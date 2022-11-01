@@ -1,16 +1,20 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {useEffect} from "react";
+import Swal from "sweetalert2";
 
 function VerifyRegister() {
 
-    const id = useParams();
+    const navigate = useNavigate();
 
-    const sendIdApi=async (id)=> {
+    const userId = useParams();
+    console.log(userId.id);
+
+    const sendIdApi = async (userId)=> {
         const results = await axios.request({
-            url: "http://localhost:3001/verify",
+            url: `http://localhost:3001/auth/verify/${userId.id}`,
             method: "POST",
-            data: JSON.stringify(id.id),
+            data: JSON.stringify(userId.id),
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -18,14 +22,30 @@ function VerifyRegister() {
         return results
     }
 
+    const handleApi = (data) =>{
+        if(data.type === 'success'){
+            Swal.fire(
+                'Register success',
+                'Confirm success',
+                'success'
+            ).then(navigate('/login'));
+        }else {
+            Swal.fire({
+                icon: 'info',
+                title: 'Oops...',
+                text: 'Confirm error',
+                footer: '<a href="/login">Go to Login</a>'
+            })
+        }
+    }
+
     useEffect(() => {
-        sendIdApi(id).then(res=>console.log(res.data)).catch(err=>console.log(err.message))
+        sendIdApi(userId).then(res=>handleApi(res.data)).catch(err=>console.log(err.message))
     },[])
 
     return (
-        <div>
-
-        </div>
+        <>
+        </>
     )
 }
 

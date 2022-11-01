@@ -11,6 +11,8 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import SignupPage from "./pages/SignupPage";
 import VerifyRegister from "./sections/auth/login/VerifyRegister";
+import WalletPage from './pages/WalletPage';
+
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +27,7 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
+        {path: 'wallet', element: <WalletPage />}
       ],
     },
     {

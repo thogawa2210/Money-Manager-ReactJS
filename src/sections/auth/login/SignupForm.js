@@ -81,7 +81,7 @@ function SingupForm() {
             }
 
             const results = await axios.request({
-                url: "http://localhost:3001/register",
+                url: "http://localhost:3001/auth/register",
                 method: "POST",
                 data: JSON.stringify(data),
                 headers: {
