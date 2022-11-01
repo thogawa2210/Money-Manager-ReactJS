@@ -47,6 +47,7 @@
     "apexcharts": "^3.36.0",
     "change-case": "^4.1.2",
     "date-fns": "^2.29.3",
+    "formik": "^2.2.9",
     "history": "^5.3.0",
     "lodash": "^4.17.21",
     "numeral": "^2.0.6",
@@ -59,6 +60,7 @@
     "react-router-dom": "^6.4.2",
     "react-scripts": "^5.0.1",
     "simplebar-react": "^2.4.3",
+    "sweetalert2": "^11.6.5",
     "web-vitals": "^3.0.3"
   },
   "devDependencies": {
