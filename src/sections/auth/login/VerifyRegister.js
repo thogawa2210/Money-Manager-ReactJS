@@ -8,13 +8,13 @@ function VerifyRegister() {
     const navigate = useNavigate();
 
     const userId = useParams();
+
     console.log(userId.id);
 
     const sendIdApi = async (userId)=> {
         const results = await axios.request({
             url: `http://localhost:3001/auth/verify/${userId.id}`,
             method: "POST",
-            data: JSON.stringify(userId.id),
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -22,7 +22,7 @@ function VerifyRegister() {
         return results
     }
 
-    const handleApi = (data) =>{
+    const verifyApi = (data) =>{
         if(data.type === 'success'){
             Swal.fire(
                 'Register success',
@@ -40,7 +40,7 @@ function VerifyRegister() {
     }
 
     useEffect(() => {
-        sendIdApi(userId).then(res=>handleApi(res.data)).catch(err=>console.log(err.message))
+        sendIdApi(userId).then(res=>verifyApi(res.data)).catch(err=>console.log(err.message))
     },[])
 
     return (
