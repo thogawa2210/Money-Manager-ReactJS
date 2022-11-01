@@ -56,7 +56,7 @@ export default function LoginForm() {
         break;
       case 'password':
         if (!REGEX.password.test(e.target.value)) {
-          setError({ ...error, password: 'Password must have at least 6 characters' });
+          setError({ ...error, password: 'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ' });
         } else {
           setError({ ...error, password: '' });
         }
