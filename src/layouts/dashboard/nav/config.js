@@ -12,6 +12,11 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
+    title: 'my wallet',
+    path: '/dashboard/wallet',
+    icon: icon('wallet-svgrepo-com'),
+  },
+  {
     title: 'user',
     path: '/dashboard/user',
     icon: icon('ic_user'),
