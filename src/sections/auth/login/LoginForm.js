@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link, Stack, IconButton, InputAdornment, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
 
 // components
 import Iconify from '../../../components/iconify';
