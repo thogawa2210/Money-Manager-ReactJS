@@ -9,7 +9,10 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
+import SignupPage from "./pages/SignupPage";
+import VerifyRegister from "./sections/auth/login/VerifyRegister";
 import WalletPage from './pages/WalletPage';
+
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +34,15 @@ export default function Router() {
       path: 'login',
       element: <LoginPage />,
     },
+    {
+      path: '/signup',
+      element: <SignupPage />,
+    },
+    {
+      path: '/register/user/:id',
+      element: <VerifyRegister />,
+    },
+
     {
       element: <SimpleLayout />,
       children: [
