@@ -10,6 +10,7 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import SignupPage from "./pages/SignupPage";
+import VerifyRegister from "./sections/auth/login/VerifyRegister";
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +35,11 @@ export default function Router() {
       path: '/signup',
       element: <SignupPage />,
     },
+    {
+      path: '/register/user/:id',
+      element: <VerifyRegister />,
+    },
+
     {
       element: <SimpleLayout />,
       children: [
