@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="060cf065-93b4-45a0-b429-a07849242b40" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/WalletPage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/_mock/wallet.js" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/AddressForm.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/PaymentForm.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/checkout.tsx" afterDir="false" />
@@ -257,9 +257,12 @@
       <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionNucleoIcons.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionProgress.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionTypography.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.eslintrc" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/WalletPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/WalletPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CaseStudy/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/../CaseStudy/test.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CaseStudy/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/../CaseStudy/test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CaseStudyModule3/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../CaseStudyModule3/server.js" afterDir="false" />
@@ -478,11 +481,13 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/JS/Money-Manager-BE-ExpressJS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.standard": "",
     "nodejs_package_manager_path": "yarn",
+    "settings.editor.selected.configurable": "preferences.general",
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2022.1.2\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -495,7 +500,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1667272660958</updated>
-      <workItem from="1667272663714" duration="10064000" />
+      <workItem from="1667272663714" duration="11772000" />
+      <workItem from="1667294153597" duration="4819000" />
     </task>
     <servers />
   </component>
