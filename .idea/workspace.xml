@@ -2,13 +2,459 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="060cf065-93b4-45a0-b429-a07849242b40" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/SignupPage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sections/auth/login/SignupForm.js" afterDir="false" />
+<<<<<<< HEAD
+      <change afterPath="$PROJECT_DIR$/src/_mock/wallet.js" afterDir="false" />
+=======
+<<<<<<< HEAD
+      <change afterPath="$PROJECT_DIR$/src/sections/auth/login/VerifyRegister.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/auth/login/SignupForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/auth/login/SignupForm.js" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/src/pages/WalletPage.js" afterDir="false" />
+>>>>>>> 2acb45f0f2ff616a04a0ece7fe023b0c0bf28b3c
+      <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/AddressForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/PaymentForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/checkout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/review.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/trouserform.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/.github/workflows/main.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/Documentation/documentation.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/ISSUE_TEMPLATE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/LICENSE.md" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/LICENSE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/commit.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/gulpfile.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/jsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/jsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/public/apple-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/css/paper-kit.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/css/paper-kit.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/css/paper-kit.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/demo/demo.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/fonts/nucleo-icons.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/fonts/nucleo-icons.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/fonts/nucleo-icons.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/fonts/nucleo-icons.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/antoine-barres.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/apple-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/avatar.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/blurred-image-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/bruno-abatti.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/clouds.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/creative-tim-white-slim2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/daniel-olahh.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/daniel-olahs.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/default-avatar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/eva.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/examples/landing-page.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/examples/profile-page.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/fabio-mangione.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/faces/ayo-ogunseinde-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/faces/clem-onojeghuo-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/faces/clem-onojeghuo-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/faces/erik-lucatero-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/faces/joe-gardner-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/faces/kaci-baum-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/favicon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/federico-beccari.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/AD.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/AE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/AG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/AM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/AR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/AT.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/AU.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/BE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/BF.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/BG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/BO.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/BR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/CA.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/CD.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/CG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/CH.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/CL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/CM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/CN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/CO.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/CZ.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/DE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/DJ.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/DK.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/DZ.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/EE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/EG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/ES.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/FI.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/FR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/GA.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/GB.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/GM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/GT.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/HN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/HT.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/HU.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/ID.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/IE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/IL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/IN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/IQ.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/IR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/IT.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/JM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/JO.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/JP.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/KG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/KN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/KP.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/KR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/KW.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/KZ.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/LA.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/LB.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/LC.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/LS.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/LU.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/LV.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/MG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/MK.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/ML.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/MM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/MT.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/MX.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/NA.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/NE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/NG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/NI.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/NL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/NO.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/OM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/PA.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/PE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/PG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/PK.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/PL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/PT.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/PY.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/QA.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/RO.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/RU.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/RW.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/SA.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/SE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/SG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/SL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/SN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/SO.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/SV.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/TD.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/TJ.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/TL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/TR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/TZ.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/UA.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/US.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/VE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/VN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/flags/YE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/fog-low.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/header.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/ilya-yakover.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/invision-white-slim.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/joshua-stannard.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/login-image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/login.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/new_logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/nucleo-logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/placeholder.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/ryan.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/soroush-karimi.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/img/uriel-soberanes.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_alerts.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_badges.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_buttons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_cards.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_carousel.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_checkbox-radio.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_dropdown.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_examples.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_footers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_headers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_icons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_images.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_inputs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_labels.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_misc.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_mixins.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_modal.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_navbars.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_nucleo-icons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_nucleo-outline.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_pagination.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_progress-bars.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_responsive.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_sections.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_sidebar.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_sliders.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_social-buttons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_switch.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_tabs-navs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_tags.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_tooltips-and-popovers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_typography.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/_variables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/cards/_card-plain.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/cards/_card-profile.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/cards/_card-register.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/mixins/_alerts.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/mixins/_buttons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/mixins/_inputs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/mixins/_labels.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/mixins/_navbars.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/mixins/_popovers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/mixins/_tabs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/mixins/_transparency.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/mixins/_vendor-prefixes.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/plugins/_plugin-bootstrap-switch.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/plugins/_plugin-datepicker.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/plugins/_plugin-nouislider.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/paper-kit/plugins/_plugin-perfect-scrollbar.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/paper-kit/_dropdown.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/paper-kit/_inputs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/paper-kit/_navbars.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/paper-kit/_responsive.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/paper-kit/_switch.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/paper-kit/_tooltips-and-popovers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/plugins/_plugin-nouislider.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/plugins/_plugin-react-bootstrap-switch.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/plugins/_plugin-react-datetime.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/assets/scss/react/react-differences.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/components/Footers/DemoFooter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/components/Headers/IndexHeader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/components/Headers/LandingPageHeader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/components/Headers/ProfilePageHeader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/components/Navbars/ExamplesNavbar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/components/Navbars/IndexNavbar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Case-Study-Module-5/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/Index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/NucleoIcons.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/examples/LandingPage.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/examples/ProfilePage.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/examples/RegisterPage.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionButtons.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionCarousel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionDark.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionDownload.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionExamples.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionJavaScript.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionLogin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionNavbars.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionNavigation.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionNotifications.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionNucleoIcons.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionProgress.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Case-Study-Module-5/src/views/index-sections/SectionTypography.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.eslintrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/WalletPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/WalletPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CaseStudy/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/../CaseStudy/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CaseStudy/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/../CaseStudy/test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CaseStudyModule3/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../CaseStudyModule3/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/.idea/TS.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/arrow-functions-example.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/default-parameters-example.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/destructuring-assignment-1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/destructuring-assignment-2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/destructuring-assignment-example.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/for-loop-example.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/khaibaomacdinhchothamso.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/luyen-arrowfunction.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/spread-operator-example.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/spread-syntax-1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/ES6/spread-syntax-example.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/OOP/QuadraticEquation.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/OOP/StopWatch.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/OOP/congthucnauan.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/OOP/phanloaihinhhoc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/OOP/tinhkhoangcach2diem.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TS/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/database.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/database.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/src/controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/src/controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/src/databaseModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/src/databaseModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/templates/add.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/templates/add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/templates/city.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/templates/city.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/templates/delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/templates/delete.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test-Module3/templates/update.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Test-Module3/templates/update.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/src/controllers/controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/src/controllers/controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/src/routers/router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/src/routers/router.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/src/schemas/branch.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/src/schemas/branch.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/src/schemas/employee.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/src/schemas/employee.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/src/views/404page.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/src/views/404page.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/src/views/create.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/src/views/create.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/src/views/detail.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/src/views/detail.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/src/views/list.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/src/views/list.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/src/views/update.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/src/views/update.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/tsconfig.build.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/tsconfig.build.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_module_4/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Test_module_4/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/middleware/auth.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/router/router.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/schemas/product.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/schemas/user.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/views/create.ejs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/views/error.ejs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/views/home.ejs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/views/list.ejs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/views/login.ejs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/src/views/success.ejs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/tsconfig.build.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/untitled/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/xaydungAPIbangJWT/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/xaydungAPIbangJWT/src/middleware/auth.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/xaydungAPIbangJWT/src/router/router.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/xaydungAPIbangJWT/src/schemas/product.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/xaydungAPIbangJWT/src/schemas/user.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/xaydungAPIbangJWT/tsconfig.build.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Thực hành/xaydungAPIbangJWT/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../binary-search/src/BinaryTree.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../binary-search/src/BinaryTree.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/src/data-source.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/src/data-source.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/src/entity/Blogs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/src/entity/Blogs.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/src/views/create.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/src/views/create.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/src/views/list.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/src/views/list.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/src/views/update.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/src/views/update.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/tsconfig.build.json" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/tsconfig.build.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blogs_manager/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../blogs_manager/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/src/middleware/passport.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/src/middleware/passport.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/src/router/authRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/src/router/authRouter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/src/schemas/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/src/schemas/user.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/src/views/home.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/src/views/home.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/src/views/login.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/src/views/login.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/tsconfig.build.json" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/tsconfig.build.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_auth_bt1/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../express_auth_bt1/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/src/router/phoneBook.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/src/router/phoneBook.router.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/src/schema/phoneBook.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/src/schema/phoneBook.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/src/views/create.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/src/views/create.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/src/views/home.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/src/views/home.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/src/views/update.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/src/views/update.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/tsconfig.build.json" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/tsconfig.build.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_phonebook_manager/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../express_phonebook_manager/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_quanlynhanvien/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../express_quanlynhanvien/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_quanlynhanvien/views/create.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_quanlynhanvien/views/create.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_quanlynhanvien/views/list.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_quanlynhanvien/views/list.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_simple_blog/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../express_simple_blog/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_simple_blog/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../express_simple_blog/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_simple_blog/views/blog.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_simple_blog/views/blog.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_simple_blog/views/view.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_simple_blog/views/view.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_simple_staff_manager/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../express_simple_staff_manager/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_simple_staff_manager/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../express_simple_staff_manager/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_simple_staff_manager/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../express_simple_staff_manager/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_simple_staff_manager/views/create.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_simple_staff_manager/views/create.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../express_simple_staff_manager/views/view.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../express_simple_staff_manager/views/view.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../laptrinhhuongdoituong/car/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../laptrinhhuongdoituong/car/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../laptrinhhuongdoituong/car/js/car.js" beforeDir="false" afterPath="$PROJECT_DIR$/../laptrinhhuongdoituong/car/js/car.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../laptrinhhuongdoituong/car/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../laptrinhhuongdoituong/car/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../laptrinhhuongdoituong/carogame/cell.js" beforeDir="false" afterPath="$PROJECT_DIR$/../laptrinhhuongdoituong/carogame/cell.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../laptrinhhuongdoituong/carogame/gameboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../laptrinhhuongdoituong/carogame/gameboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../laptrinhhuongdoituong/carogame/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../laptrinhhuongdoituong/carogame/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../laptrinhhuongdoituong/carogame/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../laptrinhhuongdoituong/carogame/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../laptrinhhuongdoituong/funny circle.html" beforeDir="false" afterPath="$PROJECT_DIR$/../laptrinhhuongdoituong/funny circle.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mang/faketext.html" beforeDir="false" afterPath="$PROJECT_DIR$/../mang/faketext.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware-checklogin/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware-checklogin/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware-checklogin/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware-checklogin/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware-checklogin/src/middleware/checkLogin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware-checklogin/src/middleware/checkLogin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware-checklogin/src/views/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware-checklogin/src/views/index.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware-checklogin/tsconfig.build.json" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware-checklogin/tsconfig.build.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware-checklogin/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware-checklogin/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware_secret_token/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware_secret_token/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware_secret_token/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware_secret_token/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware_secret_token/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware_secret_token/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware_secret_token/src/middleware/secretToken.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware_secret_token/src/middleware/secretToken.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware_secret_token/tsconfig.build.json" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware_secret_token/tsconfig.build.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../middleware_secret_token/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../middleware_secret_token/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../todoList-realtime/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/../todoList-realtime/public/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../todoList-realtime/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../todoList-realtime/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled/helloWorld.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled/helloWorld.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled100/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled100/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled102/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled102/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled102/view/notfound.html" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled102/view/notfound.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled108/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled108/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled109/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled109/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled114/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled114/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/src/data-source.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/src/data-source.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/src/data-source.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/src/entity/PhoneBook.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/src/entity/PhoneBook.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/src/entity/PhoneBook.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/dist/tsconfig.build.tsbuildinfo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled128/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled128/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/src/data-source.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled128/src/data-source.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled128/src/entity/PhoneBook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled128/src/entity/PhoneBook.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled133/src/middleware/responseTime.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled133/src/middleware/responseTime.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled134/src/router/book.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled134/src/router/book.router.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled134/src/schemas/author.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled134/src/schemas/author.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled134/src/schemas/book.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled134/src/schemas/book.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled134/src/views/createBook.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled134/src/views/createBook.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled134/src/views/listBook.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled134/src/views/listBook.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled27/jest.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled27/jest.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled27/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled27/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled34/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled34/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled6/StaffManagerment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled6/StaffManagerment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled62/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled62/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled62/index2.html" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled62/index2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled71/demo.js" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled71/demo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled71/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled71/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled71/index2.html" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled71/index2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled71/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled71/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled71/style2.css" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled71/style2.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled73/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled73/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled78/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled78/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled90/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled90/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled92/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled92/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled96/NodeJS-Register-form-basic" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled96/NodeJS-Register-form-basic" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../untitled97/NodeJS-Register-form-basic" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled97/NodeJS-Register-form-basic" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../voterealtime/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../voterealtime/templates/index.html" afterDir="false" />
+>>>>>>> 263e7ce573bdc55c184fecd26e9f85d64d8fbcde
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +478,9 @@
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectId" id="2Gvcmo8Op5Vh7N5Ia5VwO2ZdccC" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -44,11 +492,25 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/NEW/Money-Manager-ReactJS-fake",
+<<<<<<< HEAD
+    "last_opened_file_path": "D:/JS/Money-Manager-BE-ExpressJS",
+=======
+    "last_opened_file_path": "D:/NEW/web-game-react-js-case-m5",
+>>>>>>> 2acb45f0f2ff616a04a0ece7fe023b0c0bf28b3c
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
     "nodejs_package_manager_path": "yarn",
+<<<<<<< HEAD
+    "settings.editor.selected.configurable": "preferences.general",
+=======
+<<<<<<< HEAD
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2022.1.1\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
+=======
+>>>>>>> 2acb45f0f2ff616a04a0ece7fe023b0c0bf28b3c
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2022.1.2\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
+>>>>>>> 263e7ce573bdc55c184fecd26e9f85d64d8fbcde
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -65,8 +527,17 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1667272660958</updated>
+<<<<<<< HEAD
+      <workItem from="1667272663714" duration="11772000" />
+      <workItem from="1667294153597" duration="4819000" />
+=======
+<<<<<<< HEAD
       <workItem from="1667272663714" duration="311000" />
-      <workItem from="1667277832624" duration="9197000" />
+      <workItem from="1667277832624" duration="19052000" />
+=======
+      <workItem from="1667272663714" duration="10064000" />
+>>>>>>> 263e7ce573bdc55c184fecd26e9f85d64d8fbcde
+>>>>>>> 2acb45f0f2ff616a04a0ece7fe023b0c0bf28b3c
     </task>
     <servers />
   </component>
