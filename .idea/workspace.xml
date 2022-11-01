@@ -2,7 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="060cf065-93b4-45a0-b429-a07849242b40" name="Changes" comment="">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/src/_mock/wallet.js" afterDir="false" />
+=======
+<<<<<<< HEAD
+      <change afterPath="$PROJECT_DIR$/src/sections/auth/login/VerifyRegister.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/auth/login/SignupForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/auth/login/SignupForm.js" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/src/pages/WalletPage.js" afterDir="false" />
+>>>>>>> 2acb45f0f2ff616a04a0ece7fe023b0c0bf28b3c
       <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/AddressForm.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/PaymentForm.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../vbstailorapp/pages/sales/checkout.tsx" afterDir="false" />
@@ -444,6 +454,7 @@
       <change beforePath="$PROJECT_DIR$/../untitled96/NodeJS-Register-form-basic" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled96/NodeJS-Register-form-basic" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../untitled97/NodeJS-Register-form-basic" beforeDir="false" afterPath="$PROJECT_DIR$/../untitled97/NodeJS-Register-form-basic" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../voterealtime/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../voterealtime/templates/index.html" afterDir="false" />
+>>>>>>> 263e7ce573bdc55c184fecd26e9f85d64d8fbcde
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -481,17 +492,33 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+<<<<<<< HEAD
     "last_opened_file_path": "D:/JS/Money-Manager-BE-ExpressJS",
+=======
+    "last_opened_file_path": "D:/NEW/web-game-react-js-case-m5",
+>>>>>>> 2acb45f0f2ff616a04a0ece7fe023b0c0bf28b3c
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.standard": "",
     "nodejs_package_manager_path": "yarn",
+<<<<<<< HEAD
     "settings.editor.selected.configurable": "preferences.general",
+=======
+<<<<<<< HEAD
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2022.1.1\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
+=======
+>>>>>>> 2acb45f0f2ff616a04a0ece7fe023b0c0bf28b3c
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2022.1.2\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
+>>>>>>> 263e7ce573bdc55c184fecd26e9f85d64d8fbcde
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\NEW\Money-Manager-ReactJS\src\pages" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -500,8 +527,17 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1667272660958</updated>
+<<<<<<< HEAD
       <workItem from="1667272663714" duration="11772000" />
       <workItem from="1667294153597" duration="4819000" />
+=======
+<<<<<<< HEAD
+      <workItem from="1667272663714" duration="311000" />
+      <workItem from="1667277832624" duration="19052000" />
+=======
+      <workItem from="1667272663714" duration="10064000" />
+>>>>>>> 263e7ce573bdc55c184fecd26e9f85d64d8fbcde
+>>>>>>> 2acb45f0f2ff616a04a0ece7fe023b0c0bf28b3c
     </task>
     <servers />
   </component>
