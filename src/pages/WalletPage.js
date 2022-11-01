@@ -3,12 +3,27 @@ import { useState } from 'react';
 import {Avatar, Box, Button, Grid, List, ListItem, ListItemAvatar, ListItemText, Paper} from "@mui/material";
 import wallets from '../_mock/wallet'
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 export default function WalletPage() {
     const [detail,setDetail] = useState(<h5>Choose wallet to see details</h5>)
 
-    const handleClick = () => {
-        setDetail(<h5>Cash detail</h5>)
+    const handleClick = (index) => {
+        console.log(index)
+        setDetail(
+            <>
+                <h4>Wallet detail</h4>
+                <hr/>
+                <p>Wallet Name: {wallets[index].name}</p>
+                <hr/>
+                <p>Wallet Amount: {numberWithCommas(wallets[index].amount)}</p>
+                <hr/>
+                <Button variant="contained" color="primary">Edit</Button>
+                <Button variant="contained" color="error">Delete</Button>
+            </>
+        )
     }
 
     return(
@@ -34,11 +49,11 @@ export default function WalletPage() {
                     <Grid item xs={5}>
                         <List>
                             {wallets.map((item, index) =>(
-                            <ListItem button onClick={handleClick}>
+                            <ListItem button onClick={()=>handleClick(index)}>
                                 <ListItemAvatar>
                                     <Avatar alt={item.name} src={item.photoURL} />
                                 </ListItemAvatar>
-                                <ListItemText primary={item.name} secondary={item.amount} />
+                                <ListItemText primary={item.name} secondary={numberWithCommas(item.amount)} />
                             </ListItem>
                             ))
                             }
