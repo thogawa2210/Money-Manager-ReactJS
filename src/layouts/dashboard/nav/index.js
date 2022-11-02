@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
@@ -36,14 +38,48 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const isDesktop = useResponsive('up', 'lg');
+
+  const isLoginApi = async () => {
+    const result = axios.request({
+      url: 'http://localhost:3001/auth/is-login',
+      method: 'GET',
+      headers: { 'Content-Type': 'Application/json' },
+    });
+
+    return result;
+  };
 
   useEffect(() => {
     if (openNav) {
       onCloseNav();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  useEffect(() => {
+    isLoginApi()
+      .then((res) => {
+        console.log(1)
+        switch (res.data) {
+          case 'No':
+            Swal.fire({
+              icon: 'info',
+              title: 'You are not loggin!',
+              html: 'Please login and use our service',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            navigate('/login')
+            break;
+          default:
+            break;
+        }
+      })
+      .catch((err) => console.log(err));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const renderContent = (
@@ -89,15 +125,15 @@ export default function Nav({ openNav, onCloseNav }) {
 
           <Box sx={{ textAlign: 'center' }}>
             <Typography gutterBottom variant="h6">
-              Get more?
+              Get pro?
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              From only $69
+              From only $299
             </Typography>
           </Box>
 
-          <Button href="https://material-ui.com/store/items/minimal-dashboard/" target="_blank" variant="contained">
+          <Button href="https://web.moneylover.me/store/" target="_blank" variant="contained">
             Upgrade to Pro
           </Button>
         </Stack>
