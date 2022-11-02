@@ -7,7 +7,8 @@ const walletSlice = createSlice({
             name: '',
             email: '',
             amount: 0,
-            icon:''
+            icon: '',
+            user_id: ''
         }
     },
     reducers: {
