@@ -24,10 +24,13 @@ function VerifyRegister() {
 
     const verifyApi = (data) =>{
         if(data.type === 'success'){
-            Swal.fire(
-                'Register success',
-                'Confirm success',
-                'success'
+            Swal.fire({
+                    icon: 'success',
+                    title: 'Confirm success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                }
+
             ).then(navigate('/login'));
         }else {
             Swal.fire({
