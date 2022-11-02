@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link, Stack, IconButton, InputAdornment, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
 
 // components
 import Iconify from '../../../components/iconify';
@@ -56,7 +56,11 @@ export default function LoginForm() {
         break;
       case 'password':
         if (!REGEX.password.test(e.target.value)) {
-          setError({ ...error, password: 'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ' });
+          setError({
+            ...error,
+            password:
+              'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',
+          });
         } else {
           setError({ ...error, password: '' });
         }
@@ -87,6 +91,11 @@ export default function LoginForm() {
 
   const handleApi = (data) => {
     if (data.type === 'success') {
+      const user = {
+        email: data.message.data.email,
+        username: data.message.data.username,
+      };
+      localStorage.setItem('user', JSON.stringify(user));
       Swal.fire({
         icon: 'success',
         title: 'Login successfuly!',
