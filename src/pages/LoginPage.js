@@ -79,6 +79,10 @@ export default function LoginPage() {
                   showConfirmButton: false,
                   timer: 1000,
                 });
+                localStorage.setItem(
+                  'user',
+                  JSON.stringify({ token: res.data.data.token, user_id: res.data.data.data._id })
+                );
                 navigate('/');
                 break;
               case 'error':
