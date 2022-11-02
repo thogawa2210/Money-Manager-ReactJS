@@ -44,6 +44,7 @@
     "@iconify/react": "^4.0.0",
     "@mui/lab": "^5.0.0-alpha.103",
     "@mui/material": "^5.10.12",
+    "@react-oauth/google": "^0.4.0",
     "@reduxjs/toolkit": "^1.8.6",
     "apexcharts": "^3.36.0",
     "axios": "^1.1.3",
