@@ -11,19 +11,16 @@ import wallets from '../../../_mock/wallet'
 
 export default function WalletUser() {
     const [open, setOpen] = useState(null);
-    const [index, setIndex] = useState(0);
+
+    const totalMoney = wallets.reduce((a,v) =>  a = a + v.amount , 0 )
 
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
     };
 
-    const handleClose = (index) => {
+    const handleClose = () => {
         setOpen(null);
-        setIndex(index)
     };
-
-    console.log(index)
-
 
     return (
         <>
@@ -43,7 +40,7 @@ export default function WalletUser() {
                         height: 40,
                     }}
                 >
-                    <img src={wallets[index].photoURL} alt={wallets[index].name}/>
+                    <img src={wallets[0].icon} alt={wallets[0].name}/>
                 </IconButton>
                 <Box sx={{
                     height: 40,
@@ -53,14 +50,14 @@ export default function WalletUser() {
                         fontFamily: "serif",
                         fontSize: 12,
                         paddingLeft: 12
-                    }}>{wallets[index].name}</Typography>
+                    }}>Total</Typography>
                     <Typography style={{
                         color: "black",
                         fontFamily: "serif",
                         fontSize: 14,
                         paddingLeft: 12,
                         fontWeight: 700
-                    }}>{wallets[index].amount}</Typography>
+                    }}>{totalMoney}</Typography>
                 </Box>
             </Box>
 
@@ -96,7 +93,7 @@ export default function WalletUser() {
                     {wallets.map((item, index) => (
                         <MenuItem key={index}
                                   onClick={() => handleClose(index)}>
-                            <Box component="img" alt={item.name} src={item.photoURL} sx={{width: 28, mr: 2}}/>
+                            <Box component="img" alt={item.name} src={item.icon} sx={{width: 28, mr: 2}}/>
                             {item.name} {item.amount}
                         </MenuItem>
                     ))}
