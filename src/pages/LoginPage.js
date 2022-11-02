@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useEffect } from 'react';
 
 // @mui
 import { styled } from '@mui/material/styles';
@@ -23,6 +24,8 @@ const StyledRoot = styled('div')(({ theme }) => ({
     display: 'flex',
   },
 }));
+
+
 
 const StyledSection = styled('div')(({ theme }) => ({
   width: '100%',
@@ -49,6 +52,14 @@ const StyledContent = styled('div')(({ theme }) => ({
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let user = localStorage.getItem('user')
+    if (user) {
+      navigate('/')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  } ,[])
 
   const loginGGApi = async (data) => {
     const result = await axios.post('http://localhost:3001/auth/login-gg', data);

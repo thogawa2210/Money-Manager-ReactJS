@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Link, Container, Typography } from '@mui/material';
@@ -8,6 +9,7 @@ import useResponsive from '../hooks/useResponsive';
 import Logo from '../components/logo';
 // sections
 import SignupForm from '../sections/auth/login/SignupForm';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +42,16 @@ const StyledContent = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 function SignupPage() {
+  const navigate = useNavigate();
   const mdUp = useResponsive('up', 'md');
+
+  useEffect(() => {
+    let user = localStorage.getItem('user')
+    if (user) {
+      navigate('/')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  } ,[])
 
   return (
     <>

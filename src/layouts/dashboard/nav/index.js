@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -39,7 +39,7 @@ Nav.propTypes = {
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
+  const [username, setUsername] = useState('');
   const isDesktop = useResponsive('up', 'lg');
 
   const isLoginApi = async (token, id) => {
@@ -51,6 +51,10 @@ export default function Nav({ openNav, onCloseNav }) {
     if (openNav) {
       onCloseNav();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  useEffect(() => {
     let userInfo = JSON.parse(localStorage.getItem('user'));
     if (!userInfo) {
       Swal.fire({
@@ -60,40 +64,37 @@ export default function Nav({ openNav, onCloseNav }) {
         timer: 1500,
       });
       navigate('/login');
+    } else {
+      isLoginApi(userInfo.token, userInfo.user_id)
+        .then((res) => {
+          switch (res.data.type) {
+            case 'No':
+              Swal.fire({
+                icon: 'info',
+                title: 'You are not loggin!',
+                html: 'Please login and use our service!',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              navigate('/login');
+              break;
+            case 'error':
+              Swal.fire({
+                icon: 'error',
+                title: 'You are not loggin!',
+                html: 'Please login and use our service!',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              navigate('/login');
+              break;
+            default:
+              setUsername(res.data.data);
+              break;
+          }
+        })
+        .catch((err) => console.log(err));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
-
-  useEffect(() => {
-    let userInfo = JSON.parse(localStorage.getItem('user'));
-    isLoginApi(userInfo.token, userInfo.user_id)
-      .then((res) => {
-        switch (res.data.type) {
-          case 'No':
-            Swal.fire({
-              icon: 'info',
-              title: 'You are not loggin!',
-              html: 'Please login and use our service!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            navigate('/login');
-            break;
-          case 'error':
-            Swal.fire({
-              icon: 'error',
-              title: 'You are not loggin!',
-              html: 'Please login and use our service!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            navigate('/login');
-            break;
-          default:
-            break;
-        }
-      })
-      .catch((err) => console.log(err));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
@@ -116,11 +117,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
-              </Typography>
-
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                Hello, {username} !
               </Typography>
             </Box>
           </StyledAccount>
