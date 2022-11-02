@@ -42,13 +42,8 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const isDesktop = useResponsive('up', 'lg');
 
-  const isLoginApi = async () => {
-    const result = axios.request({
-      url: 'http://localhost:3001/auth/is-login',
-      method: 'GET',
-      headers: { 'Content-Type': 'Application/json' },
-    });
-
+  const isLoginApi = async (token, id) => {
+    const result = await axios.post('http://localhost:3001/auth/is-login', { token: token, id: id });
     return result;
   };
 
@@ -56,30 +51,51 @@ export default function Nav({ openNav, onCloseNav }) {
     if (openNav) {
       onCloseNav();
     }
+    let userInfo = JSON.parse(localStorage.getItem('user'));
+    if (!userInfo) {
+      Swal.fire({
+        icon: 'info',
+        title: 'You are not loggin! Please login to use our service!',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      navigate('/login');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   useEffect(() => {
-    isLoginApi()
+    let userInfo = JSON.parse(localStorage.getItem('user'));
+    isLoginApi(userInfo.token, userInfo.user_id)
       .then((res) => {
-        console.log(1)
-        switch (res.data) {
+        switch (res.data.type) {
           case 'No':
             Swal.fire({
               icon: 'info',
               title: 'You are not loggin!',
-              html: 'Please login and use our service',
+              html: 'Please login and use our service!',
               showConfirmButton: false,
               timer: 1500,
             });
-            navigate('/login')
+            navigate('/login');
+            break;
+          case 'error':
+            Swal.fire({
+              icon: 'error',
+              title: 'You are not loggin!',
+              html: 'Please login and use our service!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            navigate('/login');
             break;
           default:
             break;
         }
       })
       .catch((err) => console.log(err));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const renderContent = (

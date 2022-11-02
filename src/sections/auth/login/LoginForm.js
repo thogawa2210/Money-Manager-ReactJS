@@ -83,7 +83,8 @@ export default function LoginForm() {
   const handleApi = (data) => {
     if (data.type === 'success') {
       const user = {
-        user_id: data.message.data._id
+        user_id: data.data.data._id,
+        token: data.data.token
       };
       localStorage.setItem('user', JSON.stringify(user));
       Swal.fire({
