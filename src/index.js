@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 //
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -11,11 +12,13 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <HelmetProvider>
+  <HelmetProvider>
+    <GoogleOAuthProvider clientId="617276136155-atcka5amuvc2fuqnac8s6murahntic26.apps.googleusercontent.com">
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </HelmetProvider>
+    </GoogleOAuthProvider>
+  </HelmetProvider>
 );
 
 // If you want to enable client cache, register instead.
