@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+
 
 import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -27,6 +29,7 @@ function SingupForm() {
     password: '',
     passwordConfirm: '',
   });
+
 
   const handleOnchange = (e) => {
     handleValidate(e);
