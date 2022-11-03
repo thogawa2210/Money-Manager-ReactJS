@@ -40,14 +40,23 @@ export default function WalletPage() {
   };
 
   const onChangeEdit = (e) => {
-    setWalletEdit({ ...walletEdit, [e.target.name]: e.target.value });
+    if(e.target.name === 'amount') {
+      setWalletEdit({ ...walletEdit, [e.target.name]: parseInt(e.target.value) });
+    }else {
+      setWalletEdit({ ...walletEdit, [e.target.name]: e.target.value });
+    }
   };
 
   const handleSaveEdit = (id) => {
     const index = wallets.findIndex((wallet) => wallet._id === id);
     wallets[index] = walletEdit;
     setWallets(wallets);
+    console.log(wallets)
     setOpen(false);
+
+    //Call API here
+
+
   };
 
   const handleClick = (id) => {
