@@ -64,6 +64,32 @@ export default function WalletPage() {
     }
   };
 
+  const handleDeleteWallet = (id) => {
+    Swal.fire({
+      title: 'Are you sure to delete?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`http://localhost:3001/wallet/delete/${id}`)
+            .then(res=> {
+              dispatch(changeFlag(1))
+              setDetail(<h5>Choose wallet to see details</h5>)
+            })
+            .catch(err => console.log(err))
+        Swal.fire(
+            'Deleted!',
+            'Wallet has been deleted.',
+            'success'
+        )
+      }
+    })
+  }
+
   const handleSaveEdit = (id) => {
     axios.put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
         .then(res=>{
@@ -91,7 +117,7 @@ export default function WalletPage() {
         <Button variant="contained" color="primary" onClick={() => handleClickOpen(id)}>
           Edit
         </Button>
-        <Button variant="contained" color="error">
+        <Button variant="contained" color="error" onClick={() => handleDeleteWallet(id)}>
           Delete
         </Button>
       </>
