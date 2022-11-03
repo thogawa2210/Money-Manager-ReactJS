@@ -32,16 +32,7 @@ export default function LoginForm() {
       email: form.email,
       password: form.password,
     };
-
-    const results = await axios.request({
-      url: 'http://localhost:3001/auth/login',
-      method: 'POST',
-      data: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
+    const results = await axios.post('http://localhost:3001/auth/login', data);
     return results;
   };
 
@@ -92,8 +83,8 @@ export default function LoginForm() {
   const handleApi = (data) => {
     if (data.type === 'success') {
       const user = {
-        email: data.message.data.email,
-        username: data.message.data.username,
+        user_id: data.data.data._id,
+        token: data.data.token
       };
       localStorage.setItem('user', JSON.stringify(user));
       Swal.fire({

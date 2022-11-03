@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Link, Container, Typography } from '@mui/material';
@@ -7,82 +8,94 @@ import useResponsive from '../hooks/useResponsive';
 // components
 import Logo from '../components/logo';
 // sections
-import SignupForm from "../sections/auth/login/SignupForm";
+import SignupForm from '../sections/auth/login/SignupForm';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled('div')(({ theme }) => ({
-    [theme.breakpoints.up('md')]: {
-        display: 'flex',
-    },
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+  },
 }));
 
 const StyledSection = styled('div')(({ theme }) => ({
-    width: '100%',
-    maxWidth: 480,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    boxShadow: theme.customShadows.card,
-    backgroundColor: theme.palette.background.default,
+  width: '100%',
+  maxWidth: 480,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  boxShadow: theme.customShadows.card,
+  backgroundColor: theme.palette.background.default,
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({
-    maxWidth: 480,
-    margin: 'auto',
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    padding: theme.spacing(12, 0),
+  maxWidth: 480,
+  margin: 'auto',
+  minHeight: '100vh',
+  display: 'flex',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  padding: theme.spacing(12, 0),
 }));
 
 // ----------------------------------------------------------------------
 
 function SignupPage() {
-    const mdUp = useResponsive('up', 'md');
+  const navigate = useNavigate();
+  const mdUp = useResponsive('up', 'md');
 
-    return (
-        <>
-            <Helmet>
-                <title> Sign Up </title>
-            </Helmet>
+  useEffect(() => {
+    let user = localStorage.getItem('user')
+    if (user) {
+      navigate('/')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  } ,[])
 
-            <StyledRoot>
-                <Logo
-                    sx={{
-                        position: 'fixed',
-                        top: { xs: 16, sm: 24, md: 40 },
-                        left: { xs: 16, sm: 24, md: 40 },
-                    }}
-                />
+  return (
+    <>
+      <Helmet>
+        <title> Sign Up | Money Manager Master </title>
+      </Helmet>
 
-                {mdUp && (
-                    <StyledSection>
-                        <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-                            Hi, Welcome to  our World!
-                        </Typography>
-                        <img src="/assets/illustrations/illustration_login.png" alt="login" />
-                    </StyledSection>
-                )}
+      <StyledRoot>
+        <Logo
+          sx={{
+            position: 'fixed',
+            top: { xs: 16, sm: 24, md: 40 },
+            left: { xs: 16, sm: 24, md: 40 },
+          }}
+        />
 
-                <Container maxWidth="sm">
-                    <StyledContent>
-                        <Typography variant="h4" gutterBottom>
-                            Sign up to 395
-                        </Typography>
+        {mdUp && (
+          <StyledSection>
+            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+              Hi, Welcome to our World!
+            </Typography>
+            <img src="/assets/illustrations/illustration_login.png" alt="login" />
+          </StyledSection>
+        )}
 
-                        <Typography variant="body2" sx={{ mb: 5 }}>
-                            Already have an account? {''}
-                            <Link href="/login" variant="subtitle2">Sign in</Link>
-                        </Typography>
+        <Container maxWidth="sm">
+          <StyledContent>
+            <Typography variant="h4" gutterBottom>
+              Sign up to 395
+            </Typography>
 
-                        <SignupForm />
-                    </StyledContent>
-                </Container>
-            </StyledRoot>
-        </>
-    );
+            <Typography variant="body2" sx={{ mb: 5 }}>
+              Already have an account? {''}
+              <Link href="/login" variant="subtitle2">
+                Sign in
+              </Link>
+            </Typography>
+
+            <SignupForm />
+          </StyledContent>
+        </Container>
+      </StyledRoot>
+    </>
+  );
 }
 
 export default SignupPage;
