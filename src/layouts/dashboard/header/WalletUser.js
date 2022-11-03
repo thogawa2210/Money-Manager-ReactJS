@@ -1,13 +1,23 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 // @mui
 import {Box, MenuItem, Stack, IconButton, Popover, Typography, Divider} from '@mui/material';
 import wallets from '../../../_mock/wallet'
+import axios from "axios";
+import { useSelector, useDispatch } from 'react-redux'
+import {addWallet} from '../../../features/walletSlice'
+
+
 
 
 // ----------------------------------------------------------------------
 
 
 // ----------------------------------------------------------------------
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 
 export default function WalletUser() {
     const [open, setOpen] = useState(null);
@@ -21,6 +31,32 @@ export default function WalletUser() {
     const handleClose = () => {
         setOpen(null);
     };
+
+    const userId = JSON.parse(localStorage.getItem('user'))
+    console.log(userId.user_id);
+
+    const store =  useSelector((state) => state.wallet.wallet)
+    console.log(store.wallet)
+    const dispatch = useDispatch()
+
+    const getAllWallet = (userId) => {
+        return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
+    }
+
+    useEffect(() =>{
+        getAllWallet(userId).then(res =>{
+            const walletAll = {
+                wallets : []
+            }
+            walletAll.wallets = res.data.wallet
+           dispatch(addWallet(walletAll))
+        })
+            .catch(error => console.log(error.message))
+    })
+
+
+
+
 
     return (
         <>
@@ -57,7 +93,7 @@ export default function WalletUser() {
                         fontSize: 14,
                         paddingLeft: 12,
                         fontWeight: 700
-                    }}>{totalMoney}</Typography>
+                    }}>{numberWithCommas(totalMoney)}</Typography>
                 </Box>
             </Box>
 
