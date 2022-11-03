@@ -91,7 +91,7 @@ export default function WalletUser() {
 
                 <Stack spacing={0.75} sx={{p: 1}}>
                     {wallets.map((item, index) => (
-                        <MenuItem key={index}
+                        <MenuItem sx={{display:'flex'}} key={index}
                                   onClick={() => handleClose(index)}>
                             <Box component="img" alt={item.name} src={item.icon} sx={{width: 28, mr: 2}}/>
                             {item.name} {item.amount}
