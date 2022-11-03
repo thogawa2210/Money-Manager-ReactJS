@@ -1,18 +1,37 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 // @mui
 import {Box, MenuItem, Stack, IconButton, Popover, Typography, Divider} from '@mui/material';
 import wallets from '../../../_mock/wallet'
+import axios from "axios";
+import { useSelector} from "react-redux";
+
+
+
+
 
 
 // ----------------------------------------------------------------------
 
 
 // ----------------------------------------------------------------------
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 
 export default function WalletUser() {
     const [open, setOpen] = useState(null);
+    const [state, setState] = useState({
+        wallets:[]
+    })
+    const [total, setTotal] = useState(0)
 
-    const totalMoney = wallets.reduce((a,v) =>  a = a + v.amount , 0 )
+    const {flag} = useSelector(state => state.flag)
+
+
+
+    const totalMoney = state.wallets.reduce((a,v) =>  a = a + v.amount , 0 )
 
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
@@ -21,6 +40,29 @@ export default function WalletUser() {
     const handleClose = () => {
         setOpen(null);
     };
+
+    const userId = JSON.parse(localStorage.getItem('user'))
+
+    const getAllWallet = (userId) => {
+        return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
+    }
+    const toTalMoney = (userId) => {
+        return axios.get(`http://localhost:3001/wallet/total/${userId.user_id}`)
+    }
+
+    useEffect(() =>{
+        getAllWallet(userId).then(res => setState({wallets:res.data.wallet})
+        ).catch(error => console.log(error.message))
+        toTalMoney(userId).then(res => setTotal(res.data.total))
+            .catch(error => console.log(error.message))
+    },[flag])
+
+
+
+
+
+
+
 
     return (
         <>
@@ -57,7 +99,7 @@ export default function WalletUser() {
                         fontSize: 14,
                         paddingLeft: 12,
                         fontWeight: 700
-                    }}>{totalMoney}</Typography>
+                    }}>{numberWithCommas(total)}</Typography>
                 </Box>
             </Box>
 
@@ -90,11 +132,11 @@ export default function WalletUser() {
                 <Divider sx={{borderStyle: 'dashed'}}/>
 
                 <Stack spacing={0.75} sx={{p: 1}}>
-                    {wallets.map((item, index) => (
-                        <MenuItem key={index}
+                    {state.wallets.map((item, index) => (
+                        <MenuItem sx={{display:'flex'}} key={index}
                                   onClick={() => handleClose(index)}>
-                            <Box component="img" alt={item.name} src={item.icon} sx={{width: 28, mr: 2}}/>
-                            {item.name} {item.amount}
+                            <Box component="img" src={item.icon} sx={{width: 28, mr: 2}}/>
+                            {item.name} {numberWithCommas(item.amount)}
                         </MenuItem>
                     ))}
                 </Stack>
