@@ -19,6 +19,8 @@ import {forwardRef, useEffect, useState} from "react";
 import category from "../_mock/category";
 import axios from "axios";
 import Iconify from "../components/iconify";
+import wallet from "../_mock/wallet";
+import Swal from "sweetalert2";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -31,8 +33,8 @@ export default function TransactionPage() {
     const [listWallet, setListWallet] = useState([])
     const [listCategory, setListCategory] = useState([])
     const [transaction, setTransaction] = useState({
-        wallet: '',
-        category: '',
+        wallet_id: '',
+        category_id: '',
         amount: 0,
         note: '',
         date: dayjs(value).format('DD/MM/YYYY')
@@ -48,9 +50,6 @@ export default function TransactionPage() {
             .catch(err=> console.log(err));
         axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
             .then(res=> setListWallet(res.data.wallet))
-            .catch(err=> console.log(err))
-        axios.get(`http://localhost:3001/transaction//get-all-transaction/${userId}`)
-            .then(res => console.log(res))
             .catch(err=> console.log(err))
     },[])
 
@@ -75,9 +74,51 @@ export default function TransactionPage() {
         setOpenAddForm(false);
     };
 
-    const handleSubmit = () => {
-        console.log(transaction)
-        setOpenAddForm(false);
+    useEffect(() => {
+        const wallet = listWallet.filter(wallet => wallet._id === transaction.wallet_id);
+        if(wallet.length>0){
+            setTransaction({...transaction, wallet_name: wallet[0].name, wallet_icon : wallet[0].icon})
+        }
+        const category = listCategory.filter(category => category._id === transaction.category_id);
+        if(category.length>0){
+            setTransaction({...transaction, category_name: category[0].name, category_icon : category[0].icon })
+        }
+    },[transaction.wallet_id, transaction.category_id])
+
+    const handleSubmit = async () => {
+        if(transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === ''){
+            setOpenAddForm(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill all the required fields'
+            });
+        }else{
+            await axios.post('http://localhost:3001/transaction/add-transaction', transaction)
+                .then(res=> {
+                    if(res.status === 200){
+                        setTransaction({
+                            wallet_id: '',
+                            category_id: '',
+                            amount: 0,
+                            note: '',
+                            date: dayjs(value).format('DD/MM/YYYY')
+                        })
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Add transaction successfully!',
+                        })
+                    }else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!'
+                        })
+                    }
+                })
+                .catch(err => console.log(err))
+            setOpenAddForm(false);
+        }
     }
 
     return(
@@ -117,7 +158,7 @@ export default function TransactionPage() {
                                     onChange={handleChange}
                                     defaultValue="Cash"
                                     label = "Wallet"
-                                    name = "wallet"
+                                    name = "wallet_id"
                                 >
                                     {listWallet.map((wallet) => (
                                         <MenuItem key={wallet._id} value={wallet._id} >
@@ -134,7 +175,7 @@ export default function TransactionPage() {
                                 <Select
                                     onChange={handleChange}
                                     label="Categories"
-                                    name = "category"
+                                    name = "category_id"
                                 >
                                     {listCategory.map((category) => (
                                         <MenuItem key={category.name} value={category._id} >
