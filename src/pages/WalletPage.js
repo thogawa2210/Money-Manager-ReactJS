@@ -72,33 +72,36 @@ export default function WalletPage() {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await axios
-          .delete(`http://localhost:3001/wallet/delete/${id}`)
-          .then((res) => {
-            dispatch(changeFlag(1));
-            setDetail(<h5>Choose wallet to see details</h5>);
-          })
-          .catch((err) => console.log(err));
-        Swal.fire('Deleted!', 'Wallet has been deleted.', 'success');
+        await axios.delete(`http://localhost:3001/wallet/delete/${id}`)
+            .then(res=> {
+              dispatch(changeFlag(1))
+              setDetail(<h5>Choose wallet to see details</h5>)
+            })
+            .catch(err => console.log(err))
+        Swal.fire(
+            'Deleted!',
+            'Wallet has been deleted.',
+            'success'
+        )
       }
     });
   };
 
+
   const handleSaveEdit = async (id) => {
-    await axios
-      .put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
-      .then((res) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Update Successfully!',
-        });
-        dispatch(changeFlag(1));
-        setDetail(<h5>Choose wallet to see details</h5>);
-      })
-      .catch((err) => console.log(err));
+    await axios.put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
+        .then(res=>{
+          Swal.fire({
+                icon: 'success',
+                title: 'Update Successfully!'
+          })
+          dispatch(changeFlag(1))
+          setDetail(<h5>Choose wallet to see details</h5>)
+        })
+        .catch(err => console.log(err))
     setOpen(false);
   };
 
