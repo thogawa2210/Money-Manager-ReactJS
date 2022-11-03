@@ -3,8 +3,7 @@ import {useEffect, useState} from 'react';
 import {Box, MenuItem, Stack, IconButton, Popover, Typography, Divider} from '@mui/material';
 import wallets from '../../../_mock/wallet'
 import axios from "axios";
-import { useSelector, useDispatch } from 'react-redux'
-import {addWallet} from '../../../features/walletSlice'
+
 
 
 
@@ -21,8 +20,11 @@ function numberWithCommas(x) {
 
 export default function WalletUser() {
     const [open, setOpen] = useState(null);
+    const [state, setState] = useState({
+        wallets:[]
+    })
 
-    const totalMoney = wallets.reduce((a,v) =>  a = a + v.amount , 0 )
+    const totalMoney = state.wallets.reduce((a,v) =>  a = a + v.amount , 0 )
 
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
@@ -33,11 +35,6 @@ export default function WalletUser() {
     };
 
     const userId = JSON.parse(localStorage.getItem('user'))
-    console.log(userId.user_id);
-
-    const store =  useSelector((state) => state.wallet.wallet)
-    console.log(store.wallet)
-    const dispatch = useDispatch()
 
     const getAllWallet = (userId) => {
         return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
@@ -45,14 +42,12 @@ export default function WalletUser() {
 
     useEffect(() =>{
         getAllWallet(userId).then(res =>{
-            const walletAll = {
-                wallets : []
-            }
-            walletAll.wallets = res.data.wallet
-           dispatch(addWallet(walletAll))
-        })
-            .catch(error => console.log(error.message))
-    })
+            setState({wallets:res.data.wallet})
+        }).catch(error => console.log(error.message))
+    },[])
+
+
+    console.log(state)
 
 
 
@@ -126,11 +121,11 @@ export default function WalletUser() {
                 <Divider sx={{borderStyle: 'dashed'}}/>
 
                 <Stack spacing={0.75} sx={{p: 1}}>
-                    {wallets.map((item, index) => (
+                    {state.wallets.map((item, index) => (
                         <MenuItem sx={{display:'flex'}} key={index}
                                   onClick={() => handleClose(index)}>
-                            <Box component="img" alt={item.name} src={item.icon} sx={{width: 28, mr: 2}}/>
-                            {item.name} {item.amount}
+                            <Box component="img" src={item.icon} sx={{width: 28, mr: 2}}/>
+                            {item.name} {numberWithCommas(item.amount)}
                         </MenuItem>
                     ))}
                 </Stack>

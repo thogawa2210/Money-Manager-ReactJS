@@ -7,12 +7,12 @@ const walletSlice = createSlice({
     },
     reducers: {
         addWallet: (state, action) => {
-            state.wallet = action.payload.wallet;
+            state.wallet.push(action.payload);
         }
     }
 })
 
-export const { getUser } = walletSlice.actions
+export const { addWallet } = walletSlice.actions
 
 export default walletSlice.reducer
 
