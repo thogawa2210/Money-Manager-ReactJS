@@ -17,8 +17,13 @@ const navConfig = [
     icon: icon('wallet-svgrepo-com'),
   },
   {
-    title: 'user',
-    path: '/dashboard/user',
+    title: 'transaction',
+    path: '/dashboard/transaction',
+    icon: icon('transaction'),
+  },
+  {
+    title: 'profile',
+    path: '/dashboard/profile',
     icon: icon('ic_user'),
   },
   {
@@ -32,14 +37,14 @@ const navConfig = [
     icon: icon('ic_blog'),
   },
   {
-    title: 'login',
-    path: '/login',
-    icon: icon('ic_lock'),
-  },
-  {
     title: 'Not found',
     path: '/404',
-    icon: icon('ic_disabled'),
+    icon: icon('ic_disabled')
+  },
+  {
+    title: 'logout',
+    path: '/dashboard/logout',
+    icon: icon('logout'),
   },
 ];
 

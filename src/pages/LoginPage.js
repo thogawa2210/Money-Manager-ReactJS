@@ -1,5 +1,10 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useEffect } from 'react';
+
 // @mui
 import { styled } from '@mui/material/styles';
 import { Link, Container, Typography, Divider, Stack, Button } from '@mui/material';
@@ -10,6 +15,7 @@ import useResponsive from '../hooks/useResponsive';
 import Logo from '../components/logo';
 // sections
 import { LoginForm } from '../sections/auth/login';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -43,11 +49,80 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let user = localStorage.getItem('user');
+    if (user) {
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const loginGGApi = async (data) => {
+    const result = await axios.post('http://localhost:3001/auth/login-gg', data);
+    return result;
+  };
+
+  const loginGoogle = useGoogleLogin({
+    onSuccess: async (response) => {
+      try {
+        const res = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: {
+            Authorization: `Bearer ${response.access_token}`,
+          },
+        });
+        const info = res.data;
+        const userInfo = {
+          username: info.name,
+          google_id: info.sub,
+          email: info.email,
+        };
+        await loginGGApi(userInfo)
+          .then((res) => {
+            switch (res.data.type) {
+              case 'success':
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Login Successfully!',
+                  showConfirmButton: false,
+                  timer: 1000,
+                });
+                localStorage.setItem(
+                  'user',
+                  JSON.stringify({ token: res.data.data.token, user_id: res.data.data.data._id })
+                );
+                navigate('/');
+                break;
+              case 'error':
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Something Wrong! Try again!',
+                  showConfirmButton: true,
+                });
+                break;
+              default:
+            }
+          })
+          .catch(() =>
+            Swal.fire({
+              icon: 'error',
+              title: 'Something wrong! Please try again',
+              showConfirmButton: true,
+            })
+          );
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  });
 
   return (
     <>
       <Helmet>
-        <title> Login | 395 Group </title>
+        <title> Login | Money Manager Master </title>
       </Helmet>
 
       <StyledRoot>
@@ -76,11 +151,13 @@ export default function LoginPage() {
 
             <Typography variant="body2" sx={{ mb: 5 }}>
               Don’t have an account? {''}
-              <Link variant="subtitle2">Get started</Link>
+              <Link href="/signup" variant="subtitle2">
+                Get started
+              </Link>
             </Typography>
 
             <Stack direction="row" spacing={2}>
-              <Button fullWidth size="large" color="inherit" variant="outlined">
+              <Button fullWidth size="large" color="inherit" variant="outlined" onClick={loginGoogle}>
                 <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
                 <span style={{ color: '#DF3E30', marginLeft: 5 }}>Login with Google</span>
               </Button>

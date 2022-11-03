@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
@@ -36,13 +38,64 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
-
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
   const isDesktop = useResponsive('up', 'lg');
+
+  const isLoginApi = async (token, id) => {
+    const result = await axios.post('http://localhost:3001/auth/is-login', { token: token, id: id });
+    return result;
+  };
 
   useEffect(() => {
     if (openNav) {
       onCloseNav();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  useEffect(() => {
+    let userInfo = JSON.parse(localStorage.getItem('user'));
+    if (!userInfo) {
+      Swal.fire({
+        icon: 'info',
+        title: 'You are not loggin! Please login to use our service!',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      navigate('/login');
+    } else {
+      isLoginApi(userInfo.token, userInfo.user_id)
+        .then((res) => {
+          switch (res.data.type) {
+            case 'No':
+              Swal.fire({
+                icon: 'info',
+                title: 'You are not loggin!',
+                html: 'Please login and use our service!',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              navigate('/login');
+              break;
+            case 'error':
+              Swal.fire({
+                icon: 'error',
+                title: 'You are not loggin!',
+                html: 'Please login and use our service!',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              navigate('/login');
+              break;
+            default:
+              setUsername(res.data.data);
+              break;
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
@@ -64,11 +117,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
-              </Typography>
-
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                Hello, {username} !
               </Typography>
             </Box>
           </StyledAccount>
@@ -89,15 +138,15 @@ export default function Nav({ openNav, onCloseNav }) {
 
           <Box sx={{ textAlign: 'center' }}>
             <Typography gutterBottom variant="h6">
-              Get more?
+              Get pro?
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              From only $69
+              From only $299
             </Typography>
           </Box>
 
-          <Button href="https://material-ui.com/store/items/minimal-dashboard/" target="_blank" variant="contained">
+          <Button href="https://web.moneylover.me/store/" target="_blank" variant="contained">
             Upgrade to Pro
           </Button>
         </Stack>

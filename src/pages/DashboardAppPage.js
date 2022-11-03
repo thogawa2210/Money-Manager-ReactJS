@@ -26,7 +26,7 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Home | Money Manager Master </title>
       </Helmet>
 
       <Container maxWidth="xl">
@@ -95,7 +95,7 @@ export default function DashboardAppPage() {
             <AppCurrentVisits
               title="Current Visits"
               chartData={[
-                { label: 'America', value: 4344 },
+                { label: 'America', value: 9000 },
                 { label: 'Asia', value: 5435 },
                 { label: 'Europe', value: 1443 },
                 { label: 'Africa', value: 4443 },

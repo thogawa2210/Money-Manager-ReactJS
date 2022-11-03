@@ -32,16 +32,7 @@ export default function LoginForm() {
       email: form.email,
       password: form.password,
     };
-
-    const results = await axios.request({
-      url: 'http://localhost:3001/auth/login',
-      method: 'POST',
-      data: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
+    const results = await axios.post('http://localhost:3001/auth/login', data);
     return results;
   };
 
@@ -56,7 +47,11 @@ export default function LoginForm() {
         break;
       case 'password':
         if (!REGEX.password.test(e.target.value)) {
-          setError({ ...error, password: 'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ' });
+          setError({
+            ...error,
+            password:
+              'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',
+          });
         } else {
           setError({ ...error, password: '' });
         }
@@ -87,6 +82,11 @@ export default function LoginForm() {
 
   const handleApi = (data) => {
     if (data.type === 'success') {
+      const user = {
+        user_id: data.data.data._id,
+        token: data.data.token
+      };
+      localStorage.setItem('user', JSON.stringify(user));
       Swal.fire({
         icon: 'success',
         title: 'Login successfuly!',
