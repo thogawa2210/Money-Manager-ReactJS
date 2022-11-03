@@ -8,7 +8,6 @@ import { bgBlur } from '../../../utils/cssStyles';
 import Iconify from '../../../components/iconify';
 //
 import Searchbar from './Searchbar';
-import AccountPopover from './AccountPopover';
 import NotificationsPopover from './NotificationsPopover';
 import WalletUser from "./WalletUser";
 
@@ -70,7 +69,6 @@ export default function Header({ onOpenNav }) {
         >
           <WalletUser />
           <NotificationsPopover />
-          <AccountPopover />
         </Stack>
       </StyledToolbar>
     </StyledRoot>
