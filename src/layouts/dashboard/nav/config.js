@@ -22,8 +22,8 @@ const navConfig = [
     icon: icon('transaction'),
   },
   {
-    title: 'user',
-    path: '/dashboard/user',
+    title: 'profile',
+    path: '/dashboard/profile',
     icon: icon('ic_user'),
   },
   {
