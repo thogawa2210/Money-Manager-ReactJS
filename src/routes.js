@@ -9,11 +9,11 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
-import SignupPage from "./pages/SignupPage";
-import VerifyRegister from "./sections/auth/login/VerifyRegister";
+import SignupPage from './pages/SignupPage';
+import VerifyRegister from './sections/auth/login/VerifyRegister';
 import WalletPage from './pages/WalletPage';
 import TransactionPage from './pages/TransactionPage';
-
+import LogoutPage from './pages/LogoutPage';
 
 // ----------------------------------------------------------------------
 
@@ -28,14 +28,19 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-        { path: 'wallet', element: <WalletPage />},
-        { path: 'transaction', element: <TransactionPage />}
+        { path: 'wallet', element: <WalletPage /> },
+        {
+          path: 'logout',
+          element: <LogoutPage />,
+        },
+        { path: 'transaction', element: <TransactionPage /> },
       ],
     },
     {
       path: 'login',
       element: <LoginPage />,
     },
+
     {
       path: '/signup',
       element: <SignupPage />,
