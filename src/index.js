@@ -15,15 +15,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <HelmetProvider>
-        <Provider store={store}>
-
-    <GoogleOAuthProvider clientId="617276136155-atcka5amuvc2fuqnac8s6murahntic26.apps.googleusercontent.com">
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+    <Provider store={store}>
+      <GoogleOAuthProvider clientId="617276136155-atcka5amuvc2fuqnac8s6murahntic26.apps.googleusercontent.com">
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </GoogleOAuthProvider>
-      </Provider>
-
+    </Provider>
   </HelmetProvider>
 );
 
