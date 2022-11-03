@@ -1,6 +1,8 @@
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { store } from './app/store';
+import { Provider } from 'react-redux';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 //
 import App from './App';
@@ -13,11 +15,15 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <HelmetProvider>
+        <Provider store={store}>
+
     <GoogleOAuthProvider clientId="617276136155-atcka5amuvc2fuqnac8s6murahntic26.apps.googleusercontent.com">
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </GoogleOAuthProvider>
+      </GoogleOAuthProvider>
+      </Provider>
+
   </HelmetProvider>
 );
 
