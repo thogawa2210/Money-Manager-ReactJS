@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {Box, MenuItem, Stack, IconButton, Popover, Typography, Divider} from '@mui/material';
 import wallets from '../../../_mock/wallet'
 import axios from "axios";
-import {useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 
 
 
@@ -25,8 +25,11 @@ export default function WalletUser() {
     const [state, setState] = useState({
         wallets:[]
     })
+    const [total, setTotal] = useState(0)
 
     const {flag} = useSelector(state => state.flag)
+
+
 
     const totalMoney = state.wallets.reduce((a,v) =>  a = a + v.amount , 0 )
 
@@ -43,18 +46,19 @@ export default function WalletUser() {
     const getAllWallet = (userId) => {
         return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
     }
-    const tatalMoney = () => {
-        return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
+    const toTalMoney = (userId) => {
+        return axios.get(`http://localhost:3001/wallet/total/${userId.user_id}`)
     }
 
     useEffect(() =>{
-        getAllWallet(userId).then(res =>{
-            setState({wallets:res.data.wallet})
-        }).catch(error => console.log(error.message))
+        getAllWallet(userId).then(res => setState({wallets:res.data.wallet})
+        ).catch(error => console.log(error.message))
+        toTalMoney(userId).then(res => setTotal(res.data.total))
+            .catch(error => console.log(error.message))
     },[flag])
 
 
-    console.log(state)
+
 
 
 
@@ -95,7 +99,7 @@ export default function WalletUser() {
                         fontSize: 14,
                         paddingLeft: 12,
                         fontWeight: 700
-                    }}>{numberWithCommas(totalMoney)}</Typography>
+                    }}>{numberWithCommas(total)}</Typography>
                 </Box>
             </Box>
 
