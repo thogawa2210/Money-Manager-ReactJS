@@ -18,11 +18,9 @@ import {
   Paper,
   TextField,
 } from '@mui/material';
-import wallet from '../_mock/wallet';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
-import { Await } from 'react-router-dom';
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
