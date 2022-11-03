@@ -43,11 +43,11 @@ export default function WalletUser() {
 
     const userId = JSON.parse(localStorage.getItem('user'))
 
-    const getAllWallet = (userId) => {
-        return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
+    const getAllWallet = async (userId) => {
+        return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
     }
-    const toTalMoney = (userId) => {
-        return axios.get(`http://localhost:3001/wallet/total/${userId.user_id}`)
+    const toTalMoney = async (userId) => {
+        return await axios.get(`http://localhost:3001/wallet/total/${userId.user_id}`)
     }
 
     useEffect(() =>{
@@ -82,7 +82,7 @@ export default function WalletUser() {
                         height: 40,
                     }}
                 >
-                    <img src={wallets[0].icon} alt={wallets[0].name}/>
+                    <img src='/assets/icons/wallets/total.svg' alt='No image'/>
                 </IconButton>
                 <Box sx={{
                     height: 40,
