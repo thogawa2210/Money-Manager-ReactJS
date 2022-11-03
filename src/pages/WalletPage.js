@@ -46,9 +46,9 @@ export default function WalletPage() {
     setOpen(false);
   };
 
-  const getAllWallet = () => {
+  const getAllWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'))
-    return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
+    return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
   }
 
   useEffect(() => {
@@ -73,9 +73,9 @@ export default function WalletPage() {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3001/wallet/delete/${id}`)
+        await axios.delete(`http://localhost:3001/wallet/delete/${id}`)
             .then(res=> {
               dispatch(changeFlag(1))
               setDetail(<h5>Choose wallet to see details</h5>)
@@ -90,8 +90,8 @@ export default function WalletPage() {
     })
   }
 
-  const handleSaveEdit = (id) => {
-    axios.put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
+  const handleSaveEdit = async (id) => {
+    await axios.put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
         .then(res=>{
           Swal.fire({
                 icon: 'success',
