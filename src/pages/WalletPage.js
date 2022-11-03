@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import {useEffect, useState} from 'react';
-import {changeFlag} from "../features/flagSlice";
+import { useEffect, useState } from 'react';
+import { changeFlag } from '../features/flagSlice';
 import {
   Avatar,
   Box,
@@ -19,9 +19,10 @@ import {
   TextField,
 } from '@mui/material';
 import wallet from '../_mock/wallet';
-import axios from "axios";
-import {useDispatch, useSelector} from "react-redux";
-import Swal from "sweetalert2";
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import { Await } from 'react-router-dom';
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -33,7 +34,7 @@ export default function WalletPage() {
   const [walletEdit, setWalletEdit] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const flag = useSelector(state => state.flag);
+  const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
 
   const handleClickOpen = (id) => {
@@ -46,20 +47,21 @@ export default function WalletPage() {
     setOpen(false);
   };
 
-  const getAllWallet = () => {
-    const userId = JSON.parse(localStorage.getItem('user'))
-    return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
-  }
+  const getAllWallet = async () => {
+    const userId = JSON.parse(localStorage.getItem('user'));
+    return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`);
+  };
 
   useEffect(() => {
-    getAllWallet().then(res => setWallets(res.data.wallet)
-    ).catch(error => console.log(error.message))
-  },[flag])
+    getAllWallet()
+      .then((res) => setWallets(res.data.wallet))
+      .catch((error) => console.log(error.message));
+  }, [flag]);
 
   const onChangeEdit = (e) => {
-    if(e.target.name === 'amount') {
+    if (e.target.name === 'amount') {
       setWalletEdit({ ...walletEdit, [e.target.name]: parseInt(e.target.value) });
-    }else {
+    } else {
       setWalletEdit({ ...walletEdit, [e.target.name]: e.target.value });
     }
   };
@@ -72,35 +74,33 @@ export default function WalletPage() {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3001/wallet/delete/${id}`)
-            .then(res=> {
-              dispatch(changeFlag(1))
-              setDetail(<h5>Choose wallet to see details</h5>)
-            })
-            .catch(err => console.log(err))
-        Swal.fire(
-            'Deleted!',
-            'Wallet has been deleted.',
-            'success'
-        )
+        axios
+          .delete(`http://localhost:3001/wallet/delete/${id}`)
+          .then((res) => {
+            dispatch(changeFlag(1));
+            setDetail(<h5>Choose wallet to see details</h5>);
+          })
+          .catch((err) => console.log(err));
+        Swal.fire('Deleted!', 'Wallet has been deleted.', 'success');
       }
-    })
-  }
+    });
+  };
 
   const handleSaveEdit = (id) => {
-    axios.put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
-        .then(res=>{
-          Swal.fire({
-                icon: 'success',
-                title: 'Update Successfully!'
-          })
-          dispatch(changeFlag(1))
-          setDetail(<h5>Choose wallet to see details</h5>)
-        })
-        .catch(err => console.log(err))
+    axios
+      .put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
+      .then((res) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Update Successfully!',
+        });
+        dispatch(changeFlag(1));
+        setDetail(<h5>Choose wallet to see details</h5>);
+      })
+      .catch((err) => console.log(err));
     setOpen(false);
   };
 
