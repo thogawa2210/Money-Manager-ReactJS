@@ -18,11 +18,9 @@ import {
   Paper,
   TextField,
 } from '@mui/material';
-import wallet from '../_mock/wallet';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
-import { Await } from 'react-router-dom';
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -75,9 +73,9 @@ export default function WalletPage() {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        axios
+        await axios
           .delete(`http://localhost:3001/wallet/delete/${id}`)
           .then((res) => {
             dispatch(changeFlag(1));
@@ -89,8 +87,8 @@ export default function WalletPage() {
     });
   };
 
-  const handleSaveEdit = (id) => {
-    axios
+  const handleSaveEdit = async (id) => {
+    await axios
       .put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
       .then((res) => {
         Swal.fire({
@@ -134,7 +132,7 @@ export default function WalletPage() {
       <Paper elevation={3} sx={{ padding: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={5} alignItems="center">
-            <div>Total: 10.000.000</div>
+            <div></div>
           </Grid>
           <Grid item xs={4}>
             <h3>Detail</h3>
