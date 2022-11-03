@@ -25,8 +25,6 @@ const StyledRoot = styled('div')(({ theme }) => ({
   },
 }));
 
-
-
 const StyledSection = styled('div')(({ theme }) => ({
   width: '100%',
   maxWidth: 480,
@@ -54,12 +52,14 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let user = localStorage.getItem('user')
+    let user = localStorage.getItem('user');
     if (user) {
-      navigate('/')
+      navigate('/');
+    } else {
+      navigate('/login');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  } ,[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const loginGGApi = async (data) => {
     const result = await axios.post('http://localhost:3001/auth/login-gg', data);

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import {useEffect, useState} from 'react';
-import {changeFlag} from "../features/flagSlice";
+import { useEffect, useState } from 'react';
+import { changeFlag } from '../features/flagSlice';
 import {
   Avatar,
   Box,
@@ -19,9 +19,10 @@ import {
   TextField,
 } from '@mui/material';
 import wallet from '../_mock/wallet';
-import axios from "axios";
-import {useDispatch, useSelector} from "react-redux";
-import Swal from "sweetalert2";
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import { Await } from 'react-router-dom';
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -33,7 +34,7 @@ export default function WalletPage() {
   const [walletEdit, setWalletEdit] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const flag = useSelector(state => state.flag);
+  const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
 
   const handleClickOpen = (id) => {
@@ -47,19 +48,20 @@ export default function WalletPage() {
   };
 
   const getAllWallet = async () => {
-    const userId = JSON.parse(localStorage.getItem('user'))
-    return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
-  }
+    const userId = JSON.parse(localStorage.getItem('user'));
+    return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`);
+  };
 
   useEffect(() => {
-    getAllWallet().then(res => setWallets(res.data.wallet)
-    ).catch(error => console.log(error.message))
-  },[flag])
+    getAllWallet()
+      .then((res) => setWallets(res.data.wallet))
+      .catch((error) => console.log(error.message));
+  }, [flag]);
 
   const onChangeEdit = (e) => {
-    if(e.target.name === 'amount') {
+    if (e.target.name === 'amount') {
       setWalletEdit({ ...walletEdit, [e.target.name]: parseInt(e.target.value) });
-    }else {
+    } else {
       setWalletEdit({ ...walletEdit, [e.target.name]: e.target.value });
     }
   };
@@ -87,8 +89,9 @@ export default function WalletPage() {
             'success'
         )
       }
-    })
-  }
+    });
+  };
+
 
   const handleSaveEdit = async (id) => {
     await axios.put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
