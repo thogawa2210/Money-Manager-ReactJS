@@ -3,17 +3,11 @@ import {createSlice} from '@reduxjs/toolkit'
 const walletSlice = createSlice({
     name: 'wallet',
     initialState: {
-        wallet: {
-            name: '',
-            email: '',
-            amount: 0,
-            icon: '',
-            user_id: ''
-        }
+        wallet: []
     },
     reducers: {
         addWallet: (state, action) => {
-            state.wallet = action.payload;
+            state.wallet = action.payload.wallet;
         }
     }
 })

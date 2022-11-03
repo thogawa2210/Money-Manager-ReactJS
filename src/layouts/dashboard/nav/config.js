@@ -39,7 +39,12 @@ const navConfig = [
   {
     title: 'Not found',
     path: '/404',
-    icon: icon('ic_disabled'),
+    icon: icon('ic_disabled')
+  },
+  {
+    title: 'logout',
+    path: '/dashboard/logout',
+    icon: icon('logout'),
   },
 ];
 
