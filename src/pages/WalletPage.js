@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
+import {changeFlag} from "../features/flagSlice";
 import {
   Avatar,
   Box,
@@ -18,6 +19,9 @@ import {
   TextField,
 } from '@mui/material';
 import wallet from '../_mock/wallet';
+import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
+import Swal from "sweetalert2";
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -25,9 +29,12 @@ function numberWithCommas(x) {
 
 export default function WalletPage() {
   const [detail, setDetail] = useState(<h5>Choose wallet to see details</h5>);
-  const [wallets, setWallets] = useState(wallet);
+  const [wallets, setWallets] = useState([]);
   const [walletEdit, setWalletEdit] = useState([]);
   const [open, setOpen] = useState(false);
+
+  const flag = useSelector(state => state.flag);
+  const dispatch = useDispatch();
 
   const handleClickOpen = (id) => {
     const walletEdit = wallets.filter((wallet) => wallet._id === id);
@@ -39,6 +46,16 @@ export default function WalletPage() {
     setOpen(false);
   };
 
+  const getAllWallet = () => {
+    const userId = JSON.parse(localStorage.getItem('user'))
+    return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
+  }
+
+  useEffect(() => {
+    getAllWallet().then(res => setWallets(res.data.wallet)
+    ).catch(error => console.log(error.message))
+  },[flag])
+
   const onChangeEdit = (e) => {
     if(e.target.name === 'amount') {
       setWalletEdit({ ...walletEdit, [e.target.name]: parseInt(e.target.value) });
@@ -48,15 +65,17 @@ export default function WalletPage() {
   };
 
   const handleSaveEdit = (id) => {
-    const index = wallets.findIndex((wallet) => wallet._id === id);
-    wallets[index] = walletEdit;
-    setWallets(wallets);
-    console.log(wallets)
+    axios.put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
+        .then(res=>{
+          Swal.fire({
+                icon: 'success',
+                title: 'Update Successfully!'
+          })
+          dispatch(changeFlag(1))
+          setDetail(<h5>Choose wallet to see details</h5>)
+        })
+        .catch(err => console.log(err))
     setOpen(false);
-
-    //Call API here
-
-
   };
 
   const handleClick = (id) => {
