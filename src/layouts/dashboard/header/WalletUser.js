@@ -3,6 +3,8 @@ import {useEffect, useState} from 'react';
 import {Box, MenuItem, Stack, IconButton, Popover, Typography, Divider} from '@mui/material';
 import wallets from '../../../_mock/wallet'
 import axios from "axios";
+import {useSelector} from "react-redux";
+
 
 
 
@@ -24,6 +26,8 @@ export default function WalletUser() {
         wallets:[]
     })
 
+    const {flag} = useSelector(state => state.flag)
+
     const totalMoney = state.wallets.reduce((a,v) =>  a = a + v.amount , 0 )
 
     const handleOpen = (event) => {
@@ -39,12 +43,15 @@ export default function WalletUser() {
     const getAllWallet = (userId) => {
         return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
     }
+    const tatalMoney = () => {
+        return axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`)
+    }
 
     useEffect(() =>{
         getAllWallet(userId).then(res =>{
             setState({wallets:res.data.wallet})
         }).catch(error => console.log(error.message))
-    },[])
+    },[flag])
 
 
     console.log(state)
