@@ -83,15 +83,9 @@ export default function TransactionPage() {
     };
 
     useEffect(() => {
-        const wallet = listWallet.filter(wallet => wallet._id === transaction.wallet_id);
-        if(wallet.length>0){
-            setTransaction({...transaction, wallet_name: wallet[0].name, wallet_icon : wallet[0].icon})
-        }
-        const category = listCategory.filter(category => category._id === transaction.category_id);
-        if(category.length>0){
-            setTransaction({...transaction, category_name: category[0].name, category_icon : category[0].icon })
-        }
-    },[transaction.wallet_id, transaction.category_id])
+        const userId = JSON.parse(localStorage.getItem('user')).user_id;
+        setTransaction({...transaction, user_id: userId});
+    },[])
 
     const handleSubmit = async () => {
         if(transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === ''){
