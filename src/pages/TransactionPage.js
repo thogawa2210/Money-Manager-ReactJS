@@ -40,17 +40,21 @@ export default function TransactionPage() {
         date: dayjs(value).format('DD/MM/YYYY')
     })
 
-    useEffect(()=>{
+    const getData = async () => {
         const userId = JSON.parse(localStorage.getItem('user')).user_id;
-        axios.get(`http://localhost:3001/transaction/get-all-transaction/${userId}`)
+        await axios.get(`http://localhost:3001/transaction/get-all-transaction/${userId}`)
             .then(res=> setListTransaction(res.data.data.data))
             .catch(err=> console.log(err));
-        axios.get(`http://localhost:3001/category/get-category/${userId}`)
+        await axios.get(`http://localhost:3001/category/get-category/${userId}`)
             .then(res=> setListCategory(res.data.categoryUser))
             .catch(err=> console.log(err));
-        axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
+        await axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
             .then(res=> setListWallet(res.data.wallet))
             .catch(err=> console.log(err))
+    }
+
+    useEffect(()=>{
+        getData()
     },[])
 
     const handleChange = (e) => {
