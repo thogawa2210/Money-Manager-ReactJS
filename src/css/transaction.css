@@ -8,3 +8,9 @@
     display: flex;
     justify-content: center;
 }
+
+#mui-component-select-category_id{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

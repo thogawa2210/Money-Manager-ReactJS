@@ -9,7 +9,7 @@ import {
     DialogContentText,
     DialogTitle,
     FormControl,
-    Grid, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select,
+    Grid, InputAdornment, InputLabel, ListItemText, MenuItem, Select,
     Slide, Stack, TextField, Typography
 } from "@mui/material";
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
@@ -20,7 +20,7 @@ import axios from "axios";
 import Iconify from "../components/iconify";
 import Swal from "sweetalert2";
 import {changeFlag} from "../features/flagSlice";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 //css
 import '../css/transaction.css'
 
@@ -42,7 +42,7 @@ export default function TransactionPage() {
         date: dayjs(value).format('DD/MM/YYYY')
     });
     const [defaultWallet, setDefaultWallet] = useState("")
-    const flag = useSelector((state) => state.flag);
+    //redux
     const dispatch = useDispatch();
 
     const getData = async () => {
@@ -60,11 +60,12 @@ export default function TransactionPage() {
 
     useEffect(() => {
         getData()
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (listWallet.length > 0) {
             setDefaultWallet(listWallet[0]._id)
+            setTransaction({...transaction, wallet_id: listWallet[0]._id})
         }
     }, [listWallet])
 
@@ -82,7 +83,7 @@ export default function TransactionPage() {
             setValue(e);
             setTransaction({...transaction, date: dayjs(e).format('DD/MM/YYYY')})
         }
-    }
+    };
 
     const handleClickOpen = () => {
         setOpenAddForm(true);
@@ -95,9 +96,10 @@ export default function TransactionPage() {
     useEffect(() => {
         const userId = JSON.parse(localStorage.getItem('user')).user_id;
         setTransaction({...transaction, user_id: userId});
-    }, [])
+    }, []);
 
     const handleSubmit = async () => {
+        console.log(transaction)
         if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
             setOpenAddForm(false);
             Swal.fire({
@@ -109,6 +111,7 @@ export default function TransactionPage() {
             await axios.post('http://localhost:3001/transaction/add-transaction', transaction)
                 .then(res => {
                     if (res.status === 200) {
+                        dispatch(changeFlag(1))
                         setTransaction({
                             wallet_id: '',
                             category_id: '',
@@ -221,14 +224,17 @@ export default function TransactionPage() {
                         </Grid>
                         <Grid item xs={8}>
                             <TextField name="note" onChange={handleChange} fullWidth={true} label="Note"
-                                       variant="outlined" type="text"/>
+                                       variant="outlined" type="text" />
                         </Grid>
                     </Grid>
 
                 </DialogContent>
                 <DialogActions>
                     <Button variant="outlined" onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" color="success" onClick={handleSubmit}>Save</Button>
+                    <Button sx={{color:"white"}} variant="contained" color="success" onClick={handleSubmit}
+                    >
+                        Save
+                    </Button>
                 </DialogActions>
             </Dialog>
 
