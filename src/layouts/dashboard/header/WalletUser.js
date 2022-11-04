@@ -31,8 +31,6 @@ export default function WalletUser() {
 
 
 
-    const totalMoney = state.wallets.reduce((a,v) =>  a = a + v.amount , 0 )
-
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
     };
