@@ -41,6 +41,7 @@ export default function TransactionPage() {
         note: '',
         date: dayjs(value).format('DD/MM/YYYY')
     });
+    const [defaultWallet, setDefaultWallet] = useState("")
     const flag = useSelector((state) => state.flag);
     const dispatch = useDispatch();
 
@@ -60,6 +61,12 @@ export default function TransactionPage() {
     useEffect(()=>{
         getData()
     },[])
+
+    useEffect(() => {
+        if(listWallet.length>0){
+            setDefaultWallet(listWallet[0]._id)
+        }
+    },[listWallet])
 
     const handleChange = (e) => {
         if(e.target){
@@ -162,6 +169,7 @@ export default function TransactionPage() {
                                     defaultValue="Cash"
                                     label = "Wallet"
                                     name = "wallet_id"
+                                    value={defaultWallet}
                                 >
                                     {listWallet.map((wallet) => (
                                         <MenuItem key={wallet._id} value={wallet._id} >
