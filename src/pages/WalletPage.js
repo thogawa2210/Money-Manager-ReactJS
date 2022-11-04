@@ -15,12 +15,13 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Paper,
-  TextField,
+  Paper, Stack,
+  TextField, Typography,
 } from '@mui/material';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
+import Iconify from "../components/iconify";
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -139,21 +140,22 @@ export default function WalletPage() {
         <title> Wallet | Money Manager Master </title>
       </Helmet>
 
-      <h1>Wallet</h1>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Typography variant="h3" gutterBottom>
+          Wallet
+        </Typography>
+        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} >
+          New Wallet
+        </Button>
+      </Stack>
+
       <Paper elevation={3} sx={{ padding: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={5} alignItems="center">
             <h3>Total: {numberWithCommas(totalMoney)} VNĐ</h3>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={7}>
             <h3>Detail</h3>
-          </Grid>
-          <Grid item xs={3}>
-            <Box display="flex" justifyContent="flex-end">
-              <Button variant="contained" color="success">
-                Add new Wallet
-              </Button>
-            </Box>
           </Grid>
           <Grid item xs={5}>
             <List>
