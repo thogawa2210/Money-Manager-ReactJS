@@ -71,6 +71,7 @@ export default function Nav({ openNav, onCloseNav }) {
         .then((res) => {
           switch (res.data.type) {
             case 'No':
+              localStorage.clear('user');
               Swal.fire({
                 icon: 'info',
                 title: 'You are not loggin!',
