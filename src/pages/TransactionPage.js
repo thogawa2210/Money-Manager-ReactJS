@@ -21,6 +21,8 @@ import axios from "axios";
 import Iconify from "../components/iconify";
 import wallet from "../_mock/wallet";
 import Swal from "sweetalert2";
+import {changeFlag} from "../features/flagSlice";
+import {useDispatch, useSelector} from "react-redux";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -29,16 +31,18 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function TransactionPage() {
     const [value, setValue] = useState(dayjs());
     const [openAddForm, setOpenAddForm] = useState(false);
-    const [listTransaction, setListTransaction] = useState([])
-    const [listWallet, setListWallet] = useState([])
-    const [listCategory, setListCategory] = useState([])
+    const [listTransaction, setListTransaction] = useState([]);
+    const [listWallet, setListWallet] = useState([]);
+    const [listCategory, setListCategory] = useState([]);
     const [transaction, setTransaction] = useState({
         wallet_id: '',
         category_id: '',
         amount: 0,
         note: '',
         date: dayjs(value).format('DD/MM/YYYY')
-    })
+    });
+    const flag = useSelector((state) => state.flag);
+    const dispatch = useDispatch();
 
     const getData = async () => {
         const userId = JSON.parse(localStorage.getItem('user')).user_id;
@@ -122,6 +126,7 @@ export default function TransactionPage() {
                 })
                 .catch(err => console.log(err))
             setOpenAddForm(false);
+            dispatch(changeFlag(1))
         }
     }
 
