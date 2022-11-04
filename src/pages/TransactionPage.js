@@ -21,6 +21,8 @@ import axios from "axios";
 import Iconify from "../components/iconify";
 import wallet from "../_mock/wallet";
 import Swal from "sweetalert2";
+import {changeFlag} from "../features/flagSlice";
+import {useDispatch, useSelector} from "react-redux";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -29,28 +31,34 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function TransactionPage() {
     const [value, setValue] = useState(dayjs());
     const [openAddForm, setOpenAddForm] = useState(false);
-    const [listTransaction, setListTransaction] = useState([])
-    const [listWallet, setListWallet] = useState([])
-    const [listCategory, setListCategory] = useState([])
+    const [listTransaction, setListTransaction] = useState([]);
+    const [listWallet, setListWallet] = useState([]);
+    const [listCategory, setListCategory] = useState([]);
     const [transaction, setTransaction] = useState({
         wallet_id: '',
         category_id: '',
         amount: 0,
         note: '',
         date: dayjs(value).format('DD/MM/YYYY')
-    })
+    });
+    const flag = useSelector((state) => state.flag);
+    const dispatch = useDispatch();
 
-    useEffect(()=>{
+    const getData = async () => {
         const userId = JSON.parse(localStorage.getItem('user')).user_id;
-        axios.get(`http://localhost:3001/transaction/get-all-transaction/${userId}`)
+        await axios.get(`http://localhost:3001/transaction/get-all-transaction/${userId}`)
             .then(res=> setListTransaction(res.data.data.data))
             .catch(err=> console.log(err));
-        axios.get(`http://localhost:3001/category/get-category/${userId}`)
+        await axios.get(`http://localhost:3001/category/get-category/${userId}`)
             .then(res=> setListCategory(res.data.categoryUser))
             .catch(err=> console.log(err));
-        axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
+        await axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
             .then(res=> setListWallet(res.data.wallet))
             .catch(err=> console.log(err))
+    }
+
+    useEffect(()=>{
+        getData()
     },[])
 
     const handleChange = (e) => {
@@ -75,15 +83,9 @@ export default function TransactionPage() {
     };
 
     useEffect(() => {
-        const wallet = listWallet.filter(wallet => wallet._id === transaction.wallet_id);
-        if(wallet.length>0){
-            setTransaction({...transaction, wallet_name: wallet[0].name, wallet_icon : wallet[0].icon})
-        }
-        const category = listCategory.filter(category => category._id === transaction.category_id);
-        if(category.length>0){
-            setTransaction({...transaction, category_name: category[0].name, category_icon : category[0].icon })
-        }
-    },[transaction.wallet_id, transaction.category_id])
+        const userId = JSON.parse(localStorage.getItem('user')).user_id;
+        setTransaction({...transaction, user_id: userId});
+    },[])
 
     const handleSubmit = async () => {
         if(transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === ''){
@@ -118,6 +120,7 @@ export default function TransactionPage() {
                 })
                 .catch(err => console.log(err))
             setOpenAddForm(false);
+            dispatch(changeFlag(1))
         }
     }
 
