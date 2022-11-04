@@ -208,6 +208,7 @@ export default function TransactionPage() {
                                 inputFormat="DD/MM/YYYY"
                                 value={value}
                                 name="date"
+                                disableFuture={true}
                                 onChange={handleChange}
                                 renderInput={(params) => <TextField {...params} />}
                             />

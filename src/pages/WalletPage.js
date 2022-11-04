@@ -15,7 +15,7 @@ import {
     ListItem,
     ListItemAvatar,
     ListItemText,
-    Paper, Stack,
+    Paper, Slide, Stack,
     TextField, Typography,
 } from '@mui/material';
 import axios from 'axios';
@@ -23,11 +23,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import Swal from 'sweetalert2';
 import Iconify from "../components/iconify";
 
-
-
-const Transition = React.forwardRef(function Transaction(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
