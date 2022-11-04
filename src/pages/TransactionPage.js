@@ -19,6 +19,10 @@ import {forwardRef, useEffect, useState} from "react";
 import category from "../_mock/category";
 import axios from "axios";
 import Iconify from "../components/iconify";
+import wallet from "../_mock/wallet";
+import Swal from "sweetalert2";
+import {changeFlag} from "../features/flagSlice";
+import {useDispatch, useSelector} from "react-redux";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -27,31 +31,34 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function TransactionPage() {
     const [value, setValue] = useState(dayjs());
     const [openAddForm, setOpenAddForm] = useState(false);
-    const [listTransaction, setListTransaction] = useState([])
-    const [listWallet, setListWallet] = useState([])
-    const [listCategory, setListCategory] = useState([])
+    const [listTransaction, setListTransaction] = useState([]);
+    const [listWallet, setListWallet] = useState([]);
+    const [listCategory, setListCategory] = useState([]);
     const [transaction, setTransaction] = useState({
-        wallet: '',
-        category: '',
+        wallet_id: '',
+        category_id: '',
         amount: 0,
         note: '',
         date: dayjs(value).format('DD/MM/YYYY')
-    })
+    });
+    const flag = useSelector((state) => state.flag);
+    const dispatch = useDispatch();
 
-    useEffect(()=>{
+    const getData = async () => {
         const userId = JSON.parse(localStorage.getItem('user')).user_id;
-        axios.get(`http://localhost:3001/transaction/get-all-transaction/${userId}`)
+        await axios.get(`http://localhost:3001/transaction/get-all-transaction/${userId}`)
             .then(res=> setListTransaction(res.data.data.data))
             .catch(err=> console.log(err));
-        axios.get(`http://localhost:3001/category/get-category/${userId}`)
+        await axios.get(`http://localhost:3001/category/get-category/${userId}`)
             .then(res=> setListCategory(res.data.categoryUser))
             .catch(err=> console.log(err));
-        axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
+        await axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
             .then(res=> setListWallet(res.data.wallet))
             .catch(err=> console.log(err))
-        axios.get(`http://localhost:3001/transaction//get-all-transaction/${userId}`)
-            .then(res => console.log(res))
-            .catch(err=> console.log(err))
+    }
+
+    useEffect(()=>{
+        getData()
     },[])
 
     const handleChange = (e) => {
@@ -75,9 +82,46 @@ export default function TransactionPage() {
         setOpenAddForm(false);
     };
 
-    const handleSubmit = () => {
-        console.log(transaction)
-        setOpenAddForm(false);
+    useEffect(() => {
+        const userId = JSON.parse(localStorage.getItem('user')).user_id;
+        setTransaction({...transaction, user_id: userId});
+    },[])
+
+    const handleSubmit = async () => {
+        if(transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === ''){
+            setOpenAddForm(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill all the required fields'
+            });
+        }else{
+            await axios.post('http://localhost:3001/transaction/add-transaction', transaction)
+                .then(res=> {
+                    if(res.status === 200){
+                        setTransaction({
+                            wallet_id: '',
+                            category_id: '',
+                            amount: 0,
+                            note: '',
+                            date: dayjs(value).format('DD/MM/YYYY')
+                        })
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Add transaction successfully!',
+                        })
+                    }else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!'
+                        })
+                    }
+                })
+                .catch(err => console.log(err))
+            setOpenAddForm(false);
+            dispatch(changeFlag(1))
+        }
     }
 
     return(
@@ -117,7 +161,7 @@ export default function TransactionPage() {
                                     onChange={handleChange}
                                     defaultValue="Cash"
                                     label = "Wallet"
-                                    name = "wallet"
+                                    name = "wallet_id"
                                 >
                                     {listWallet.map((wallet) => (
                                         <MenuItem key={wallet._id} value={wallet._id} >
@@ -134,7 +178,7 @@ export default function TransactionPage() {
                                 <Select
                                     onChange={handleChange}
                                     label="Categories"
-                                    name = "category"
+                                    name = "category_id"
                                 >
                                     {listCategory.map((category) => (
                                         <MenuItem key={category.name} value={category._id} >

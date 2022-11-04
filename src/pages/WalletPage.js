@@ -18,11 +18,9 @@ import {
   Paper,
   TextField,
 } from '@mui/material';
-import wallet from '../_mock/wallet';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
-import { Await } from 'react-router-dom';
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -33,6 +31,7 @@ export default function WalletPage() {
   const [wallets, setWallets] = useState([]);
   const [walletEdit, setWalletEdit] = useState([]);
   const [open, setOpen] = useState(false);
+  const [totalMoney, setTotalMoney] = useState(0);
 
   const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
@@ -52,10 +51,17 @@ export default function WalletPage() {
     return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`);
   };
 
+  const toTalMoney = async () => {
+    const userId = JSON.parse(localStorage.getItem('user'));
+    return await axios.get(`http://localhost:3001/wallet/total/${userId.user_id}`)
+  };
+
   useEffect(() => {
     getAllWallet()
       .then((res) => setWallets(res.data.wallet))
       .catch((error) => console.log(error.message));
+    toTalMoney().then(res => setTotalMoney(res.data.total))
+        .catch(error => console.log(error.message))
   }, [flag]);
 
   const onChangeEdit = (e) => {
@@ -137,7 +143,7 @@ export default function WalletPage() {
       <Paper elevation={3} sx={{ padding: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={5} alignItems="center">
-            <div>Total: 10.000.000</div>
+            <h3>Total: {numberWithCommas(totalMoney)} VNĐ</h3>
           </Grid>
           <Grid item xs={4}>
             <h3>Detail</h3>
