@@ -31,6 +31,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function TransactionPage() {
     const [value, setValue] = useState(dayjs());
     const [openAddForm, setOpenAddForm] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [listTransaction, setListTransaction] = useState([]);
     const [listWallet, setListWallet] = useState([]);
     const [listCategory, setListCategory] = useState([]);
@@ -67,6 +68,7 @@ export default function TransactionPage() {
             setDefaultWallet(listWallet[0]._id)
             setTransaction({...transaction, wallet_id: listWallet[0]._id})
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [listWallet])
 
     const handleChange = (e) => {
@@ -96,6 +98,7 @@ export default function TransactionPage() {
     useEffect(() => {
         const userId = JSON.parse(localStorage.getItem('user')).user_id;
         setTransaction({...transaction, user_id: userId});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleSubmit = async () => {

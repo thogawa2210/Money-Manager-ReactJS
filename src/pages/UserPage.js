@@ -18,6 +18,8 @@ import {
   Typography,
   Grid,
   Divider,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -28,6 +30,7 @@ import { useDispatch } from 'react-redux';
 import { changeFlag } from 'src/features/flagSlice';
 
 // components
+import Iconify from '../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +55,7 @@ export default function UserPage() {
     google_id: '',
     img: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [profile, setProfile] = useState({
     wallets: 0,
     transactions: 0,
@@ -225,13 +229,13 @@ export default function UserPage() {
                       {form.username}
                     </Typography>
                     <Typography color="textSecondary" variant="body2">
-                      {`${form.email}`}
+                      {form.email}
                     </Typography>
                     <Typography color="textSecondary" variant="body2">
                       {form.google_id ? (
-                        <p style={{ color: 'red', fontSize: '12px', margin: 0 }}> Google Account </p>
+                        <p style={{ color: 'red', fontSize: '12px', margin: 0 }}> Google Account <Iconify icon='/assets/icons/google-svgrepo-com.svg' /></p>
                       ) : (
-                        <p style={{ color: 'gray', fontSize: '12px', margin: 0 }}> Basic Account </p>
+                        <p style={{ color: 'green', fontSize: '12px', margin: 0 }}> Basic Account <Iconify icon='/assets/icons/account-svgrepo-com.svg' /></p>
                       )}
                     </Typography>
                   </Box>
@@ -243,20 +247,28 @@ export default function UserPage() {
                   </Button>
                 </CardActions>
                 <CardActions>
-                  <Button color="success" fullWidth variant="outlined">
-                    Change User Info
+                  <Button color="success" fullWidth variant="outlined" onClick={handleClickOpenName}>
+                    Change Username
                   </Button>
                 </CardActions>
-                <CardActions>
-                  <Button color="success" fullWidth variant="outlined">
-                    Change Password
-                  </Button>
-                </CardActions>
+                {form.google_id ? (
+                  <CardActions>
+                    <Button color="success" fullWidth variant="outlined" disabled>
+                      Change Password
+                    </Button>
+                  </CardActions>
+                ) : (
+                  <CardActions>
+                    <Button color="success" fullWidth variant="outlined" onClick={handleClickOpenPass}>
+                      Change Password
+                    </Button>
+                  </CardActions>
+                )}
               </Card>
             </Grid>
             <Grid item lg={8} md={6} xs={12}>
               <Card>
-                <CardHeader subheader="The information can be edited" title="Profile" />
+                <CardHeader subheader="Thank you for using our app" title="Profile" />
                 <Divider />
                 <CardContent sx={{ padding: 2, ml: 1 }}>
                   <p>Number of wallet: {profile.wallets} </p>
@@ -282,7 +294,7 @@ export default function UserPage() {
               label="New Username"
               type="text"
               fullWidth
-              variant="standard"
+              variant="outlined"
               required
               onChange={(e) => setFormName({ username: e.target.value })}
             />
@@ -315,10 +327,19 @@ export default function UserPage() {
                 margin="dense"
                 id="old_pass"
                 label="Old Password"
-                type="text"
+                type={showPassword ? 'text' : 'password'}
                 fullWidth
                 name="old_pass"
-                variant="standard"
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 helperText="A valid password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 special
               character"
               />
@@ -333,7 +354,16 @@ export default function UserPage() {
                 label="Old Password"
                 type="text"
                 fullWidth
-                variant="standard"
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             )}
             {error.new_pass ? (
@@ -347,7 +377,16 @@ export default function UserPage() {
                 label="New Password"
                 type="text"
                 fullWidth
-                variant="standard"
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 helperText="A valid password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 special
               character"
               />
@@ -361,7 +400,16 @@ export default function UserPage() {
                 label="New Password"
                 type="text"
                 fullWidth
-                variant="standard"
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             )}
           </DialogContent>
