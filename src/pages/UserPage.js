@@ -124,6 +124,9 @@ export default function UserPage() {
             timer: 1000,
             showConfirmButton: false,
           });
+        } else if (res.data.type === 'warning') {
+          setOpenPass(false);
+          Swal.fire('Warning', 'Your old password and your new password are the same', 'warning')
         } else {
           setOpenPass(false);
           Swal.fire({
@@ -233,9 +236,15 @@ export default function UserPage() {
                     </Typography>
                     <Typography color="textSecondary" variant="body2">
                       {form.google_id ? (
-                        <p style={{ color: 'red', fontSize: '12px', margin: 0 }}> Google Account <Iconify icon='/assets/icons/google-svgrepo-com.svg' /></p>
+                        <p style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                          {' '}
+                          Google Account <Iconify icon="/assets/icons/google-svgrepo-com.svg" />
+                        </p>
                       ) : (
-                        <p style={{ color: 'green', fontSize: '12px', margin: 0 }}> Basic Account <Iconify icon='/assets/icons/account-svgrepo-com.svg' /></p>
+                        <p style={{ color: 'green', fontSize: '12px', margin: 0 }}>
+                          {' '}
+                          Basic Account <Iconify icon="/assets/icons/account-svgrepo-com.svg" />
+                        </p>
                       )}
                     </Typography>
                   </Box>
