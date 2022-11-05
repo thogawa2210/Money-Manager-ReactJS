@@ -15,13 +15,14 @@ import {
   DialogContentText,
   DialogTitle,
   Box,
+  Typography,
+  Grid,
+  Divider,
 } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
-import { red } from '@mui/material/colors';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { changeFlag } from 'src/features/flagSlice';
@@ -49,6 +50,12 @@ export default function UserPage() {
     email: '',
     password: '',
     google_id: '',
+    img: '',
+  });
+  const [profile, setProfile] = useState({
+    wallets: 0,
+    transactions: 0,
+    categorys: 0,
   });
   const flag = useSelector((state) => state.flag.flag);
   const dispatch = useDispatch();
@@ -168,52 +175,100 @@ export default function UserPage() {
       .catch((err) => console.log(err));
   }, [flag]);
 
+  const profileApi = async (id) => {
+    return await axios.get(`http://localhost:3001/user/profile/${id}`);
+  };
+
+  useEffect(() => {
+    const userID = JSON.parse(localStorage.getItem('user')).user_id;
+    profileApi(userID)
+      .then((res) => setProfile(res.data.data))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <Helmet>
         <title> Profile | Money Manager Master </title>
       </Helmet>
 
-      <Container>
-        <Card sx={{ boxShadow: '1px 1px 1px 1px #CCE2FF', mt: 2, maxWidth: 500, maxHeight: 500, ml: 20 }}>
-          <CardHeader
-            avatar={<Avatar sx={{ bgcolor: red[500] }} aria-label="recipe"></Avatar>}
-            title={`${form.username}`}
-            subheader={`${form.email}`}
-          />
-          <CardMedia component="img" height="194" image="/assets/images/avatars/avatar_10.jpg" alt="user photo" />
-          <CardContent>
-            <Button fullWidth variant="contained" color="info" size="large" onClick={handleClickOpenName}>
-              Edit Username
-            </Button>
-            {!form.google_id ? (
-              <Button
-                fullWidth
-                variant="outlined"
-                color="success"
-                size="large"
-                sx={{ mt: 1 }}
-                onClick={handleClickOpenPass}
-              >
-                Change Password
-              </Button>
-            ) : (
-              <Button
-                disabled
-                fullWidth
-                variant="outlined"
-                color="success"
-                size="large"
-                sx={{ mt: 1 }}
-                onClick={handleClickOpenPass}
-              >
-                You login with GG
-              </Button>
-            )}
-          </CardContent>
-          <CardActions disableSpacing></CardActions>
-        </Card>
-      </Container>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Typography sx={{ mb: 3 }} variant="h4">
+            Account
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item lg={4} md={6} xs={12}>
+              <Card>
+                <CardContent>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <Avatar
+                      src={form.img}
+                      sx={{
+                        height: 64,
+                        mb: 2,
+                        width: 64,
+                      }}
+                    />
+                    <Typography color="textPrimary" gutterBottom variant="h5">
+                      {form.username}
+                    </Typography>
+                    <Typography color="textSecondary" variant="body2">
+                      {`${form.email}`}
+                    </Typography>
+                    <Typography color="textSecondary" variant="body2">
+                      {form.google_id ? (
+                        <p style={{ color: 'red', fontSize: '12px', margin: 0 }}> Google Account </p>
+                      ) : (
+                        <p style={{ color: 'gray', fontSize: '12px', margin: 0 }}> Basic Account </p>
+                      )}
+                    </Typography>
+                  </Box>
+                </CardContent>
+                <Divider />
+                <CardActions>
+                  <Button color="success" fullWidth variant="outlined">
+                    Upload picture
+                  </Button>
+                </CardActions>
+                <CardActions>
+                  <Button color="success" fullWidth variant="outlined">
+                    Change User Info
+                  </Button>
+                </CardActions>
+                <CardActions>
+                  <Button color="success" fullWidth variant="outlined">
+                    Change Password
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+            <Grid item lg={8} md={6} xs={12}>
+              <Card>
+                <CardHeader subheader="The information can be edited" title="Profile" />
+                <Divider />
+                <CardContent sx={{ padding: 2, ml: 1 }}>
+                  <p>Number of wallet: {profile.wallets} </p>
+                  <p>Number of transaction: {profile.transactions}</p>
+                  <p>Number of category: {profile.categorys}</p>
+                </CardContent>
+                <Divider />
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
 
       <Dialog open={openName} onClose={handleCloseName}>
         <Box component="form" onSubmit={handleChangeName}>

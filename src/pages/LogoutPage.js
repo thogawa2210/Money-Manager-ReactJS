@@ -17,7 +17,7 @@ const LogoutPage = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.clear('user');
-        Swal.fire('You are logged out!', 'Thank you for using our service!', 'success');
+        Swal.fire({title: 'You are logged out!',text: 'Thank you for using our service!', icon: 'success', showConfirmButton: false, timer: 1500});
         navigate('/login');
       } else {
         navigate('/');

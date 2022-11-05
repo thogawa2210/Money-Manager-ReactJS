@@ -1,8 +1,6 @@
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-
 
 import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -29,7 +27,6 @@ function SingupForm() {
     password: '',
     passwordConfirm: '',
   });
-
 
   const handleOnchange = (e) => {
     handleValidate(e);
@@ -95,7 +92,13 @@ function SingupForm() {
 
   const handleApi = (data) => {
     if (data.type === 'success') {
-      Swal.fire('Register Success', 'Please Check Your Email To Verify', 'success');
+      Swal.fire({
+        title: 'Register Success',
+        text: 'Please Check Your Email To Verify',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 3000,
+      });
     } else {
       Swal.fire({
         icon: 'info',
