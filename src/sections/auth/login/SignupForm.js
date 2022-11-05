@@ -36,6 +36,7 @@ function SingupForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+
   const handleValidate = (e) => {
     switch (e.target.name) {
       case 'username':
@@ -59,7 +60,7 @@ function SingupForm() {
             password:
               'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',
           });
-        } else {
+        }else {
           setError({ ...error, password: '' });
         }
         break;
@@ -74,6 +75,8 @@ function SingupForm() {
         break;
     }
   };
+
+  console.log(error)
 
   const sendUser = async () => {
     const data = {
@@ -124,7 +127,7 @@ function SingupForm() {
     <>
       <Stack spacing={3}>
         {!error.username ? (
-          <TextField required name="username" label="Username" onChange={(e) => handleOnchange(e)} />
+          <TextField required name="username" label="Username" onChange={(e) => handleOnchange(e)}  />
         ) : (
           <TextField
             required
@@ -245,7 +248,7 @@ function SingupForm() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <hr />
       </Stack>
-      {!error.email && !error.username && !error.password && !error.passwordConfirm ? (
+      {!error.email && !error.username && !error.password && !error.passwordConfirm && form.username && form.password && form.email && form.passwordConfirm ? (
         <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
           Sign up
         </LoadingButton>
