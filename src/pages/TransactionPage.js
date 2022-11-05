@@ -1,164 +1,91 @@
-import { Helmet } from 'react-helmet-async';
+import {Helmet} from 'react-helmet-async';
 import dayjs from 'dayjs';
 import {
-    Avatar, Box,
-    Button, Card, Checkbox, Container,
+    Avatar,
+    Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
     FormControl,
-    Grid, IconButton, InputLabel, ListItemText, MenuItem, Paper, Popover, Select,
-    Slide, Stack, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, TextField, Typography
+    Grid, InputAdornment, InputLabel, ListItemText, MenuItem, Select,
+    Slide, Stack, TextField, Typography
 } from "@mui/material";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
 import {forwardRef, useEffect, useState} from "react";
-import wallets from '../_mock/wallet'
-import category from "../_mock/category";
 import axios from "axios";
-import USERLIST from '../_mock/user';
-import {filter} from "lodash";
 import Iconify from "../components/iconify";
-import {UserListHead, UserListToolbar} from "../sections/@dashboard/user";
-import Scrollbar from "../components/scrollbar/Scrollbar";
-import Label from "../components/label";
-import {sentenceCase} from "change-case";
-
-const TABLE_HEAD = [
-    { id: 'category', label: 'Category', alignRight: false },
-    { id: 'wallet', label: 'Wallet', alignRight: false },
-    { id: 'date', label: 'Date', alignRight: false },
-    { id: 'amount', label: 'Amount', alignRight: false },
-    { id: 'note', label: 'Note', alignRight: false },
-    { id: '' },
-];
-
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    if (query) {
-        return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-    }
-    return stabilizedThis.map((el) => el[0]);
-}
-
+import Swal from "sweetalert2";
+import {changeFlag} from "../features/flagSlice";
+import {useDispatch} from "react-redux";
+//css
+import '../css/transaction.css'
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
 export default function TransactionPage() {
     const [value, setValue] = useState(dayjs());
     const [openAddForm, setOpenAddForm] = useState(false);
-    const [list, setList] = useState([])
+    // eslint-disable-next-line no-unused-vars
+    const [listTransaction, setListTransaction] = useState([]);
+    const [listWallet, setListWallet] = useState([]);
+    const [listCategory, setListCategory] = useState([]);
     const [transaction, setTransaction] = useState({
-        wallet: '',
-        category: '',
+        wallet_id: '',
+        category_id: '',
         amount: 0,
         note: '',
         date: dayjs(value).format('DD/MM/YYYY')
-    })
+    });
+    const [defaultWallet, setDefaultWallet] = useState("")
+    //redux
+    const dispatch = useDispatch();
 
-    const [open, setOpen] = useState(null);
-
-    const [page, setPage] = useState(0);
-
-    const [order, setOrder] = useState('asc');
-
-    const [selected, setSelected] = useState([]);
-
-    const [orderBy, setOrderBy] = useState('name');
-
-    const [filterName, setFilterName] = useState('');
-
-    const [rowsPerPage, setRowsPerPage] = useState(5);
-
-    const handleOpenMenu = (event) => {
-        setOpen(event.currentTarget);
-    };
-
-    const handleCloseMenu = () => {
-        setOpen(null);
-    };
-
-    const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
-
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelecteds = USERLIST.map((n) => n.name);
-            setSelected(newSelecteds);
-            return;
-        }
-        setSelected([]);
-    };
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-        setPage(0);
-        setRowsPerPage(parseInt(event.target.value, 10));
-    };
-
-    const handleFilterByName = (event) => {
-        setPage(0);
-        setFilterName(event.target.value);
-    };
-
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-    const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
-
-    const isNotFound = !filteredUsers.length && !!filterName;
-
-    useEffect(()=>{
+    const getData = async () => {
         const userId = JSON.parse(localStorage.getItem('user')).user_id;
-        axios.get(`http://localhost:3001/transaction/get-all-transaction/${userId}`)
-            .then(res=> setList(res.data.data.data))
-            .catch(err=> console.log(err))
-    },[])
+        await axios.get(`http://localhost:3001/transaction/get-all-transaction/${userId}`)
+            .then(res => setListTransaction(res.data.data.data))
+            .catch(err => console.log(err));
+        await axios.get(`http://localhost:3001/category/get-category/${userId}`)
+            .then(res => setListCategory(res.data.categoryUser))
+            .catch(err => console.log(err));
+        await axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
+            .then(res => setListWallet(res.data.wallet))
+            .catch(err => console.log(err))
+    }
+
+    useEffect(() => {
+        getData()
+    }, []);
+
+    useEffect(() => {
+        if (listWallet.length > 0) {
+            setDefaultWallet(listWallet[0]._id)
+            setTransaction({...transaction, wallet_id: listWallet[0]._id})
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [listWallet])
 
     const handleChange = (e) => {
-        if(e.target){
-            if(e.target.name === 'amount'){
+        if (e.target) {
+            if (e.target.name === 'amount') {
                 setTransaction({...transaction, [e.target.name]: parseInt(e.target.value)});
-            }else{
+            } else if(e.target.name === 'wallet_id'){
+                setDefaultWallet(e.target.value);
+                setTransaction({...transaction, [e.target.name]: e.target.value});
+            }else {
                 setTransaction({...transaction, [e.target.name]: e.target.value});
             }
-        }else {
+        } else {
             setValue(e);
             setTransaction({...transaction, date: dayjs(e).format('DD/MM/YYYY')})
         }
-    }
+    };
 
     const handleClickOpen = () => {
         setOpenAddForm(true);
@@ -168,152 +95,65 @@ export default function TransactionPage() {
         setOpenAddForm(false);
     };
 
-    const handleSubmit = () => {
-        setOpenAddForm(false);
+    useEffect(() => {
+        const userId = JSON.parse(localStorage.getItem('user')).user_id;
+        setTransaction({...transaction, user_id: userId});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleSubmit = async () => {
+        console.log(transaction)
+        if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
+            setOpenAddForm(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill all the required fields'
+            });
+        } else {
+            await axios.post('http://localhost:3001/transaction/add-transaction', transaction)
+                .then(res => {
+                    if (res.status === 200) {
+                        dispatch(changeFlag(1))
+                        setTransaction({
+                            wallet_id: '',
+                            category_id: '',
+                            amount: 0,
+                            note: '',
+                            date: dayjs(value).format('DD/MM/YYYY')
+                        })
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Add transaction successfully!',
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!'
+                        })
+                    }
+                })
+                .catch(err => console.log(err))
+            setOpenAddForm(false);
+            dispatch(changeFlag(1))
+        }
     }
 
-    return(
+    return (
         <>
             <Helmet>
                 <title> Transaction | Money Controller </title>
             </Helmet>
 
-            <Container>
-                <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                    <Typography variant="h4" gutterBottom>
-                        Transaction
-                    </Typography>
-                    <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpen}>
-                        New Transaction
-                    </Button>
-                </Stack>
-
-                <Card>
-                    {/*<UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />*/}
-
-                    <Scrollbar>
-                        <TableContainer sx={{ minWidth: 800 }}>
-                            <Table>
-                                <UserListHead
-                                    order={order}
-                                    orderBy={orderBy}
-                                    headLabel={TABLE_HEAD}
-                                    rowCount={USERLIST.length}
-                                    numSelected={selected.length}
-                                    onRequestSort={handleRequestSort}
-                                    onSelectAllClick={handleSelectAllClick}
-                                />
-                                <TableBody>
-                                    {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                                        const selectedUser = selected.indexOf(name) !== -1;
-
-                                        return (
-                                            <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-
-                                                <TableCell component="th" scope="row" padding="none">
-                                                    <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Avatar alt={name} src={avatarUrl} />
-                                                        <Typography variant="subtitle2" noWrap>
-                                                            {name}
-                                                        </Typography>
-                                                    </Stack>
-                                                </TableCell>
-
-                                                <TableCell align="left">{company}</TableCell>
-
-                                                <TableCell align="left">{role}</TableCell>
-
-                                                <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-
-                                                <TableCell align="left">
-                                                    <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                                                </TableCell>
-
-                                                <TableCell align="right">
-                                                    <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                                                        <Iconify icon={'eva:more-vertical-fill'} />
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                    {emptyRows > 0 && (
-                                        <TableRow style={{ height: 53 * emptyRows }}>
-                                            <TableCell colSpan={6} />
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-
-                                {isNotFound && (
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                                                <Paper
-                                                    sx={{
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    <Typography variant="h6" paragraph>
-                                                        Not found
-                                                    </Typography>
-
-                                                    <Typography variant="body2">
-                                                        No results found for &nbsp;
-                                                        <strong>&quot;{filterName}&quot;</strong>.
-                                                        <br /> Try checking for typos or using complete words.
-                                                    </Typography>
-                                                </Paper>
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                )}
-                            </Table>
-                        </TableContainer>
-                    </Scrollbar>
-
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={USERLIST.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </Card>
-            </Container>
-
-            <Popover
-                open={Boolean(open)}
-                anchorEl={open}
-                onClose={handleCloseMenu}
-                anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                PaperProps={{
-                    sx: {
-                        p: 1,
-                        width: 140,
-                        '& .MuiMenuItem-root': {
-                            px: 1,
-                            typography: 'body2',
-                            borderRadius: 0.75,
-                        },
-                    },
-                }}
-            >
-                <MenuItem>
-                    <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-                    Edit
-                </MenuItem>
-
-                <MenuItem sx={{ color: 'error.main' }}>
-                    <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-                    Delete
-                </MenuItem>
-            </Popover>
-
-
+            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+                <Typography variant="h3" gutterBottom>
+                    Transaction
+                </Typography>
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>} onClick={handleClickOpen}>
+                    New Transaction
+                </Button>
+            </Stack>
 
             <Dialog
                 open={openAddForm}
@@ -325,71 +165,79 @@ export default function TransactionPage() {
             >
                 <DialogTitle>{"Add Transaction"}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText >
+                    <DialogContentText>
                         Remember to Record Your Transactions Today.
                     </DialogContentText>
                     <hr/>
                     <Grid container spacing={4}>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                             <FormControl fullWidth margin="dense">
                                 <InputLabel>Wallet</InputLabel>
                                 <Select
                                     onChange={handleChange}
                                     defaultValue="Cash"
-                                    label = "Wallet"
-                                    name = "wallet"
+                                    label="Wallet"
+                                    name="wallet_id"
+                                    value={defaultWallet}
                                 >
-                                    {wallets.map((wallet) => (
-                                        <MenuItem key={wallet._id} value={wallet._id} >
-                                            <Avatar src={wallet.icon} />
-                                            <ListItemText primary={wallet.name} />
+                                    {listWallet.map((wallet) => (
+                                        <MenuItem key={wallet._id} value={wallet._id}>
+                                            <Avatar src={wallet.icon}/>
+                                            <ListItemText primary={wallet.name}/>
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel >Categories</InputLabel>
+                                <InputLabel>Categories</InputLabel>
                                 <Select
                                     onChange={handleChange}
                                     label="Categories"
-                                    name = "category"
+                                    name="category_id"
                                 >
-                                    {category.map((category) => (
-                                        <MenuItem key={category.name} value={category.name} >
-                                            <Avatar src={category.icon} />
-                                            <ListItemText primary={category.name} />
+                                    {listCategory.map((category) => (
+                                        <MenuItem key={category.name} value={category._id}>
+                                            <Avatar src={category.icon}/>
+                                            <ListItemText primary={category.name}/>
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={6}>
-                            <TextField name="amount" onChange={handleChange} fullWidth={true} label="Amount" variant="outlined" type="number" />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DesktopDatePicker
-                                fullWidth
-                                label="Date desktop"
-                                inputFormat="DD/MM/YYYY"
-                                value={value}
-                                name="date"
-                                onChange={handleChange}
-                                renderInput={(params) => <TextField {...params} />}
+                        <Grid item xs={4}>
+                            <TextField name="amount" onChange={handleChange} fullWidth={true} label="Amount"
+                                       variant="outlined" type="number" margin="dense"
+                                       InputProps={{startAdornment: <InputAdornment position="start">VNĐ</InputAdornment>,}}
                             />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DesktopDatePicker
+                                    label="Date desktop"
+                                    inputFormat="DD/MM/YYYY"
+                                    value={value}
+                                    name="date"
+                                    disableFuture={true}
+                                    onChange={handleChange}
+                                    renderInput={(params) => <TextField {...params} fullWidth/>}
+                                />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField name="note" onChange={handleChange} fullWidth={true} label="Note" variant="outlined" type="text" multiline rows={2} />
+                        <Grid item xs={8}>
+                            <TextField name="note" onChange={handleChange} fullWidth={true} label="Note"
+                                       variant="outlined" type="text" />
                         </Grid>
                     </Grid>
 
                 </DialogContent>
                 <DialogActions>
                     <Button variant="outlined" onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" color="success" onClick={handleSubmit}>Save</Button>
+                    <Button sx={{color:"white"}} variant="contained" color="success" onClick={handleSubmit}
+                    >
+                        Save
+                    </Button>
                 </DialogActions>
             </Dialog>
 

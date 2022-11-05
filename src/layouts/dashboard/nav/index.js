@@ -16,6 +16,7 @@ import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
 import navConfig from './config';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const isDesktop = useResponsive('up', 'lg');
+  const flag = useSelector(state => state.flag.flag)
 
   const isLoginApi = async (token, id) => {
     const result = await axios.post('http://localhost:3001/auth/is-login', { token: token, id: id });
@@ -69,6 +71,7 @@ export default function Nav({ openNav, onCloseNav }) {
         .then((res) => {
           switch (res.data.type) {
             case 'No':
+              localStorage.clear('user');
               Swal.fire({
                 icon: 'info',
                 title: 'You are not loggin!',
@@ -97,7 +100,7 @@ export default function Nav({ openNav, onCloseNav }) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname, flag]);
 
   const renderContent = (
     <Scrollbar
@@ -117,7 +120,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                Hello, {username} !
+                Hello, {username} ! 
               </Typography>
             </Box>
           </StyledAccount>
