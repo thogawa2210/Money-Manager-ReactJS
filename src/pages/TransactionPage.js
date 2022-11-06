@@ -210,60 +210,71 @@ export default function TransactionPage() {
                   </CardContent>
                   <Divider />
                   {listTransaction.map((item, index) => (
-                    <CardActions sx={{ width: '100%' }} key={index}>
-                      <Accordion
-                        expanded={expanded === `panel${index + 1}`}
-                        onChange={handleExpand(`panel${index + 1}`)}
+                    <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleExpand(`panel${index + 1}`)}>
+                      <AccordionSummary
+                        aria-controls={`panel${index + 1}bh-content`}
+                        id={`panel${index + 1}bh-header`}
+                        sx={{ width: '100%', height: '60px', flexShrink: 0, justifyContent: 'flex-start', padding: '24px' }}
                       >
-                        <Grid container>
-                          <div><AccordionSummary
-                            aria-controls={`panel${index + 1}bh-content`}
-                            id={`panel${index + 1}bh-header`}
-                            sx={{ width: '100%', height: '60px', flexShrink: 0}}
-                          >
-                            <Stack>
-                              <Typography sx={{ width: '100%'}}>
-                                <Grid container spacing={3}>
-                                  <Grid item xs={2} sx={{ direction: 'inline-block' }} >
-                                    {' '}
-                                    <Avatar src={item.wallet_icon} />
-                                  </Grid>
-                                  <Grid item xs={5} sx={{ pt: '20px', pl: '5px' }}>
-                                    {item.wallet_name}
-                                  </Grid>
-                                  {item.type === 'expense' ? (
-                                    <Grid item xs={5} sx={{ color: '#E51C23', textAlign: 'right', pt: '20px', width: "100%" }}>
-                                      - {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
-                                    </Grid>
-                                  ) : (
-                                    <Grid item xs={5} sx={{ color: '#039BE5', textAlign: 'right', pt: '20px', width: "100%" }}>
-                                      + {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
-                                    </Grid>
-                                  )}
-                                </Grid>
-                              </Typography>
-                            </Stack>
-                          </AccordionSummary></div>
-                          
-                        </Grid>
-
-                        <AccordionDetails>
-                          <Typography>
-                            <Grid container>
-                              <Grid item xs>Transaction Details</Grid>
-                              <Grid item xs><Button variant='outlined' color='success'>EDIT</Button></Grid>
-                              <Grid item xs><Button variant='outlined' color='error'>DELETE</Button></Grid>
-                            </Grid>
-                          </Typography>
-                          <hr />
-                          <Grid container>
-                            <Grid item xs></Grid>
-                            <hr />
+                        <Grid container spacing={2} sx={{ pt: '10px' }}>
+                          <Grid item xs={2} sx={{textAlign: 'center'}}>
+                            {' '}
+                            <Avatar src={item.wallet_icon} />
                           </Grid>
-                        </AccordionDetails>
-                      </Accordion>
-                      <Divider />
-                    </CardActions>
+                          <Grid item xs={5} sx={{ mt: '6px' }}>
+                            {item.wallet_name}
+                          </Grid>
+                          {item.type === 'expense' ? (
+                            <Grid item xs={5} sx={{ color: '#E51C23', textAlign: 'right', mt: '6px' }}>
+                              - {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                            </Grid>
+                          ) : (
+                            <Grid item xs={5} sx={{ color: '#039BE5', textAlign: 'right', mt: '6px' }}>
+                              + {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                            </Grid>
+                          )}
+                        </Grid>
+                      </AccordionSummary>
+                      <AccordionDetails sx={{height: '235px', pb: 0}}>
+                        <Typography sx={{height: '40px'}}>
+                          <Grid container>
+                            <Grid item xs sx={{mt: 0, mb: 0}}>
+                              <h3 style={{margin: 0}}>Transaction Details</h3>
+                            </Grid>
+                            <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                              <Button variant="outlined" color="success">
+                                EDIT
+                              </Button>
+                            </Grid>
+                            <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                              <Button variant="outlined" color="error">
+                                DELETE
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Typography>
+                        <hr />
+                        <Grid container>
+                          <Grid item xs={2}>
+                            <Avatar src={item.wallet_icon} sx={{ mr: 10 }} />
+                          </Grid>
+                          <Grid item xs sx={{mt: '3px'}}>
+                            <h3 style={{ margin: 0 }}>{item.wallet_name}</h3>
+                            <Typography>
+                              <p style={{ fontSize: '12px' }}>{item.date} </p>
+                              <hr />
+                              <p style={{ margin: '8px 0px' }}>{item.note} </p>
+                              {item.category_type === 'income' ? (
+                                <p style={{ color: '#039BE5', marginBottom: 0 }}>+ {item.amount} <span style={{ color: '#039BE5', textDecoration: 'underline'}}>đ</span></p>
+                              ) : (
+                                <p style={{ color: '#E51C23', marginBottom: 0 }}>- {item.amount} <span style={{color: '#E51C23', textDecoration: 'underline' }}>đ</span></p>
+                              )}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs></Grid>
+                        </Grid>
+                      </AccordionDetails>
+                    </Accordion>
                   ))}
                 </Card>
               </Grid>
