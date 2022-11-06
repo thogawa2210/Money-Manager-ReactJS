@@ -99,7 +99,6 @@ export default function WalletPage() {
         });
     };
 
-
     const handleSaveEdit = async (id) => {
         await axios.put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
             .then(res => {
