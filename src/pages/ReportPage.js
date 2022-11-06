@@ -2,10 +2,24 @@ import {Helmet} from "react-helmet-async";
 import {AppWebsiteVisits} from "../sections/@dashboard/app";
 import {AppBar, Box, Button, Grid, Toolbar, Typography} from "@mui/material";
 import transaction from "../_mock/transaction";
+import {useEffect} from "react";
 
 
 function ReportPage() {
 
+
+    useEffect(() => {
+        let result = []
+
+        transaction.forEach((transaction) => {
+            if(Date.parse(transaction.date)>Date.parse("10/31/2022") && Date.parse(transaction.date)<Date.now()){
+                result.push(transaction)
+            }
+        })
+
+        console.log(result)
+
+    },[])
 
     return (
         <>
