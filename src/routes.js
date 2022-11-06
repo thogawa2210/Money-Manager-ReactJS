@@ -14,6 +14,7 @@ import VerifyRegister from './sections/auth/login/VerifyRegister';
 import WalletPage from './pages/WalletPage';
 import TransactionPage from './pages/TransactionPage';
 import LogoutPage from './pages/LogoutPage';
+import ReportPage from './pages/ReportPage';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
+        { path: 'report', element: <ReportPage /> },
         { path: 'profile', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
