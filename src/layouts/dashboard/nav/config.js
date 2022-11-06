@@ -12,6 +12,11 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
+    title: 'report',
+    path: '/dashboard/report',
+    icon: icon('ic_analytics'),
+  },
+  {
     title: 'my wallet',
     path: '/dashboard/wallet',
     icon: icon('wallet-svgrepo-com'),
@@ -32,14 +37,9 @@ const navConfig = [
     icon: icon('ic_cart'),
   },
   {
-    title: 'blog',
+    title: 'about',
     path: '/dashboard/blog',
     icon: icon('ic_blog'),
-  },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: icon('ic_disabled')
   },
   {
     title: 'logout',
