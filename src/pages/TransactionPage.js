@@ -73,9 +73,7 @@ export default function TransactionPage() {
 
   const getDataApi = async () => {
     const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    if (userId) {
-      return await axios.get(`http://localhost:3001/transaction/transaction-this-month/${userId}`);
-    }
+    return await axios.get(`http://localhost:3001/transaction/transaction-this-month/${userId}`);
   };
 
   const getData = async () => {
@@ -131,13 +129,6 @@ export default function TransactionPage() {
   };
 
   const handleClickOpen = () => {
-    setTransaction({
-      wallet_id: '',
-      category_id: '',
-      amount: 0,
-      note: '',
-      date: dayjs(value).format('DD/MM/YYYY'),
-    });
     setOpenAddForm(true);
   };
 
@@ -152,40 +143,38 @@ export default function TransactionPage() {
   }, []);
 
   const deleteTransApi = async (id) => {
-    return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`);
-  };
+    return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`)
+  }
 
   const handleDeleteTrans = (id) => {
     Swal.fire({
       icon: 'warning',
-      title: 'Delete This Transaction',
-      text: 'Are you sure?',
-      showCancelButton: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteTransApi(id)
-          .then((res) => {
-            dispatch(changeFlag(1));
-            setExpanded(false);
-            Swal.fire({
-              icon: 'success',
-              title: 'Delete Success!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          })
-          .catch((err) =>
-            Swal.fire({
+          title: 'Delete This Transaction',
+          text: 'Are you sure?',
+          showCancelButton: true
+    })
+      .then(result => {
+        if (result.isConfirmed) {
+          deleteTransApi(id)
+            .then(res => {
+              dispatch(changeFlag(1))
+              setExpanded(false)
+              Swal.fire({
+                icon: 'success',
+                title: 'Delete Success!',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }).catch(err => Swal.fire({
               icon: 'warning',
               title: 'Something Wrong!',
               text: 'Try again!',
               showConfirmButton: false,
-              timer: 1500,
-            })
-          );
+              timer: 1500
+          }))
       }
-    });
-  };
+    })
+  }
 
   const handleSubmit = async () => {
     console.log(transaction);
@@ -202,6 +191,13 @@ export default function TransactionPage() {
         .then((res) => {
           if (res.status === 200) {
             dispatch(changeFlag(1));
+            setTransaction({
+              wallet_id: '',
+              category_id: '',
+              amount: 0,
+              note: '',
+              date: dayjs(value).format('DD/MM/YYYY'),
+            });
             Swal.fire({
               icon: 'success',
               title: 'Add transaction successfully!',
@@ -245,9 +241,7 @@ export default function TransactionPage() {
                     <h2 style={{ padding: 0, margin: 0 }}>Transaction Info</h2>
                     <hr />
                     <Grid container>
-                      <Grid xs item>
-                        Inflow
-                      </Grid>
+                      <Grid xs item>Inflow</Grid>
                       <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
                         + {moneyFlow.inflow} <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
@@ -272,7 +266,6 @@ export default function TransactionPage() {
                       <Accordion
                         expanded={expanded === `panel${index + 1}`}
                         onChange={handleExpand(`panel${index + 1}`)}
-                        key={index}
                       >
                         <AccordionSummary
                           aria-controls={`panel${index + 1}bh-content`}
@@ -316,7 +309,7 @@ export default function TransactionPage() {
                                 </Button>
                               </Grid>
                               <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                                <Button variant="outlined" color="error" onClick={() => handleDeleteTrans(item._id)}>
+                                <Button variant="outlined" color="error" onClick={()=>handleDeleteTrans(item._id)}>
                                   DELETE
                                 </Button>
                               </Grid>
