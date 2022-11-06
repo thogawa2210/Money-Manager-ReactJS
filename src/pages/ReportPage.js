@@ -6,34 +6,63 @@ import {useEffect, useState} from "react";
 
 
 function ReportPage() {
-    const [columns, setColumns] = useState([])
-    const [rows, setRows] = useState([
-        {
-        name: 'Income',
-        type: 'column',
-        fill: 'solid',
-        data: [],
-    },
-        {
-            name: 'Expense',
-            type: 'column',
-            fill: 'solid',
-            data: [],
-        }]);
+
+    const [chartLabels, setChartLabels] = useState([])
+    const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
         let result = []
 
         transaction.forEach((transaction) => {
-            if(Date.parse(transaction.date)>Date.parse("09/30/2022") && Date.parse(transaction.date)<Date.parse("10/31/2022")){
+            if (Date.parse(transaction.date) >= Date.parse("09/30/2022") && Date.parse(transaction.date) <= Date.parse("10/31/2022")) {
                 result.push(transaction)
             }
         })
 
+        const month = new Date().getMonth();
+        const year = new Date().getFullYear();
+        let daysInThisMonth = new Date(year, month, 0).getDate();
+        let columns = [];
+        for (let i = 0; i < daysInThisMonth; i++){
+            columns.push(`${month}/${i+1}/${year}`)
+        }
+        setChartLabels(columns)
 
+        let dataIncome = [];
+        let dataExpense = [];
 
-        console.log(result)
-    },[])
+        columns.forEach((date) => {
+            let income = 0;
+            let expense = 0;
+            result.forEach((transaction) => {
+                if (transaction.date === date){
+                    if(transaction.type === 'income'){
+                        income += transaction.amount;
+                    }else {
+                        expense += transaction.amount;
+                    }
+                }
+            })
+            dataIncome.push(income);
+            dataExpense.push(expense);
+        })
+
+        const chartData=[
+            {
+                name: 'Income',
+                type: 'column',
+                fill: 'solid',
+                data: dataIncome,
+            },
+            {
+                name: 'Expense',
+                type: 'column',
+                fill: 'solid',
+                data: dataExpense,
+            }
+        ]
+        setChartData(chartData)
+    }, [])
 
     return (
         <>
@@ -52,35 +81,10 @@ function ReportPage() {
 
             <Grid item xs={12} md={6} lg={8}>
                 <AppWebsiteVisits
-                    title="Website Visits"
+                    title="This month Reports"
                     subheader="(+43%) than last year"
-                    chartLabels={[
-                        '01/01/2003',
-                        '02/01/2003',
-                        '03/01/2003',
-                        '04/01/2003',
-                        '05/01/2003',
-                        '06/01/2003',
-                        '07/01/2003',
-                        '08/01/2003',
-                        '09/01/2003',
-                        '10/01/2003',
-                        '11/01/2003',
-                    ]}
-                    chartData={[
-                        {
-                            name: 'Team A',
-                            type: 'column',
-                            fill: 'solid',
-                            data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                        },
-                        {
-                            name: 'Team D',
-                            type: 'column',
-                            fill: 'solid',
-                            data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-                        }
-                    ]}
+                    chartLabels={chartLabels}
+                    chartData={chartData}
                 />
             </Grid>
         </>
