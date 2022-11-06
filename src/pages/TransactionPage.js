@@ -22,10 +22,10 @@ import {
   Divider,
   Card,
   CardContent,
-  CardActions,
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -210,6 +210,8 @@ export default function TransactionPage() {
                   </CardContent>
                   <Divider />
                   {listTransaction.map((item, index) => (
+                    <>
+                      <Box sx={{heght: '20px' , border: '1px solid #b3d4fc'}}></Box>
                     <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleExpand(`panel${index + 1}`)}>
                       <AccordionSummary
                         aria-controls={`panel${index + 1}bh-content`}
@@ -274,7 +276,8 @@ export default function TransactionPage() {
                           <Grid item xs></Grid>
                         </Grid>
                       </AccordionDetails>
-                    </Accordion>
+                      </Accordion>
+                      </>
                   ))}
                 </Card>
               </Grid>
