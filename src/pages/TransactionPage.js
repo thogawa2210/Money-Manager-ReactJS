@@ -216,10 +216,10 @@ export default function TransactionPage() {
                         onChange={handleExpand(`panel${index + 1}`)}
                       >
                         <Grid container>
-                          <AccordionSummary
+                          <div><AccordionSummary
                             aria-controls={`panel${index + 1}bh-content`}
                             id={`panel${index + 1}bh-header`}
-                            sx={{ width: '100%', height: '60px', display:'inline-flex' }}
+                            sx={{ width: '100%', height: '60px', flexShrink: 0}}
                           >
                             <Stack>
                               <Typography sx={{ width: '100%'}}>
@@ -243,14 +243,21 @@ export default function TransactionPage() {
                                 </Grid>
                               </Typography>
                             </Stack>
-                          </AccordionSummary>
+                          </AccordionSummary></div>
+                          
                         </Grid>
 
                         <AccordionDetails>
-                          <Grid container>
-                            <Grid item xs>
-                              Transaction Details
+                          <Typography>
+                            <Grid container>
+                              <Grid item xs>Transaction Details</Grid>
+                              <Grid item xs><Button variant='outlined' color='success'>EDIT</Button></Grid>
+                              <Grid item xs><Button variant='outlined' color='error'>DELETE</Button></Grid>
                             </Grid>
+                          </Typography>
+                          <hr />
+                          <Grid container>
+                            <Grid item xs></Grid>
                             <hr />
                           </Grid>
                         </AccordionDetails>
