@@ -1,6 +1,7 @@
 import {Helmet} from "react-helmet-async";
 import {AppWebsiteVisits} from "../sections/@dashboard/app";
 import {AppBar, Box, Button, Grid, Toolbar, Typography} from "@mui/material";
+import transaction from "../_mock/transaction";
 
 
 function ReportPage() {
@@ -18,8 +19,6 @@ function ReportPage() {
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         Expense report
                     </Typography>
-                    <Button color="inherit">Login</Button>
-                    <Button color="inherit">Login</Button>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
