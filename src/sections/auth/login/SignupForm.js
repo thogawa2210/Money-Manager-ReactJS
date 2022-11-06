@@ -55,13 +55,19 @@ function SingupForm() {
         break;
       case 'password':
         if (!REGEX.password.test(e.target.value)) {
-          setError({
-            ...error,
-            password:
-              'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',
-          });
+          setError({ ...error,password:
+                'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',passwordConfirm: 'Password is not the same'});
         }else {
-          setError({ ...error, password: '' });
+          if (e.target.value === form.passwordConfirm) {
+            console.log(111)
+            setError({ ...error,password: '', passwordConfirm: '' });
+          }else if (e.target.value !== form.passwordConfirm) {
+            console.log(22)
+            setError({
+              ...error,
+              password: '',passwordConfirm: 'Password is not the same'
+            });
+          }
         }
         break;
       case 'passwordConfirm':

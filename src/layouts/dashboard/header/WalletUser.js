@@ -97,7 +97,7 @@ export default function WalletUser() {
                         fontSize: 14,
                         paddingLeft: 12,
                         fontWeight: 700
-                    }}>{numberWithCommas(total)}</Typography>
+                    }}>{numberWithCommas(total)} VNĐ</Typography>
                 </Box>
             </Box>
 
@@ -134,7 +134,7 @@ export default function WalletUser() {
                         <MenuItem sx={{display:'flex'}} key={index}
                                   onClick={() => handleClose(index)}>
                             <Box component="img" src={item.icon} sx={{width: 28, mr: 2}}/>
-                            {item.name} {numberWithCommas(item.amount)}
+                            {item.name} {numberWithCommas(item.amount)} VNĐ
                         </MenuItem>
                     ))}
                 </Stack>
