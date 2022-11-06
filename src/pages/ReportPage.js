@@ -14,28 +14,35 @@ function ReportPage() {
         let result = []
 
         transaction.forEach((transaction) => {
-            if (Date.parse(transaction.date) >= Date.parse("09/30/2022") && Date.parse(transaction.date) <= Date.parse("10/31/2022")) {
+            if (Date.parse(transaction.date) >= Date.parse("11/01/2022") && Date.parse(transaction.date) <= Date.parse("11/30/2022")) {
                 result.push(transaction)
             }
         })
 
-        const month = new Date().getMonth();
+        //get days of month
+        const month = new Date().getMonth()+1;
         const year = new Date().getFullYear();
         let daysInThisMonth = new Date(year, month, 0).getDate();
-        let columns = [];
+        let chartLabels = [];
         for (let i = 0; i < daysInThisMonth; i++){
-            columns.push(`${month}/${i+1}/${year}`)
+            if(i<9){
+                chartLabels.push(`${month}/0${i+1}/${year}`)
+            }else{
+                chartLabels.push(`${month}/${i+1}/${year}`)
+            }
         }
-        setChartLabels(columns)
+        setChartLabels(chartLabels)
 
+        // get income and expense by day
         let dataIncome = [];
         let dataExpense = [];
-
-        columns.forEach((date) => {
+        chartLabels.forEach((date) => {
             let income = 0;
             let expense = 0;
+            console.log(result)
             result.forEach((transaction) => {
                 if (transaction.date === date){
+                    console.log(1)
                     if(transaction.type === 'income'){
                         income += transaction.amount;
                     }else {
@@ -45,8 +52,7 @@ function ReportPage() {
             })
             dataIncome.push(income);
             dataExpense.push(expense);
-        })
-
+        });
         const chartData=[
             {
                 name: 'Income',
