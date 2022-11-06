@@ -2,23 +2,37 @@ import {Helmet} from "react-helmet-async";
 import {AppWebsiteVisits} from "../sections/@dashboard/app";
 import {AppBar, Box, Button, Grid, Toolbar, Typography} from "@mui/material";
 import transaction from "../_mock/transaction";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 
 function ReportPage() {
-
+    const [columns, setColumns] = useState([])
+    const [rows, setRows] = useState([
+        {
+        name: 'Income',
+        type: 'column',
+        fill: 'solid',
+        data: [],
+    },
+        {
+            name: 'Expense',
+            type: 'column',
+            fill: 'solid',
+            data: [],
+        }]);
 
     useEffect(() => {
         let result = []
 
         transaction.forEach((transaction) => {
-            if(Date.parse(transaction.date)>Date.parse("10/31/2022") && Date.parse(transaction.date)<Date.now()){
+            if(Date.parse(transaction.date)>Date.parse("09/30/2022") && Date.parse(transaction.date)<Date.parse("10/31/2022")){
                 result.push(transaction)
             }
         })
 
-        console.log(result)
 
+
+        console.log(result)
     },[])
 
     return (
@@ -26,7 +40,6 @@ function ReportPage() {
             <Helmet>
                 <title> Report | Money Manager Master </title>
             </Helmet>
-
 
             <AppBar position="static" color="inherit">
                 <Toolbar>
@@ -36,7 +49,6 @@ function ReportPage() {
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
-
 
             <Grid item xs={12} md={6} lg={8}>
                 <AppWebsiteVisits
@@ -67,19 +79,7 @@ function ReportPage() {
                             type: 'column',
                             fill: 'solid',
                             data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-                        },
-                        {
-                            name: 'Team B',
-                            type: 'area',
-                            fill: 'gradient',
-                            data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                        },
-                        {
-                            name: 'Team C',
-                            type: 'line',
-                            fill: 'solid',
-                            data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-                        },
+                        }
                     ]}
                 />
             </Grid>
