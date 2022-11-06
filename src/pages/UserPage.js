@@ -280,9 +280,9 @@ export default function UserPage() {
                 <CardHeader subheader="Thank you for using our app" title="Profile" />
                 <Divider />
                 <CardContent sx={{ padding: 2, ml: 1 }}>
-                  <p>Number of wallet: {profile.wallets} </p>
-                  <p>Number of transaction: {profile.transactions}</p>
-                  <p>Number of category: {profile.categorys}</p>
+                  <p style={{fontWeight: 'lighter'}}>Number of wallet: {profile.wallets} </p>
+                  <p style={{fontWeight: 'lighter'}}>Number of transaction: {profile.transactions}</p>
+                  <p style={{fontWeight: 'lighter'}}>Number of category: {profile.categorys}</p>
                 </CardContent>
                 <Divider />
               </Card>

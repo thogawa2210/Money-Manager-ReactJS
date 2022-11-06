@@ -168,11 +168,11 @@ export default function TransactionPage() {
   return (
     <>
       <Helmet>
-        <title> Transaction | Money Controller </title>
+        <title> Transaction | Money Manager Master </title>
       </Helmet>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} sx={{ padding: '40px' }}>
+        <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h3">Transaction</Typography>
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpen}>
@@ -183,21 +183,23 @@ export default function TransactionPage() {
         <Grid item xs />
         <Grid item xs={8} sx={{ padding: 0 }}>
           <Stack>
-            <Grid spacing={1}>
+            <Grid>
               <Grid>
                 <Card>
                   <CardContent sx={{ pb: 0 }}>
-                    <h2 style={{ padding: 0 }}>Transaction Info</h2>
+                    <h2 style={{ padding: 0, margin: 0 }}>Transaction Info</h2>
                     <hr />
-                    <Grid xs={12} container>
+                    <Grid container>
                       <Grid xs>Inflow</Grid>
                       <Grid xs sx={{ textAlign: 'right', color: '#039BE5' }}>
                         + 30000 <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
                     </Grid>
-                    <Grid xs={12} container>
-                      <Grid xs={6}>Outflow</Grid>
-                      <Grid xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        Outflow
+                      </Grid>
+                      <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
                         - 30000 <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
                     </Grid>
@@ -207,25 +209,55 @@ export default function TransactionPage() {
                     </p>
                   </CardContent>
                   <Divider />
-                  <CardActions>
-                    {listTransaction.map((item, index) => (
+                  {listTransaction.map((item, index) => (
+                    <CardActions sx={{ width: '100%' }} key={index}>
                       <Accordion
                         expanded={expanded === `panel${index + 1}`}
                         onChange={handleExpand(`panel${index + 1}`)}
                       >
-                        <AccordionSummary aria-controls="panel1bh-content" id="panel1bh-header">
-                          <Typography sx={{ width: '33%', flexShrink: 0 }}>{item.wallet_name}</Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>I am an accordion</Typography>
-                        </AccordionSummary>
+                        <Grid container>
+                          <AccordionSummary
+                            aria-controls={`panel${index + 1}bh-content`}
+                            id={`panel${index + 1}bh-header`}
+                            sx={{ width: '100%', height: '60px', display:'inline-flex' }}
+                          >
+                            <Stack>
+                              <Typography sx={{ width: '100%'}}>
+                                <Grid container spacing={3}>
+                                  <Grid item xs={2} sx={{ direction: 'inline-block' }} >
+                                    {' '}
+                                    <Avatar src={item.wallet_icon} />
+                                  </Grid>
+                                  <Grid item xs={5} sx={{ pt: '20px', pl: '5px' }}>
+                                    {item.wallet_name}
+                                  </Grid>
+                                  {item.type === 'expense' ? (
+                                    <Grid item xs={5} sx={{ color: '#E51C23', textAlign: 'right', pt: '20px', width: "100%" }}>
+                                      - {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                                    </Grid>
+                                  ) : (
+                                    <Grid item xs={5} sx={{ color: '#039BE5', textAlign: 'right', pt: '20px', width: "100%" }}>
+                                      + {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                                    </Grid>
+                                  )}
+                                </Grid>
+                              </Typography>
+                            </Stack>
+                          </AccordionSummary>
+                        </Grid>
+
                         <AccordionDetails>
-                          <Typography>
-                            Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget maximus
-                            est, id dignissim quam.
-                          </Typography>
+                          <Grid container>
+                            <Grid item xs>
+                              Transaction Details
+                            </Grid>
+                            <hr />
+                          </Grid>
                         </AccordionDetails>
                       </Accordion>
-                    ))}
-                  </CardActions>
+                      <Divider />
+                    </CardActions>
+                  ))}
                 </Card>
               </Grid>
             </Grid>
