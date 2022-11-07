@@ -48,8 +48,8 @@ function numberWithCommas(x) {
 }
 
 function getDayy(x) {
-  const day = ['Sunday ', 'Monday', 'Tuesday ', 'Wednesday ', 'Thursday', 'Friday ', 'Sunday ']
-  return day[x]
+  const day = ['Sunday ', 'Monday', 'Tuesday ', 'Wednesday ', 'Thursday', 'Friday ', 'Sunday '];
+  return day[x];
 }
 
 export default function TransactionPage() {
@@ -152,7 +152,7 @@ export default function TransactionPage() {
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem('user')).user_id;
     setTransaction({ ...transaction, user_id: userId });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDeleteTrans = (id) => {
@@ -292,7 +292,7 @@ export default function TransactionPage() {
                             padding: '24px',
                           }}
                         >
-                          <Grid container spacing={2} sx={{ pt: '10px' }}>
+                          <Grid container spacing={2} sx={{ pt: '4px' }}>
                             <Grid item xs={2} sx={{ textAlign: 'center' }}>
                               {' '}
                               <Avatar src={item.category_icon} />
@@ -337,9 +337,12 @@ export default function TransactionPage() {
                             <Grid item xs sx={{ mt: '3px' }}>
                               <h3 style={{ margin: 0 }}>{item.category_name}</h3>
                               <Typography>
-                                <p style={{ fontSize: '12px' }}>{getDayy(new Date(`${item.date}`).getDay())}, {item.date} </p>
+                                <p style={{ marginTop: '0px', marginBottom: '0px', fontSize: '10px' }}>{item.wallet_name}</p>
+                                <p style={{ fontSize: '10px', fontWeight: 'light' }}>
+                                  {getDayy(new Date(`${item.date}`).getDay())}, {item.date}{' '}
+                                </p>
                                 <hr />
-                                <p style={{ margin: '8px 0px' }}>{item.note} </p>
+                                <p style={{ margin: '8px 0px', fontSize: '12px' }}>{item.note} </p>
                                 {item.category_type === 'income' ? (
                                   <p style={{ color: '#039BE5', marginBottom: 0 }}>
                                     + {numberWithCommas(item.amount)}{' '}
