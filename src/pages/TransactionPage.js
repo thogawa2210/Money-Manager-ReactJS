@@ -295,10 +295,10 @@ export default function TransactionPage() {
                           <Grid container spacing={2} sx={{ pt: '10px' }}>
                             <Grid item xs={2} sx={{ textAlign: 'center' }}>
                               {' '}
-                              <Avatar src={item.wallet_icon} />
+                              <Avatar src={item.category_icon} />
                             </Grid>
                             <Grid item xs={5} sx={{ mt: '6px' }}>
-                              {item.wallet_name}
+                              {item.category_name}
                             </Grid>
                             {item.category_type === 'expense' ? (
                               <Grid item xs={5} sx={{ color: '#E51C23', textAlign: 'right', mt: '6px' }}>
@@ -332,10 +332,10 @@ export default function TransactionPage() {
                           <hr />
                           <Grid container>
                             <Grid item xs={2}>
-                              <Avatar src={item.wallet_icon} sx={{ mr: 10 }} />
+                              <Avatar src={item.category_icon} sx={{ mr: 10 }} />
                             </Grid>
                             <Grid item xs sx={{ mt: '3px' }}>
-                              <h3 style={{ margin: 0 }}>{item.wallet_name}</h3>
+                              <h3 style={{ margin: 0 }}>{item.category_name}</h3>
                               <Typography>
                                 <p style={{ fontSize: '12px' }}>{getDayy(new Date(`${item.date}`).getDay())}, {item.date} </p>
                                 <hr />
