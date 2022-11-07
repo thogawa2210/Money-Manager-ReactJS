@@ -47,6 +47,11 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+function getDayy(x) {
+  const day = ['Sunday ', 'Monday', 'Tuesday ', 'Wednesday ', 'Thursday', 'Friday ', 'Sunday ']
+  return day[x]
+}
+
 export default function TransactionPage() {
   const flag = useSelector((state) => state.flag.flag);
   const [value, setValue] = useState(dayjs());
@@ -331,7 +336,7 @@ export default function TransactionPage() {
                             <Grid item xs sx={{ mt: '3px' }}>
                               <h3 style={{ margin: 0 }}>{item.wallet_name}</h3>
                               <Typography>
-                                <p style={{ fontSize: '12px' }}>{item.date} </p>
+                                <p style={{ fontSize: '12px' }}>{getDayy(new Date(`${item.date}`).getDay())}, {item.date} </p>
                                 <hr />
                                 <p style={{ margin: '8px 0px' }}>{item.note} </p>
                                 {item.category_type === 'income' ? (
