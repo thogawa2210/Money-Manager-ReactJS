@@ -19,6 +19,7 @@ import {
     FormControl,
     Grid,
     InputLabel,
+    ListItemText,
     MenuItem,
     Paper, Select, Slide, Stack,
     Table,
@@ -264,8 +265,8 @@ export default function WalletPage() {
                             >
          
                                 <Typography sx={{ width: '80%', flexShrink: 0 }}>
-                                        <Avatar src={item.icon} sx={{ mr: 0 }}  />
-                                        <p>{item.name}</p>
+                                        <Avatar src={item.icon} sx={{ mr: 0 }} />
+                                        <ListItemText primary={item.name} sx={{pr : 22}}/>
                                 </Typography>
                                 
                                 <Typography sx={{ color: 'text.secondary' }} >Wallet {index + 1}</Typography>
