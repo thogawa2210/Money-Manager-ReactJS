@@ -15,13 +15,42 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
+import getFormatDate from './../getDateFormat';
+
+const getStartEndDate = (date) => {
+  let day = getFormatDate(date);
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  let thisMonth = day.slice(0, 2);
+  let daysOfMonth = new Date(year, month, 0).getDate();
+  return {
+    start_date: `${thisMonth}/01/${year}`,
+    end_date: `${thisMonth}/${daysOfMonth}/${year}`,
+  };
+};
+
+const getLastStartEndDate = (date) => {
+  let month = date.getMonth();
+  let year = date.getFullYear();
+  let thisMonth, daysOfMonth;
+  if (month !== 0) {
+    thisMonth = month.toString().length > 1 ? month : '0' + month;
+    daysOfMonth = new Date(year, month, 0).getDate();
+  } else {
+    thisMonth = 12;
+    year = year - 1;
+    daysOfMonth = new Date(year, thisMonth, 0).getDate();
+  }
+  return {
+    start_date: `${thisMonth}/01/${year}`,
+    end_date: `${thisMonth}/${daysOfMonth}/${year}`,
+  };
+};
 
 function ReportPage() {
   const [chartLabels, setChartLabels] = useState([]);
   const [chartData, setChartData] = useState([]);
-  const [menu, setMenu] = useState();
   const [openChooseDay, setOpenChooseDay] = useState(false);
   const [form, setForm] = useState({
     date: '',
@@ -29,7 +58,6 @@ function ReportPage() {
   });
   const [wallets, setWallets] = useState([]);
   const [defaultWallet, setDefaultWallet] = useState('');
-  const totalWallet = useSelector((state) => state.total.wallet.amount);
   const [defaultDate, setDefaultDate] = useState('today');
 
   useEffect(() => {
@@ -54,14 +82,12 @@ function ReportPage() {
         } else console.log(res.data);
       })
       .catch((err) => console.log(err));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChangeMenu = (e) => {
-    console.log(e.target.name);
     switch (e.target.name) {
       case 'wallet_id':
-        console.log(e.target.value);
         setDefaultWallet(e.target.value);
         setForm({ ...form, [e.target.name]: e.target.value });
         break;
@@ -71,17 +97,78 @@ function ReportPage() {
         break;
       default:
     }
-    };
-    
+  };
 
-    const handleFilter = (e) => {
-        if (form && form.date && form.wallet_id) {
-            if (form.date === 'today') {
-                if (form.wallet_id === 'total') {
+  const getTransCustomApi = async (data) => {
+    return await axios.post('http://localhost:3001/transaction/get-transaction-custom', data);
+  };
 
-                }
-            }
+  const handleFilter = (e) => {
+    const userID = JSON.parse(localStorage.getItem('user')).user_id;
+    if (form && form.date && form.wallet_id) {
+      if (form.date === 'today') {
+        if (form.wallet_id === 'total') {
+          getTransCustomApi({ user_id: userID })
+            .then((res) => console.log(res.data.data))
+            .catch((err) => console.log(err));
+        } else {
+          getTransCustomApi({
+            user_id: userID,
+            wallet_id: form.wallet_id,
+          })
+            .then((res) => console.log(res.data.data))
+            .catch((err) => console.log(err));
+        }
+      } else if (form.date === 'this month') {
+        let day = new Date();
+        let { start_date, end_date } = getStartEndDate(day);
+        if (form.wallet_id === 'total') {
+          let data = {
+            start_date: start_date,
+            end_date: end_date,
+            user_id: userID,
+          };
+          getTransCustomApi(data)
+            .then((res) => console.log(res.data))
+            .catch((err) => console.log(err));
+        } else {
+          let data = {
+            start_date: start_date,
+            end_date: end_date,
+            user_id: userID,
+            wallet_id: form.wallet_id,
+          };
+          getTransCustomApi(data)
+            .then((res) => console.log(res.data))
+            .catch((err) => console.log(err));
+        }
+      } else if (form.date === 'last month') {
+        let day = new Date();
+        let { start_date, end_date } = getLastStartEndDate(day);
+        if (form.wallet_id === 'total') {
+          let data = {
+            user_id: userID,
+            start_date: start_date,
+            end_date: end_date,
+          };
+          getTransCustomApi(data)
+            .then((res) => console.log(res.data))
+            .catch((err) => console.log(err));
+        } else {
+          let data = {
+            user_id: userID,
+            start_date: start_date,
+            end_date: end_date,
+            wallet_id: form.wallet_id,
+          };
+          getTransCustomApi(data)
+            .then((res) => console.log(res.data))
+            .catch((err) => console.log(err));
+        }
+      } else {
+        setOpenChooseDay(true)
       }
+    }
   };
 
   return (
