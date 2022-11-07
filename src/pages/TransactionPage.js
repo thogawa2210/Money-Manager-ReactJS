@@ -328,12 +328,12 @@ export default function TransactionPage() {
                                 <p style={{ margin: '8px 0px' }}>{item.note} </p>
                                 {item.category_type === 'income' ? (
                                   <p style={{ color: '#039BE5', marginBottom: 0 }}>
-                                    + {item.amount}{' '}
+                                    + {item.amount.toLocaleString()}{' '}
                                     <span style={{ color: '#039BE5', textDecoration: 'underline' }}>đ</span>
                                   </p>
                                 ) : (
                                   <p style={{ color: '#E51C23', marginBottom: 0 }}>
-                                    - {item.amount}{' '}
+                                    - {item.amount.toLocaleString()}{' '}
                                     <span style={{ color: '#E51C23', textDecoration: 'underline' }}>đ</span>
                                   </p>
                                 )}
