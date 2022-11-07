@@ -12,9 +12,9 @@ const getTransactions = (startDate, endDate) => {
 }
 
 export default function getDataBarChart(){
-    const transactions = getTransactions("10/01/2022", "10/31/2022")
+    const transactions = getTransactions("10/01/2022", "10/25/2022");
     const startDate = new Date("10/01/2022");
-    const endDate = new Date("11/15/2022");
+    const endDate = new Date("10/25/2022");
     const startMonth = startDate.getMonth();
     const endMonth = endDate.getMonth();
 
@@ -52,35 +52,23 @@ export default function getDataBarChart(){
         for(let i=startMonth; i <= endMonth; i++) {
             chartLabels.push(`${i+1}/01/2022`)
         }
-        console.log(chartLabels)
 
+        chartLabels.forEach((month)=>{
+            let income = 0;
+            let expense = 0;
+            transactions.forEach((transaction) => {
+                if(new Date(transaction.date).getMonth() === new Date(month).getMonth()){
+                    if(transaction.type === 'income'){
+                        income += transaction.amount;
+                    }else {
+                        expense += transaction.amount;
+                    }
+                }
+            })
+            dataIncome.push(income);
+            dataExpense.push(expense);
+        })
     }
-    //
-    // // data get from API
-    // let transactions = getTransactions(startDate , endDate)
-    //
-    // const diffTime = Math.abs(endDate - startDate);
-    // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    //
-    // //get days of this month
-    // const month = new Date().getMonth();
-    // const year = new Date().getFullYear();
-    // let daysInThisMonth = new Date(year, month, 0).getDate();
-    //
-    // //
-
-    //get chartLabels in this month
-    //
-    // for (let i = 0; i < daysInThisMonth; i++){
-    //     if(i<9){
-    //         chartLabels.push(`${month}/0${i+1}/${year}`)
-    //     }else{
-    //         chartLabels.push(`${month}/${i+1}/${year}`)
-    //     }
-    // }
-
-    // get income and expense by day
-
 
     const chartData=[
         {
@@ -98,5 +86,4 @@ export default function getDataBarChart(){
     ]
 
     return {chartLabels:chartLabels, chartData:chartData}
-
 }
