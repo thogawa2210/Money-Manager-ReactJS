@@ -56,11 +56,19 @@ export default function TransactionPage() {
   const flag = useSelector((state) => state.flag.flag);
   const [value, setValue] = useState(dayjs());
   const [openAddForm, setOpenAddForm] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [listTransaction, setListTransaction] = useState([]);
   const [listWallet, setListWallet] = useState([]);
   const [listCategory, setListCategory] = useState([]);
   const [transaction, setTransaction] = useState({
+    wallet_id: '',
+    category_id: '',
+    amount: 0,
+    note: '',
+    date: dayjs(value).format('MM/DD/YYYY'),
+  });
+  const [editTransaction, setEditTransaction] = useState({
     wallet_id: '',
     category_id: '',
     amount: 0,
@@ -73,6 +81,7 @@ export default function TransactionPage() {
     inflow: 0,
     outflow: 0,
   });
+
   //redux
   const dispatch = useDispatch();
 
@@ -137,12 +146,38 @@ export default function TransactionPage() {
     }
   };
 
-  const handleClickOpen = () => {
+  const handleChangeEdit = (e) => {
+    if (e.target) {
+      if (e.target.name === 'amount') {
+        setEditTransaction({ ...editTransaction, [e.target.name]: parseInt(e.target.value) });
+      } else if (e.target.name === 'wallet_id') {
+        // setDefaultWallet(e.target.value);
+        setEditTransaction({ ...editTransaction, [e.target.name]: e.target.value });
+      } else {
+        setEditTransaction({ ...editTransaction, [e.target.name]: e.target.value });
+      }
+    } else {
+      setValue(e);
+      setTransaction({ ...editTransaction, date: dayjs(e).format('MM/DD/YYYY') });
+    }
+  };
+
+  const handleClickOpenAddForm = () => {
     setOpenAddForm(true);
   };
 
-  const handleClose = () => {
+  const handleCloseAddForm = () => {
     setOpenAddForm(false);
+  };
+
+  const handleClickEditAddForm = (id) => {
+    const editTransaction = listTransaction.filter((transaction) => transaction._id === id);
+    setEditTransaction(editTransaction[0]);
+    setOpenEditForm(true);
+  };
+
+  const handleCloseEditForm = () => {
+    setOpenEditForm(false);
   };
 
   const deleteTransApi = async (id) => {
@@ -195,7 +230,6 @@ export default function TransactionPage() {
         text: 'Please fill all the required fields',
       });
     } else {
-      console.log(transaction);
       await axios
         .post('http://localhost:3001/transaction/add-transaction', transaction)
         .then((res) => {
@@ -226,6 +260,19 @@ export default function TransactionPage() {
     }
   };
 
+  const handleEdit = async () => {
+    if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || editTransaction.amount === '') {
+      setOpenAddForm(false);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please fill all the required fields',
+      });
+    }else {
+      console.log(editTransaction)
+    }
+  }
+
   return (
     <>
       <Helmet>
@@ -236,7 +283,7 @@ export default function TransactionPage() {
         <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h3">Transaction</Typography>
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpen}>
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
               New Transaction
             </Button>
           </Stack>
@@ -317,7 +364,7 @@ export default function TransactionPage() {
                                 <h3 style={{ margin: 0 }}>Transaction Details</h3>
                               </Grid>
                               <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                                <Button variant="outlined" color="success">
+                                <Button variant="outlined" color="success" onClick={()=>handleClickEditAddForm(item._id)}>
                                   EDIT
                                 </Button>
                               </Grid>
@@ -370,7 +417,7 @@ export default function TransactionPage() {
         open={openAddForm}
         TransitionComponent={Transition}
         keepMounted
-        onClose={handleClose}
+        onClose={handleCloseAddForm}
         fullWidth={true}
         maxWidth="md"
       >
@@ -445,7 +492,7 @@ export default function TransactionPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleClose}>
+          <Button variant="outlined" onClick={handleCloseAddForm}>
             Cancel
           </Button>
           <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleSubmit}>
@@ -453,6 +500,95 @@ export default function TransactionPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+          open={openEditForm}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleCloseEditForm}
+          fullWidth={true}
+          maxWidth="md"
+      >
+        <DialogTitle>{'Edit Transaction'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Remember to Record Your Transactions Today.</DialogContentText>
+          <hr />
+          <Grid container spacing={4}>
+            <Grid item xs={4}>
+              <FormControl fullWidth margin="dense">
+                <InputLabel>Wallet</InputLabel>
+                <Select onChange={handleChangeEdit} label="Wallet" name="wallet_id" value={editTransaction.wallet_id}>
+                  {listWallet.map((wallet) => (
+                      <MenuItem key={wallet._id} value={wallet._id}>
+                        <Avatar src={wallet.icon} />
+                        <ListItemText primary={wallet.name} />
+                      </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}>
+              <FormControl fullWidth margin="dense">
+                <InputLabel>Categories</InputLabel>
+                <Select onChange={handleChangeEdit} label="Categories" name="category_id" value={editTransaction.category_id}>
+                  {listCategory.map((category) => (
+                      <MenuItem key={category.name} value={category._id}>
+                        <Avatar src={category.icon} />
+                        <ListItemText primary={category.name} />
+                      </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                  name="amount"
+                  onChange={handleChangeEdit}
+                  fullWidth={true}
+                  label="Amount"
+                  variant="outlined"
+                  type="number"
+                  margin="dense"
+                  value={editTransaction.amount}
+                  InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DesktopDatePicker
+                    label="Date desktop"
+                    inputFormat="DD/MM/YYYY"
+                    value={value}
+                    name="date"
+                    disableFuture={true}
+                    onChange={handleChangeEdit}
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={8}>
+              <TextField
+                  name="note"
+                  onChange={handleChangeEdit}
+                  fullWidth={true}
+                  label="Note"
+                  variant="outlined"
+                  type="text"
+                  value = {editTransaction.note}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleCloseEditForm}>
+            Cancel
+          </Button>
+          <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleEdit}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </>
   );
 }
