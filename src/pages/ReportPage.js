@@ -71,11 +71,16 @@ function ReportPage() {
         break;
       default:
     }
-  };
+    };
+    
 
     const handleFilter = (e) => {
         if (form && form.date && form.wallet_id) {
-          
+            if (form.date === 'today') {
+                if (form.wallet_id === 'total') {
+
+                }
+            }
       }
   };
 
