@@ -10,6 +10,7 @@ import {
     AccordionSummary,
     Avatar,
     Button,
+    CardContent,
     Dialog,
     DialogActions,
     DialogContent,
@@ -54,8 +55,8 @@ export default function WalletPage() {
     const [openCreate, setOpenCreate] = React.useState(false);
     const [icon, setIcon] = useState('');
     const [wallet, setWallet] = useState({
-        name : '',
-        amount : ''
+        name: '',
+        amount: ''
     })
     const [value, setValue] = useState(dayjs());
     const [openAddForm, setOpenAddForm] = useState(false);
@@ -75,32 +76,42 @@ export default function WalletPage() {
     };
     const handleSubmitCreate = async () => {
         setOpenAddForm(false);
-    
-        let data = {
-            icon : icon,
-           name : wallet.name,
-           amount : wallet.amount,
-           user_id : idUser
-        }
-        const result = await axios.post('http://localhost:3001/wallet/create',data)
- 
-        if(result.data.type === "success") { 
-            Swal.fire({
-                icon: 'success',
-                title: 'Update Successfully!'
-            }).then(
-                setOpenCreate(false),
-                dispatch(changeFlag(1)),
-                setWallet({
-                    ...wallet,
-                    name : '',
-                    amount : ''
-                })
-            );
 
-        } else {
-            alert(result.data.message)
+        let data = {
+            icon: icon,
+            name: wallet.name,
+            amount: wallet.amount,
+            user_id: idUser
         }
+        if (wallet.name == '' || wallet.amount == '') {
+            setOpenCreate(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill all the required fields',
+            });
+        } else {
+            const result = await axios.post('http://localhost:3001/wallet/create', data)
+            if (result.data.type === "success") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Update Successfully!'
+                }).then(
+                    setOpenCreate(false),
+                    dispatch(changeFlag(1)),
+                    setWallet({
+                        ...wallet,
+                        name: '',
+                        amount: ''
+                    })
+                );
+
+            } else {
+                alert(result.data.message)
+            }
+        }
+
+
     }
 
 
@@ -257,65 +268,71 @@ export default function WalletPage() {
                 </DialogActions>
             </Dialog>
             {/* Detail Wallet */}
-            
-                {wallets.map((item, index) => (
-                    <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)} >
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1bh-content"
-                            id="panel1bh-header"
-                            
-                        >
 
-                            <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                                <Grid item xs={2}>
-                                    <Avatar src={item.icon} sx={{ mr: 0 }} />{item.name}
-                                </Grid>
-                            </Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>Ví {index + 1}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Typography>
+            <Grid container spacing={3}>
 
-                                {/* Table */}
-                                <TableContainer component={Paper}>
-                                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>Wallet Name</TableCell>
-                                                <TableCell align="right">Wallet Amount</TableCell>
-                                                <TableCell align="right">Wallet Action</TableCell>
+                <Grid item xs />
+                <Grid item xs={8} sx={{ padding: 0 }}>
+                    {wallets.map((item, index) => (
+                        <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)}  >
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+         
+                                <Typography sx={{ width: '80%', flexShrink: 0 }}>
+                                        <Avatar src={item.icon} sx={{ mr: 0 }}  />
+                                        <p>{item.name}</p>
+                                </Typography>
+                                
+                                <Typography sx={{ color: 'text.secondary' }} >Wallet {index + 1}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Typography>
 
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody key={index}>
-                                            <TableRow
-                                                key={index}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                                <TableCell component="th" scope="row">
+                                    {/* Table */}
+                                    <TableContainer component={Paper}>
+                                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>Wallet Name</TableCell>
+                                                    <TableCell align="right">Wallet Amount</TableCell>
+                                                    <TableCell align="right">Wallet Action</TableCell>
 
-                                                    {item.name}
-                                                </TableCell>
-                                                <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
-                                                <TableCell align="right">
-                                                    <Button variant="contained" color="primary" onClick={() => handleClickOpen(item._id)}>
-                                                        Edit
-                                                    </Button>
-                                                    <Button variant="contained" color="error" onClick={() => handleDeleteWallet(item._id)}>
-                                                        Delete
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                                {/* done Table */}
-                            </Typography>
-                        </AccordionDetails>
-                    </Accordion>
-                ))}
-            
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody key={index}>
+                                                <TableRow
+                                                    key={index}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell component="th" scope="row">
+
+                                                        {item.name}
+                                                    </TableCell>
+                                                    <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
+                                                    <TableCell align="right">
+                                                        <Button variant="contained" color="primary" onClick={() => handleClickOpen(item._id)}>
+                                                            Edit
+                                                        </Button>
+                                                        <Button variant="contained" color="error" onClick={() => handleDeleteWallet(item._id)}>
+                                                            Delete
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                    {/* done Table */}
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                    ))}
+                </Grid>
+                <Grid item xs />
+            </Grid>
+
             {/* Done */}
 
             {/* Dialog create wallet/>*/}
@@ -329,64 +346,50 @@ export default function WalletPage() {
                 onClose={handleCloseCreate}>
                 <DialogTitle>{"Add Wallet"}</DialogTitle>
 
-                <DialogContent>
+                <DialogContent >
                     <DialogContentText>
-                        Form dialogs allow users to fill out form fields within a dialog. For example, if your site prompts for potential subscribers to fill in their email address, they can fill out the email field and touch 'Submit'.
+                        Form add wallet, they can fill out the email field and touch 'Submit'.
                     </DialogContentText>
-                    <Grid container spacing={4}>
-                        <Grid item xs={6}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={3}>
 
                             {/* Select icon */}
                             <Box sx={{ minWidth: 120 }}>
-                                <FormControl fullWidth>
+                                <FormControl sx={{ width: 100 }}>
                                     <InputLabel id="demo-simple-select-label">Icon</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         value={icon}
-                                        name="icon" 
+                                        name="icon"
                                         onChange={handleChangeIcon}
                                     >
 
                                         <MenuItem value={`/assets/icons/wallets/cash.svg`}>
                                             <Avatar src={`/assets/icons/wallets/cash.svg`} sx={{ mr: 0 }} />
-                                            </MenuItem>
-                                            <MenuItem value={`/assets/icons/wallets/card.svg`}>
+                                        </MenuItem>
+                                        <MenuItem value={`/assets/icons/wallets/card.svg`}>
                                             <Avatar src={`/assets/icons/wallets/card.svg`} sx={{ mr: 0 }} />
-                                            </MenuItem>
-                                            <MenuItem value={`/assets/icons/wallets/credit-card.svg`}>
+                                        </MenuItem>
+                                        <MenuItem value={`/assets/icons/wallets/credit-card.svg`}>
                                             <Avatar src={`/assets/icons/wallets/credit-card.svg`} sx={{ mr: 0 }} />
-                                            </MenuItem>
-                                            <MenuItem value={`/assets/icons/wallets/saving.svg`}>
+                                        </MenuItem>
+                                        <MenuItem value={`/assets/icons/wallets/saving.svg`}>
                                             <Avatar src={`/assets/icons/wallets/saving.svg`} sx={{ mr: 0 }} />
-                                            </MenuItem>
-                                   
+                                        </MenuItem>
+
                                     </Select>
                                 </FormControl>
                             </Box>
 
-                           
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name Wallet" variant="outlined" value={wallet.name} />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField name="amount" onChange={handleChangeCreate} fullWidth={true} label="Amount" variant="outlined" type="number" value={wallet.amount} />
                         </Grid>
 
-                        <Grid item xs={4}>
-                            <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name" variant="outlined" value={wallet.name} />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <TextField name="amount" onChange={handleChangeCreate} fullWidth={true} label="Amount" variant="outlined" type="number"value={wallet.amount} />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DesktopDatePicker
-                                    fullWidth
-                                    label="Date desktop"
-                                    inputFormat="DD/MM/YYYY"
-                                    value={value}
-                                    name="date"
-                                    onChange={handleChangeCreate}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
                     </Grid>
 
                 </DialogContent>
