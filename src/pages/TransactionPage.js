@@ -56,7 +56,7 @@ export default function TransactionPage() {
     category_id: '',
     amount: 0,
     note: '',
-    date: dayjs(value).format('DD/MM/YYYY'),
+    date: dayjs(value).format('MM/DD/YYYY'),
   });
   const [defaultWallet, setDefaultWallet] = useState('');
   const [expanded, setExpanded] = useState(false);
@@ -124,7 +124,7 @@ export default function TransactionPage() {
       }
     } else {
       setValue(e);
-      setTransaction({ ...transaction, date: dayjs(e).format('DD/MM/YYYY') });
+      setTransaction({ ...transaction, date: dayjs(e).format('MM/DD/YYYY') });
     }
   };
 
@@ -135,12 +135,6 @@ export default function TransactionPage() {
   const handleClose = () => {
     setOpenAddForm(false);
   };
-
-  useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    setTransaction({ ...transaction, user_id: userId });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const deleteTransApi = async (id) => {
     return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`)
@@ -186,6 +180,9 @@ export default function TransactionPage() {
         text: 'Please fill all the required fields',
       });
     } else {
+      const userId = JSON.parse(localStorage.getItem('user')).user_id;
+      setTransaction({ ...transaction, user_id: userId });
+      console.log(transaction)
       await axios
         .post('http://localhost:3001/transaction/add-transaction', transaction)
         .then((res) => {
@@ -196,7 +193,7 @@ export default function TransactionPage() {
               category_id: '',
               amount: 0,
               note: '',
-              date: dayjs(value).format('DD/MM/YYYY'),
+              date: dayjs(value).format('MM/DD/YYYY'),
             });
             Swal.fire({
               icon: 'success',
@@ -211,6 +208,13 @@ export default function TransactionPage() {
           }
         })
         .catch((err) => console.log(err));
+      setTransaction({
+        ...transaction,
+        category_id: '',
+        amount: 0,
+        note: '',
+        date: dayjs(value).format('MM/DD/YYYY'),
+      })
       setOpenAddForm(false);
       dispatch(changeFlag(1));
     }
@@ -371,7 +375,6 @@ export default function TransactionPage() {
                 <InputLabel>Wallet</InputLabel>
                 <Select
                   onChange={handleChange}
-                  defaultValue="Cash"
                   label="Wallet"
                   name="wallet_id"
                   value={defaultWallet}
@@ -388,7 +391,7 @@ export default function TransactionPage() {
             <Grid item xs={4}>
               <FormControl fullWidth margin="dense">
                 <InputLabel>Categories</InputLabel>
-                <Select onChange={handleChange} label="Categories" name="category_id">
+                <Select onChange={handleChange} label="Categories" name="category_id" value = {transaction.category_id}>
                   {listCategory.map((category) => (
                     <MenuItem key={category.name} value={category._id}>
                       <Avatar src={category.icon} />
@@ -407,6 +410,7 @@ export default function TransactionPage() {
                 variant="outlined"
                 type="number"
                 margin="dense"
+                value = {transaction.amount}
                 InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
               />
             </Grid>
@@ -431,6 +435,7 @@ export default function TransactionPage() {
                 label="Note"
                 variant="outlined"
                 type="text"
+                value = {transaction.not}
               />
             </Grid>
           </Grid>
