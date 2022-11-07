@@ -35,7 +35,7 @@ import axios from 'axios';
 import Iconify from '../components/iconify';
 import Swal from 'sweetalert2';
 import { changeFlag } from '../features/flagSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 //css
 import '../css/transaction.css';
 
@@ -44,6 +44,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 export default function TransactionPage() {
+  const flag = useSelector((state) => state.flag.flag);
   const [value, setValue] = useState(dayjs());
   const [openAddForm, setOpenAddForm] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -70,18 +71,13 @@ export default function TransactionPage() {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const getDataApi = async () => {
+    const userId = JSON.parse(localStorage.getItem('user')).user_id;
+    return await axios.get(`http://localhost:3001/transaction/transaction-this-month/${userId}`);
+  };
+
   const getData = async () => {
     const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    await axios
-      .get(`http://localhost:3001/transaction/transaction-this-month/${userId}`)
-      .then((res) => {
-        setListTransaction(res.data.data.list);
-        setMoneyFlow({
-          inflow: res.data.data.inflow,
-          outflow: res.data.data.outflow,
-        });
-      })
-      .catch((err) => console.log(err));
     await axios
       .get(`http://localhost:3001/category/get-category/${userId}`)
       .then((res) => setListCategory(res.data.categoryUser))
@@ -95,6 +91,18 @@ export default function TransactionPage() {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    getDataApi()
+      .then((res) => {
+        setListTransaction(res.data.data.list);
+        setMoneyFlow({
+          inflow: res.data.data.inflow,
+          outflow: res.data.data.outflow,
+        });
+      })
+      .catch((err) => console.log(err));
+  }, [flag]);
 
   useEffect(() => {
     if (listWallet.length > 0) {
@@ -127,6 +135,40 @@ export default function TransactionPage() {
   const handleClose = () => {
     setOpenAddForm(false);
   };
+
+  const deleteTransApi = async (id) => {
+    return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`)
+  }
+
+  const handleDeleteTrans = (id) => {
+    Swal.fire({
+      icon: 'warning',
+          title: 'Delete This Transaction',
+          text: 'Are you sure?',
+          showCancelButton: true
+    })
+      .then(result => {
+        if (result.isConfirmed) {
+          deleteTransApi(id)
+            .then(res => {
+              dispatch(changeFlag(1))
+              setExpanded(false)
+              Swal.fire({
+                icon: 'success',
+                title: 'Delete Success!',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }).catch(err => Swal.fire({
+              icon: 'warning',
+              title: 'Something Wrong!',
+              text: 'Try again!',
+              showConfirmButton: false,
+              timer: 1500
+          }))
+      }
+    })
+  }
 
   const handleSubmit = async () => {
     console.log(transaction);
@@ -203,8 +245,8 @@ export default function TransactionPage() {
                     <h2 style={{ padding: 0, margin: 0 }}>Transaction Info</h2>
                     <hr />
                     <Grid container>
-                      <Grid xs>Inflow</Grid>
-                      <Grid xs sx={{ textAlign: 'right', color: '#039BE5' }}>
+                      <Grid xs item>Inflow</Grid>
+                      <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
                         + {moneyFlow.inflow} <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
                     </Grid>
@@ -271,7 +313,7 @@ export default function TransactionPage() {
                                 </Button>
                               </Grid>
                               <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                                <Button variant="outlined" color="error">
+                                <Button variant="outlined" color="error" onClick={()=>handleDeleteTrans(item._id)}>
                                   DELETE
                                 </Button>
                               </Grid>
