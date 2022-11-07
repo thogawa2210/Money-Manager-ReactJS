@@ -140,6 +140,11 @@ export default function TransactionPage() {
     return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`)
   }
 
+  useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem('user')).user_id;
+    setTransaction({ ...transaction, user_id: userId });
+  },[])
+
   const handleDeleteTrans = (id) => {
     Swal.fire({
       icon: 'warning',
@@ -171,7 +176,6 @@ export default function TransactionPage() {
   }
 
   const handleSubmit = async () => {
-    console.log(transaction);
     if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
       setOpenAddForm(false);
       Swal.fire({
@@ -180,8 +184,6 @@ export default function TransactionPage() {
         text: 'Please fill all the required fields',
       });
     } else {
-      const userId = JSON.parse(localStorage.getItem('user')).user_id;
-      setTransaction({ ...transaction, user_id: userId });
       console.log(transaction)
       await axios
         .post('http://localhost:3001/transaction/add-transaction', transaction)
@@ -189,7 +191,7 @@ export default function TransactionPage() {
           if (res.status === 200) {
             dispatch(changeFlag(1));
             setTransaction({
-              wallet_id: '',
+              ...transaction,
               category_id: '',
               amount: 0,
               note: '',
@@ -208,13 +210,6 @@ export default function TransactionPage() {
           }
         })
         .catch((err) => console.log(err));
-      setTransaction({
-        ...transaction,
-        category_id: '',
-        amount: 0,
-        note: '',
-        date: dayjs(value).format('MM/DD/YYYY'),
-      })
       setOpenAddForm(false);
       dispatch(changeFlag(1));
     }
