@@ -103,7 +103,8 @@ export default function WalletPage() {
                         ...wallet,
                         name: '',
                         amount: ''
-                    })
+                    }),
+                    setIcon('')
                 );
 
             } else {
@@ -204,25 +205,6 @@ export default function WalletPage() {
         setOpen(false);
     };
 
-    const handleClick = (id) => {
-        const wallet = wallets.filter((wallet) => wallet._id === id);
-        setDetail(
-            <>
-                <h4>Wallet detail</h4>
-                <hr />
-                <p>Wallet Name: {wallet[0].name}</p>
-                <hr />
-                <p>Wallet Amount: {numberWithCommas(wallet[0].amount)}</p>
-                <hr />
-                <Button variant="contained" color="primary" onClick={() => handleClickOpen(id)}>
-                    Edit
-                </Button>
-                <Button variant="contained" color="error" onClick={() => handleDeleteWallet(id)}>
-                    Delete
-                </Button>
-            </>
-        );
-    };
     return (
         <>
 
@@ -345,24 +327,25 @@ export default function WalletPage() {
                 open={openCreate}
                 onClose={handleCloseCreate}>
                 <DialogTitle>{"Add Wallet"}</DialogTitle>
-
-                <DialogContent >
-                    <DialogContentText>
-                        Form add wallet, they can fill out the email field and touch 'Submit'.
+                <DialogContentText>
+                        
                     </DialogContentText>
+                <DialogContent >
+          
                     <Grid container spacing={3}>
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
 
                             {/* Select icon */}
                             <Box sx={{ minWidth: 120 }}>
                                 <FormControl sx={{ width: 100 }}>
-                                    <InputLabel id="demo-simple-select-label">Icon</InputLabel>
+                                    <InputLabel id="demo-simple-select-label"   >Icon</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        value={icon}
+                                        label="icon"
                                         name="icon"
                                         onChange={handleChangeIcon}
+                                        sx={{ height: 55 }}
                                     >
 
                                         <MenuItem value={`/assets/icons/wallets/cash.svg`}>
@@ -383,10 +366,10 @@ export default function WalletPage() {
                             </Box>
 
                         </Grid>
-                        <Grid item xs={3}>
-                            <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name Wallet" variant="outlined" value={wallet.name} />
+                        <Grid item xs={5} >
+                            <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name Wallet" variant="outlined" value={wallet.name}  />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={5}>
                             <TextField name="amount" onChange={handleChangeCreate} fullWidth={true} label="Amount" variant="outlined" type="number" value={wallet.amount} />
                         </Grid>
 
@@ -394,8 +377,8 @@ export default function WalletPage() {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="outlined" onClick={handleCloseCreate}>Cancel</Button>
-                    <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleSubmitCreate}>Save</Button>
+                    <Button variant="outlined"  onClick={handleCloseCreate}>Cancel</Button>
+                    <Button variant="contained" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCreate}>Save</Button>
                 </DialogActions>
             </Dialog>
         </>
