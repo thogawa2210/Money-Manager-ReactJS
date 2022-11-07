@@ -43,6 +43,10 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 export default function TransactionPage() {
   const flag = useSelector((state) => state.flag.flag);
   const [value, setValue] = useState(dayjs());
@@ -56,7 +60,7 @@ export default function TransactionPage() {
     category_id: '',
     amount: 0,
     note: '',
-    date: dayjs(value).format('DD/MM/YYYY'),
+    date: dayjs(value).format('MM/DD/YYYY'),
   });
   const [defaultWallet, setDefaultWallet] = useState('');
   const [expanded, setExpanded] = useState(false);
@@ -124,7 +128,7 @@ export default function TransactionPage() {
       }
     } else {
       setValue(e);
-      setTransaction({ ...transaction, date: dayjs(e).format('DD/MM/YYYY') });
+      setTransaction({ ...transaction, date: dayjs(e).format('MM/DD/YYYY') });
     }
   };
 
@@ -136,48 +140,48 @@ export default function TransactionPage() {
     setOpenAddForm(false);
   };
 
+  const deleteTransApi = async (id) => {
+    return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`);
+  };
+
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem('user')).user_id;
     setTransaction({ ...transaction, user_id: userId });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const deleteTransApi = async (id) => {
-    return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`)
-  }
 
   const handleDeleteTrans = (id) => {
     Swal.fire({
       icon: 'warning',
       title: 'Delete This Transaction',
       text: 'Are you sure?',
-      showCancelButton: true
-    })
-      .then(result => {
-        if (result.isConfirmed) {
-          deleteTransApi(id)
-            .then(res => {
-              dispatch(changeFlag(1))
-              setExpanded(false)
-              Swal.fire({
-                icon: 'success',
-                title: 'Delete Success!',
-                showConfirmButton: false,
-                timer: 1500
-              })
-            }).catch(err => Swal.fire({
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteTransApi(id)
+          .then((res) => {
+            dispatch(changeFlag(1));
+            setExpanded(false);
+            Swal.fire({
+              icon: 'success',
+              title: 'Delete Success!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          })
+          .catch((err) =>
+            Swal.fire({
               icon: 'warning',
               title: 'Something Wrong!',
               text: 'Try again!',
               showConfirmButton: false,
-              timer: 1500
-            }))
-        }
-      })
-  }
+              timer: 1500,
+            })
+          );
+      }
+    });
+  };
 
   const handleSubmit = async () => {
-    console.log(transaction);
     if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
       setOpenAddForm(false);
       Swal.fire({
@@ -186,17 +190,18 @@ export default function TransactionPage() {
         text: 'Please fill all the required fields',
       });
     } else {
+      console.log(transaction);
       await axios
         .post('http://localhost:3001/transaction/add-transaction', transaction)
         .then((res) => {
           if (res.status === 200) {
             dispatch(changeFlag(1));
             setTransaction({
-              wallet_id: '',
+              ...transaction,
               category_id: '',
               amount: 0,
               note: '',
-              date: dayjs(value).format('DD/MM/YYYY'),
+              date: dayjs(value).format('MM/DD/YYYY'),
             });
             Swal.fire({
               icon: 'success',
@@ -241,9 +246,11 @@ export default function TransactionPage() {
                     <h2 style={{ padding: 0, margin: 0 }}>Transaction Info</h2>
                     <hr />
                     <Grid container>
-                      <Grid xs item>Inflow</Grid>
+                      <Grid xs item>
+                        Inflow
+                      </Grid>
                       <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
-                        + {moneyFlow.inflow} <span style={{ textDecoration: 'underline' }}>đ</span>
+                        + {numberWithCommas(moneyFlow.inflow)} <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
                     </Grid>
                     <Grid container>
@@ -251,12 +258,13 @@ export default function TransactionPage() {
                         Outflow
                       </Grid>
                       <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
-                        - {moneyFlow.outflow} <span style={{ textDecoration: 'underline' }}>đ</span>
+                        - {numberWithCommas(moneyFlow.outflow)} <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
                     </Grid>
                     <hr />
                     <p style={{ textAlign: 'right' }}>
-                      {moneyFlow.inflow - moneyFlow.outflow} <span style={{ textDecoration: 'underline' }}>đ</span>
+                      {numberWithCommas(moneyFlow.inflow - moneyFlow.outflow)}{' '}
+                      <span style={{ textDecoration: 'underline' }}>đ</span>
                     </p>
                   </CardContent>
                   <Divider />
@@ -288,11 +296,11 @@ export default function TransactionPage() {
                             </Grid>
                             {item.category_type === 'expense' ? (
                               <Grid item xs={5} sx={{ color: '#E51C23', textAlign: 'right', mt: '6px' }}>
-                                - {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                                - {numberWithCommas(item.amount)} <span style={{ textDecoration: 'underline' }}>đ</span>
                               </Grid>
                             ) : (
                               <Grid item xs={5} sx={{ color: '#039BE5', textAlign: 'right', mt: '6px' }}>
-                                + {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                                + {numberWithCommas(item.amount)} <span style={{ textDecoration: 'underline' }}>đ</span>
                               </Grid>
                             )}
                           </Grid>
@@ -328,12 +336,12 @@ export default function TransactionPage() {
                                 <p style={{ margin: '8px 0px' }}>{item.note} </p>
                                 {item.category_type === 'income' ? (
                                   <p style={{ color: '#039BE5', marginBottom: 0 }}>
-                                    + {item.amount}{' '}
+                                    + {numberWithCommas(item.amount)}{' '}
                                     <span style={{ color: '#039BE5', textDecoration: 'underline' }}>đ</span>
                                   </p>
                                 ) : (
                                   <p style={{ color: '#E51C23', marginBottom: 0 }}>
-                                    - {item.amount}{' '}
+                                    - {numberWithCommas(item.amount)}{' '}
                                     <span style={{ color: '#E51C23', textDecoration: 'underline' }}>đ</span>
                                   </p>
                                 )}
@@ -369,13 +377,7 @@ export default function TransactionPage() {
             <Grid item xs={4}>
               <FormControl fullWidth margin="dense">
                 <InputLabel>Wallet</InputLabel>
-                <Select
-                  onChange={handleChange}
-                  defaultValue="Cash"
-                  label="Wallet"
-                  name="wallet_id"
-                  value={defaultWallet}
-                >
+                <Select onChange={handleChange} label="Wallet" name="wallet_id" value={defaultWallet}>
                   {listWallet.map((wallet) => (
                     <MenuItem key={wallet._id} value={wallet._id}>
                       <Avatar src={wallet.icon} />
@@ -388,7 +390,7 @@ export default function TransactionPage() {
             <Grid item xs={4}>
               <FormControl fullWidth margin="dense">
                 <InputLabel>Categories</InputLabel>
-                <Select onChange={handleChange} label="Categories" name="category_id">
+                <Select onChange={handleChange} label="Categories" name="category_id" value={transaction.category_id}>
                   {listCategory.map((category) => (
                     <MenuItem key={category.name} value={category._id}>
                       <Avatar src={category.icon} />
@@ -407,6 +409,7 @@ export default function TransactionPage() {
                 variant="outlined"
                 type="number"
                 margin="dense"
+                value={transaction.amount}
                 InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
               />
             </Grid>
@@ -431,6 +434,7 @@ export default function TransactionPage() {
                 label="Note"
                 variant="outlined"
                 type="text"
+                value={transaction.note}
               />
             </Grid>
           </Grid>

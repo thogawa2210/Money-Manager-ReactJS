@@ -14,7 +14,8 @@ function ReportPage() {
         let result = []
 
         transaction.forEach((transaction) => {
-            if (Date.parse(transaction.date) >= Date.parse("11/01/2022") && Date.parse(transaction.date) <= Date.parse("11/30/2022")) {
+            if (Date.parse(transaction.date) >= Date.parse("11/01/2022")
+                && Date.parse(transaction.date) <= Date.parse("11/30/2022")) {
                 result.push(transaction)
             }
         })
@@ -39,10 +40,8 @@ function ReportPage() {
         chartLabels.forEach((date) => {
             let income = 0;
             let expense = 0;
-            console.log(result)
             result.forEach((transaction) => {
                 if (transaction.date === date){
-                    console.log(1)
                     if(transaction.type === 'income'){
                         income += transaction.amount;
                     }else {
