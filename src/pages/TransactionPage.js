@@ -430,7 +430,7 @@ export default function TransactionPage() {
                 label="Note"
                 variant="outlined"
                 type="text"
-                value = {transaction.not}
+                value = {transaction.note}
               />
             </Grid>
           </Grid>

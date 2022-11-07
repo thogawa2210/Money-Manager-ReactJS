@@ -1,8 +1,8 @@
 import {Helmet} from "react-helmet-async";
 import {AppWebsiteVisits} from "../sections/@dashboard/app";
 import {AppBar, Box, Button, Grid, Toolbar, Typography} from "@mui/material";
-import transaction from "../_mock/transaction";
 import {useEffect, useState} from "react";
+import getDataBarChart from "../getDataBarChart";
 
 
 function ReportPage() {
@@ -11,62 +11,9 @@ function ReportPage() {
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
-        let result = []
-
-        transaction.forEach((transaction) => {
-            if (Date.parse(transaction.date) >= Date.parse("11/01/2022")
-                && Date.parse(transaction.date) <= Date.parse("11/30/2022")) {
-                result.push(transaction)
-            }
-        })
-
-        //get days of month
-        const month = new Date().getMonth()+1;
-        const year = new Date().getFullYear();
-        let daysInThisMonth = new Date(year, month, 0).getDate();
-        let chartLabels = [];
-        for (let i = 0; i < daysInThisMonth; i++){
-            if(i<9){
-                chartLabels.push(`${month}/0${i+1}/${year}`)
-            }else{
-                chartLabels.push(`${month}/${i+1}/${year}`)
-            }
-        }
-        setChartLabels(chartLabels)
-
-        // get income and expense by day
-        let dataIncome = [];
-        let dataExpense = [];
-        chartLabels.forEach((date) => {
-            let income = 0;
-            let expense = 0;
-            result.forEach((transaction) => {
-                if (transaction.date === date){
-                    if(transaction.type === 'income'){
-                        income += transaction.amount;
-                    }else {
-                        expense += transaction.amount;
-                    }
-                }
-            })
-            dataIncome.push(income);
-            dataExpense.push(expense);
-        });
-        const chartData=[
-            {
-                name: 'Income',
-                type: 'column',
-                fill: 'solid',
-                data: dataIncome,
-            },
-            {
-                name: 'Expense',
-                type: 'column',
-                fill: 'solid',
-                data: dataExpense,
-            }
-        ]
-        setChartData(chartData)
+        const data = getDataBarChart('cash', '11/01/2022', '11/30/2022');
+        setChartLabels(data.chartLabels);
+        setChartData(data.chartData);
     }, [])
 
     return (
