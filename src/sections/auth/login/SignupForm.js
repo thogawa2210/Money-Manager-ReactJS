@@ -33,6 +33,7 @@ function SingupForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+
   const handleValidate = (e) => {
     switch (e.target.name) {
       case 'username':
@@ -51,13 +52,19 @@ function SingupForm() {
         break;
       case 'password':
         if (!REGEX.password.test(e.target.value)) {
-          setError({
-            ...error,
-            password:
-              'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',
-          });
-        } else {
-          setError({ ...error, password: '' });
+          setError({ ...error,password:
+                'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',passwordConfirm: 'Password is not the same'});
+        }else {
+          if (e.target.value === form.passwordConfirm) {
+            console.log(111)
+            setError({ ...error,password: '', passwordConfirm: '' });
+          }else if (e.target.value !== form.passwordConfirm) {
+            console.log(22)
+            setError({
+              ...error,
+              password: '',passwordConfirm: 'Password is not the same'
+            });
+          }
         }
         break;
       case 'passwordConfirm':
@@ -71,6 +78,8 @@ function SingupForm() {
         break;
     }
   };
+
+  console.log(error)
 
   const sendUser = async () => {
     const data = {
@@ -127,7 +136,7 @@ function SingupForm() {
     <>
       <Stack spacing={3}>
         {!error.username ? (
-          <TextField required name="username" label="Username" onChange={(e) => handleOnchange(e)} />
+          <TextField required name="username" label="Username" onChange={(e) => handleOnchange(e)}  />
         ) : (
           <TextField
             required
@@ -248,7 +257,7 @@ function SingupForm() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <hr />
       </Stack>
-      {!error.email && !error.username && !error.password && !error.passwordConfirm ? (
+      {!error.email && !error.username && !error.password && !error.passwordConfirm && form.username && form.password && form.email && form.passwordConfirm ? (
         <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
           Sign up
         </LoadingButton>

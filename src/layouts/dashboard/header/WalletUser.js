@@ -31,8 +31,6 @@ export default function WalletUser() {
 
 
 
-    const totalMoney = state.wallets.reduce((a,v) =>  a = a + v.amount , 0 )
-
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
     };
@@ -56,7 +54,6 @@ export default function WalletUser() {
         toTalMoney(userId).then(res => setTotal(res.data.total))
             .catch(error => console.log(error.message))
     },[flag])
-
 
 
 
@@ -99,7 +96,7 @@ export default function WalletUser() {
                         fontSize: 14,
                         paddingLeft: 12,
                         fontWeight: 700
-                    }}>{numberWithCommas(total)}</Typography>
+                    }}>{numberWithCommas(total)} VNĐ</Typography>
                 </Box>
             </Box>
 
@@ -136,7 +133,7 @@ export default function WalletUser() {
                         <MenuItem sx={{display:'flex'}} key={index}
                                   onClick={() => handleClose(index)}>
                             <Box component="img" src={item.icon} sx={{width: 28, mr: 2}}/>
-                            {item.name} {numberWithCommas(item.amount)}
+                            {item.name} {numberWithCommas(item.amount)} VNĐ
                         </MenuItem>
                     ))}
                 </Stack>
