@@ -23,10 +23,14 @@ function ReportPage() {
   const [chartData, setChartData] = useState([]);
   const [menu, setMenu] = useState();
   const [openChooseDay, setOpenChooseDay] = useState(false);
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({
+    date: '',
+    wallet_id: '',
+  });
   const [wallets, setWallets] = useState([]);
   const [defaultWallet, setDefaultWallet] = useState('');
   const totalWallet = useSelector((state) => state.total.wallet.amount);
+  const [defaultDate, setDefaultDate] = useState('today');
 
   useEffect(() => {
     const data = getDataBarChart();
@@ -43,11 +47,14 @@ function ReportPage() {
     getWalletsApi(userID)
       .then((res) => {
         if (res.data.type === 'success') {
-          setDefaultWallet(res.data.wallet[0].name);
+          setDefaultWallet('total');
+          setForm({ date: 'today', wallet_id: 'total' });
+          setDefaultDate('today');
           setWallets(res.data.wallet);
         } else console.log(res.data);
       })
       .catch((err) => console.log(err));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChangeMenu = (e) => {
@@ -59,13 +66,19 @@ function ReportPage() {
         setForm({ ...form, [e.target.name]: e.target.value });
         break;
       case 'date':
+        setDefaultDate(e.target.value);
         setForm({ ...form, [e.target.name]: e.target.value });
         break;
       default:
     }
   };
 
-  console.log(form);
+    const handleFilter = (e) => {
+        if (form && form.date && form.wallet_id) {
+          
+      }
+  };
+
   return (
     <>
       <Helmet>
@@ -75,8 +88,8 @@ function ReportPage() {
       <AppBar position="static" color="inherit">
         <Toolbar sx={{ height: '40px' }}>
           <Grid container spacing={1}>
-            <Grid item xs={4} sx={{ pt: '14px' }}>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Grid item xs={4}>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1, pt: '6px' }}>
                 Expense report
               </Typography>
             </Grid>
@@ -85,7 +98,7 @@ function ReportPage() {
                 <Grid item xs={5}>
                   <FormControl size="small" fullWidth sx={{ mr: '2px' }}>
                     <InputLabel> Date </InputLabel>
-                    <Select value={menu} name="date" onChange={handleChangeMenu} label=" Date ">
+                    <Select value={defaultDate} name="date" onChange={handleChangeMenu} label=" Date ">
                       <MenuItem value={'today'}>Today</MenuItem>
                       <MenuItem value={'this month'}>This month</MenuItem>
                       <MenuItem value={'last month'}>Last month </MenuItem>
@@ -111,7 +124,7 @@ function ReportPage() {
                           </Grid>
                           <Grid item xs sx={{ textAlign: 'center' }}>
                             {' '}
-                            <ListItemText primary="Total"  />
+                            <ListItemText primary="Total" />
                           </Grid>
                         </MenuItem>
                         {wallets.map((wallet, index) => (
@@ -130,7 +143,13 @@ function ReportPage() {
                   </FormControl>
                 </Grid>
                 <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                  <Button color="success" type="submit" variant="outlined" sx={{ padding: '7px' }}>
+                  <Button
+                    color="success"
+                    type="submit"
+                    variant="outlined"
+                    sx={{ padding: '7px' }}
+                    onClick={handleFilter}
+                  >
                     Filter
                   </Button>
                 </Grid>
