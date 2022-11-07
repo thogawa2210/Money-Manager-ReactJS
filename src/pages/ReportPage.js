@@ -40,10 +40,8 @@ function ReportPage() {
         chartLabels.forEach((date) => {
             let income = 0;
             let expense = 0;
-            console.log(result)
             result.forEach((transaction) => {
                 if (transaction.date === date){
-                    console.log(1)
                     if(transaction.type === 'income'){
                         income += transaction.amount;
                     }else {
