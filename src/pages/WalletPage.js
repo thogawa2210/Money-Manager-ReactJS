@@ -15,12 +15,11 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControl,
     Grid,
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
-    Paper, Slide, Stack,
+    InputLabel,
+    MenuItem,
+    Paper, Select, Slide, Stack,
     Table,
     TableBody,
     TableCell,
@@ -37,46 +36,60 @@ import { DesktopDatePicker, LocalizationProvider } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { forwardRef } from 'react';
+import { Box } from '@mui/system';
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
-  });
+});
 export default function WalletPage() {
     const [detail, setDetail] = useState(<h5>Choose wallet to see details</h5>);
     const [wallets, setWallets] = useState([]);
     const [walletEdit, setWalletEdit] = useState([]);
     const [open, setOpen] = useState(false);
     const [totalMoney, setTotalMoney] = useState(0);
-     // Create Wallet
+    // Create Wallet
 
-  const [openCreate, setOpenCreate] = React.useState(false);
+    const [openCreate, setOpenCreate] = React.useState(false);
+    const [icon, setIcon] = useState('');
 
-  const [wallet, setWallet] = useState()
-  const [value, setValue] = useState(dayjs());
-  const [openAddForm, setOpenAddForm] = useState(false);
-const idUser = JSON.parse(localStorage.getItem('user')).user_id
-  const handleClickOpenCreate = () => {
-    setOpenCreate(true);
-  };
-  const handleCloseCreate = () => {
-    setOpenCreate(false);
-  };
-  const handleChangeCreate = (e) => {
-    setWallet({
-      ...wallet,
-      [e.target.name]: e.target.value
-    });
+    const [wallet, setWallet] = useState()
+    const [value, setValue] = useState(dayjs());
+    const [openAddForm, setOpenAddForm] = useState(false);
+    const idUser = JSON.parse(localStorage.getItem('user')).user_id
+    const handleClickOpenCreate = () => {
+        setOpenCreate(true);
+    };
+    const handleCloseCreate = () => {
+        setOpenCreate(false);
+    };
+    const handleChangeCreate = (e) => {
+        setWallet({
+            ...wallet,
+            [e.target.name]: e.target.value
+        });
 
-  };
-  const handleSubmitCreate = async () => {
-    setOpenAddForm(false);
-    const result = await axios.post('http://localhost:3001/wallet/create')
-    console.log(result)
-  }
+    };
+    const handleSubmitCreate = async () => {
+        setOpenAddForm(false);
+    
+        let data = {
+            icon : icon,
+           name : wallet.name,
+           amount : wallet.amount,
+           user_id : idUser
+        }
+        console.log(icon);
+        const result = await axios.post('http://localhost:3001/wallet/create',data)
+        console.log(result)
+    }
 
+
+    const handleChangeIcon = (event) => {
+        setIcon(event.target.value);
+    };
     // Detail wallet
     const [expanded, setExpanded] = React.useState(false);
 
@@ -191,7 +204,7 @@ const idUser = JSON.parse(localStorage.getItem('user')).user_id
                 <Typography variant="h3" gutterBottom>
                     Wallet Manager
                 </Typography>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}  onClick={handleClickOpenCreate}>
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenCreate}>
                     New Wallet
                 </Button>
             </Stack>
@@ -228,19 +241,20 @@ const idUser = JSON.parse(localStorage.getItem('user')).user_id
                 </DialogActions>
             </Dialog>
             {/* Detail Wallet */}
-            <div>
+            
                 {wallets.map((item, index) => (
-                    <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)}>
+                    <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)} >
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1bh-content"
                             id="panel1bh-header"
+                            
                         >
 
                             <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                            <Grid item xs={2}>
-                            <Avatar src={item.wallet_icon} sx={{ mr: 0 }} />{item.name}
-                            </Grid>
+                                <Grid item xs={2}>
+                                    <Avatar src={item.wallet_icon} sx={{ mr: 0 }} />{item.name}
+                                </Grid>
                             </Typography>
                             <Typography sx={{ color: 'text.secondary' }}>Ví {index + 1}</Typography>
                         </AccordionSummary>
@@ -258,14 +272,14 @@ const idUser = JSON.parse(localStorage.getItem('user')).user_id
 
                                             </TableRow>
                                         </TableHead>
-                                        <TableBody>             
-                            <TableRow
-                                                key={item.name}
+                                        <TableBody key={index}>
+                                            <TableRow
+                                                key={index}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                             >
                                                 <TableCell component="th" scope="row">
-                               
-                                             {item.name}
+
+                                                    {item.name}
                                                 </TableCell>
                                                 <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
                                                 <TableCell align="right">
@@ -277,7 +291,6 @@ const idUser = JSON.parse(localStorage.getItem('user')).user_id
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>
-
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
@@ -286,62 +299,85 @@ const idUser = JSON.parse(localStorage.getItem('user')).user_id
                         </AccordionDetails>
                     </Accordion>
                 ))}
-            </div>
+            
             {/* Done */}
 
-          {/* Dialog create wallet/>*/}
-    
-      <Dialog
-        TransitionComponent={Transition}
-        fullWidth={true}
-        maxWidth='md'
-        keepMounted
-        open={openCreate}
-        onClose={handleCloseCreate}>
-        <DialogTitle>{"Add Wallet"}</DialogTitle>
+            {/* Dialog create wallet/>*/}
 
-        <DialogContent>
-          <DialogContentText>
-            Form dialogs allow users to fill out form fields within a dialog. For example, if your site prompts for potential subscribers to fill in their email address, they can fill out the email field and touch 'Submit'.
-          </DialogContentText>
-          <Grid container spacing={4}>
-            <Grid item xs={6}>
-              <TextField name="icon" onChange={handleChangeCreate} fullWidth={true} label="Icon" variant="outlined" />
-            </Grid>
+            <Dialog
+                TransitionComponent={Transition}
+                fullWidth={true}
+                maxWidth='md'
+                keepMounted
+                open={openCreate}
+                onClose={handleCloseCreate}>
+                <DialogTitle>{"Add Wallet"}</DialogTitle>
 
-            <Grid item xs={6}>
-              <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name" variant="outlined" />
-            </Grid>
+                <DialogContent>
+                    <DialogContentText>
+                        Form dialogs allow users to fill out form fields within a dialog. For example, if your site prompts for potential subscribers to fill in their email address, they can fill out the email field and touch 'Submit'.
+                    </DialogContentText>
+                    <Grid container spacing={4}>
+                        <Grid item xs={6}>
 
-            <Grid item xs={6}>
-              <TextField name="user_id" onChange={handleChangeCreate} fullWidth={true} variant="outlined" />{idUser} 
-            </Grid>
-            <Grid item xs={6}>
-              <TextField name="amount" onChange={handleChangeCreate} fullWidth={true} label="Amount" variant="outlined" type="number" />
-            </Grid>
-            <Grid item xs={6}>
+                            {/* Select icon */}
+                            <Box sx={{ minWidth: 120 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Icon</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={icon}
+                                        name="icon" 
+                                        onChange={handleChangeIcon}
+                                    >
+                                        <MenuItem value={`/assets/icons/wallets/cash.svg`}>
+                                            <Avatar src={`/assets/icons/wallets/cash.svg`} sx={{ mr: 0 }} />
+                                            </MenuItem>
+                                            <MenuItem value={`/assets/icons/wallets/card.svg`}>
+                                            <Avatar src={`/assets/icons/wallets/card.svg`} sx={{ mr: 0 }} />
+                                            </MenuItem>
+                                            <MenuItem value={`/assets/icons/wallets/credit-card.svg`}>
+                                            <Avatar src={`/assets/icons/wallets/credit-card.svg`} sx={{ mr: 0 }} />
+                                            </MenuItem>
+                                            <MenuItem value={`/assets/icons/wallets/saving.svg`}>
+                                            <Avatar src={`/assets/icons/wallets/saving.svg`} sx={{ mr: 0 }} />
+                                            </MenuItem>
+                                   
+                                    </Select>
+                                </FormControl>
+                            </Box>
 
+                           
+                        </Grid>
 
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker
-                  fullWidth
-                  label="Date desktop"
-                  inputFormat="DD/MM/YYYY"
-                  value={value}
-                  name="date"
-                  onChange={handleChangeCreate}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </LocalizationProvider>
-            </Grid>
-          </Grid>
+                        <Grid item xs={4}>
+                            <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name" variant="outlined" />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <TextField name="amount" onChange={handleChangeCreate} fullWidth={true} label="Amount" variant="outlined" type="number" />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DesktopDatePicker
+                                    fullWidth
+                                    label="Date desktop"
+                                    inputFormat="DD/MM/YYYY"
+                                    value={value}
+                                    name="date"
+                                    onChange={handleChangeCreate}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                    </Grid>
 
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleCloseCreate}>Cancel</Button>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleSubmitCreate}>Save</Button>
-        </DialogActions>
-      </Dialog>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" onClick={handleCloseCreate}>Cancel</Button>
+                    <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleSubmitCreate}>Save</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }
