@@ -11,6 +11,7 @@ import {
   Select,
   MenuItem,
   Avatar,
+  ListItemText,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
@@ -27,8 +28,6 @@ function ReportPage() {
   const [defaultWallet, setDefaultWallet] = useState('');
   const totalWallet = useSelector((state) => state.total.wallet.amount);
 
-  let result = [];
-
   useEffect(() => {
     const data = getDataBarChart();
     setChartLabels(data.chartLabels);
@@ -44,6 +43,7 @@ function ReportPage() {
     getWalletsApi(userID)
       .then((res) => {
         if (res.data.type === 'success') {
+          setDefaultWallet(res.data.wallet[0].name);
           setWallets(res.data.wallet);
         } else console.log(res.data);
       })
@@ -51,8 +51,10 @@ function ReportPage() {
   }, []);
 
   const handleChangeMenu = (e) => {
+    console.log(e.target.name);
     switch (e.target.name) {
-      case 'walletID':
+      case 'wallet_id':
+        console.log(e.target.value);
         setDefaultWallet(e.target.value);
         setForm({ ...form, [e.target.name]: e.target.value });
         break;
@@ -62,6 +64,7 @@ function ReportPage() {
       default:
     }
   };
+
   console.log(form);
   return (
     <>
@@ -72,17 +75,17 @@ function ReportPage() {
       <AppBar position="static" color="inherit">
         <Toolbar sx={{ height: '40px' }}>
           <Grid container spacing={1}>
-            <Grid item xs={6} sx={{ pt: '14px' }}>
+            <Grid item xs={4} sx={{ pt: '14px' }}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 Expense report
               </Typography>
             </Grid>
             <Grid item xs>
               <Grid container>
-                <Grid item xs>
+                <Grid item xs={5}>
                   <FormControl size="small" fullWidth sx={{ mr: '2px' }}>
-                    <InputLabel>Date </InputLabel>
-                    <Select value={menu} name="date" onChange={handleChangeMenu}>
+                    <InputLabel> Date </InputLabel>
+                    <Select value={menu} name="date" onChange={handleChangeMenu} label=" Date ">
                       <MenuItem value={'today'}>Today</MenuItem>
                       <MenuItem value={'this month'}>This month</MenuItem>
                       <MenuItem value={'last month'}>Last month </MenuItem>
@@ -90,30 +93,40 @@ function ReportPage() {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={5}>
                   <FormControl size="small" fullWidth sx={{ pl: '4px' }}>
-                    <InputLabel>Wallet</InputLabel>
-                    <Select
-                      value={defaultWallet}
-                      label="Wallet"
-                      onChange={handleChangeMenu}
-                      name="walletID"
-                      sx={{ pl: 0 }}
-                    >
-                      <Grid container>
+                    <InputLabel> Wallet </InputLabel>
+                    <Grid container>
+                      <Select
+                        value={defaultWallet}
+                        onChange={handleChangeMenu}
+                        name="wallet_id"
+                        sx={{ pl: 0, height: '40px' }}
+                        label=" Wallet "
+                        fullWidth
+                      >
+                        <MenuItem key={'0'} value={'total'} sx={{ width: '100%', height: '40px' }}>
+                          <Grid item xs={2}>
+                            <Avatar src="/assets/icons/wallets/total.svg" sx={{ width: '28px', height: '28px' }} />
+                          </Grid>
+                          <Grid item xs sx={{ textAlign: 'center' }}>
+                            {' '}
+                            <ListItemText primary="Total"  />
+                          </Grid>
+                        </MenuItem>
                         {wallets.map((wallet, index) => (
-                          <MenuItem key={index + 1} value={wallet._id} sx={{ width: '100%', height: '100%' }}>
-                            <Grid item xs>
-                              <Avatar src={wallet.icon} />
+                          <MenuItem key={wallet._id} value={wallet._id} sx={{ width: '100%', height: '40px' }}>
+                            <Grid item xs={2}>
+                              <Avatar src={wallet.icon} sx={{ width: '28px', height: '28px' }} />
                             </Grid>
-                            <Grid item xs sx={{}}>
+                            <Grid item xs sx={{ textAlign: 'center' }}>
                               {' '}
-                              {wallet.name}
+                              <ListItemText primary={wallet.name} />
                             </Grid>
                           </MenuItem>
                         ))}
-                      </Grid>
-                    </Select>
+                      </Select>
+                    </Grid>
                   </FormControl>
                 </Grid>
                 <Grid item xs={2} sx={{ textAlign: 'right' }}>
