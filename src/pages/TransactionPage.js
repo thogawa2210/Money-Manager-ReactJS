@@ -242,7 +242,7 @@ export default function TransactionPage() {
                     <Grid container>
                       <Grid xs item>Inflow</Grid>
                       <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
-                        + {moneyFlow.inflow} <span style={{ textDecoration: 'underline' }}>đ</span>
+                        + {moneyFlow.inflow.toLocaleString('en-IN')} <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
                     </Grid>
                     <Grid container>
@@ -250,12 +250,12 @@ export default function TransactionPage() {
                         Outflow
                       </Grid>
                       <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
-                        - {moneyFlow.outflow} <span style={{ textDecoration: 'underline' }}>đ</span>
+                        - {moneyFlow.outflow.toLocaleString('en-IN')} <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
                     </Grid>
                     <hr />
                     <p style={{ textAlign: 'right' }}>
-                      {moneyFlow.inflow - moneyFlow.outflow} <span style={{ textDecoration: 'underline' }}>đ</span>
+                      {(moneyFlow.inflow - moneyFlow.outflow).toLocaleString('en-IN')} <span style={{ textDecoration: 'underline' }}>đ</span>
                     </p>
                   </CardContent>
                   <Divider />
@@ -287,11 +287,11 @@ export default function TransactionPage() {
                             </Grid>
                             {item.category_type === 'expense' ? (
                               <Grid item xs={5} sx={{ color: '#E51C23', textAlign: 'right', mt: '6px' }}>
-                                - {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                                - {item.amount.toLocaleString('en-IN')} <span style={{ textDecoration: 'underline' }}>đ</span>
                               </Grid>
                             ) : (
                               <Grid item xs={5} sx={{ color: '#039BE5', textAlign: 'right', mt: '6px' }}>
-                                + {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                                + {item.amount.toLocaleString('en-IN')} <span style={{ textDecoration: 'underline' }}>đ</span>
                               </Grid>
                             )}
                           </Grid>
@@ -327,12 +327,12 @@ export default function TransactionPage() {
                                 <p style={{ margin: '8px 0px' }}>{item.note} </p>
                                 {item.category_type === 'income' ? (
                                   <p style={{ color: '#039BE5', marginBottom: 0 }}>
-                                    + {item.amount.toLocaleString()}{' '}
+                                    + {item.amount.toLocaleString('en-IN')}{' '}
                                     <span style={{ color: '#039BE5', textDecoration: 'underline' }}>đ</span>
                                   </p>
                                 ) : (
                                   <p style={{ color: '#E51C23', marginBottom: 0 }}>
-                                    - {item.amount.toLocaleString()}{' '}
+                                    - {item.amount.toLocaleString('en-IN')}{' '}
                                     <span style={{ color: '#E51C23', textDecoration: 'underline' }}>đ</span>
                                   </p>
                                 )}
@@ -430,7 +430,7 @@ export default function TransactionPage() {
                 label="Note"
                 variant="outlined"
                 type="text"
-                value = {transaction.not}
+                value = {transaction.note}
               />
             </Grid>
           </Grid>
