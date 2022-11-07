@@ -152,6 +152,7 @@ export default function TransactionPage() {
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem('user')).user_id;
     setTransaction({ ...transaction, user_id: userId });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDeleteTrans = (id) => {
