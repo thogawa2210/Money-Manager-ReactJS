@@ -11,7 +11,7 @@ function ReportPage() {
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
-        const data = getDataBarChart('cash', '11/01/2022', '11/30/2022');
+        const data = getDataBarChart();
         setChartLabels(data.chartLabels);
         setChartData(data.chartData);
     }, [])
