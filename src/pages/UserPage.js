@@ -355,6 +355,7 @@ export default function UserPage() {
             ) : (
               <TextField
                 onChange={handleOnchange}
+
                 required
                 autoFocus
                 name="old_pass"
