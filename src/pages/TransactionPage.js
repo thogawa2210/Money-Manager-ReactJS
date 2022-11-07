@@ -22,10 +22,10 @@ import {
   Divider,
   Card,
   CardContent,
-  CardActions,
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -35,7 +35,7 @@ import axios from 'axios';
 import Iconify from '../components/iconify';
 import Swal from 'sweetalert2';
 import { changeFlag } from '../features/flagSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 //css
 import '../css/transaction.css';
 
@@ -44,6 +44,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 export default function TransactionPage() {
+  const flag = useSelector((state) => state.flag.flag);
   const [value, setValue] = useState(dayjs());
   const [openAddForm, setOpenAddForm] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -55,11 +56,14 @@ export default function TransactionPage() {
     category_id: '',
     amount: 0,
     note: '',
-    date: dayjs(value).format('DD/MM/YYYY'),
+    date: dayjs(value).format('MM/DD/YYYY'),
   });
   const [defaultWallet, setDefaultWallet] = useState('');
   const [expanded, setExpanded] = useState(false);
-
+  const [moneyFlow, setMoneyFlow] = useState({
+    inflow: 0,
+    outflow: 0,
+  });
   //redux
   const dispatch = useDispatch();
 
@@ -67,12 +71,13 @@ export default function TransactionPage() {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const getDataApi = async () => {
+    const userId = JSON.parse(localStorage.getItem('user')).user_id;
+    return await axios.get(`http://localhost:3001/transaction/transaction-this-month/${userId}`);
+  };
+
   const getData = async () => {
     const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    await axios
-      .get(`http://localhost:3001/transaction/get-all-transaction/${userId}`)
-      .then((res) => setListTransaction(res.data.data.data))
-      .catch((err) => console.log(err));
     await axios
       .get(`http://localhost:3001/category/get-category/${userId}`)
       .then((res) => setListCategory(res.data.categoryUser))
@@ -86,6 +91,18 @@ export default function TransactionPage() {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    getDataApi()
+      .then((res) => {
+        setListTransaction(res.data.data.list);
+        setMoneyFlow({
+          inflow: res.data.data.inflow,
+          outflow: res.data.data.outflow,
+        });
+      })
+      .catch((err) => console.log(err));
+  }, [flag]);
 
   useEffect(() => {
     if (listWallet.length > 0) {
@@ -107,7 +124,7 @@ export default function TransactionPage() {
       }
     } else {
       setValue(e);
-      setTransaction({ ...transaction, date: dayjs(e).format('DD/MM/YYYY') });
+      setTransaction({ ...transaction, date: dayjs(e).format('MM/DD/YYYY') });
     }
   };
 
@@ -119,11 +136,39 @@ export default function TransactionPage() {
     setOpenAddForm(false);
   };
 
-  useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    setTransaction({ ...transaction, user_id: userId });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const deleteTransApi = async (id) => {
+    return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`)
+  }
+
+  const handleDeleteTrans = (id) => {
+    Swal.fire({
+      icon: 'warning',
+          title: 'Delete This Transaction',
+          text: 'Are you sure?',
+          showCancelButton: true
+    })
+      .then(result => {
+        if (result.isConfirmed) {
+          deleteTransApi(id)
+            .then(res => {
+              dispatch(changeFlag(1))
+              setExpanded(false)
+              Swal.fire({
+                icon: 'success',
+                title: 'Delete Success!',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }).catch(err => Swal.fire({
+              icon: 'warning',
+              title: 'Something Wrong!',
+              text: 'Try again!',
+              showConfirmButton: false,
+              timer: 1500
+          }))
+      }
+    })
+  }
 
   const handleSubmit = async () => {
     console.log(transaction);
@@ -135,6 +180,9 @@ export default function TransactionPage() {
         text: 'Please fill all the required fields',
       });
     } else {
+      const userId = JSON.parse(localStorage.getItem('user')).user_id;
+      setTransaction({ ...transaction, user_id: userId });
+      console.log(transaction)
       await axios
         .post('http://localhost:3001/transaction/add-transaction', transaction)
         .then((res) => {
@@ -145,7 +193,7 @@ export default function TransactionPage() {
               category_id: '',
               amount: 0,
               note: '',
-              date: dayjs(value).format('DD/MM/YYYY'),
+              date: dayjs(value).format('MM/DD/YYYY'),
             });
             Swal.fire({
               icon: 'success',
@@ -160,6 +208,13 @@ export default function TransactionPage() {
           }
         })
         .catch((err) => console.log(err));
+      setTransaction({
+        ...transaction,
+        category_id: '',
+        amount: 0,
+        note: '',
+        date: dayjs(value).format('MM/DD/YYYY'),
+      })
       setOpenAddForm(false);
       dispatch(changeFlag(1));
     }
@@ -190,9 +245,9 @@ export default function TransactionPage() {
                     <h2 style={{ padding: 0, margin: 0 }}>Transaction Info</h2>
                     <hr />
                     <Grid container>
-                      <Grid xs>Inflow</Grid>
-                      <Grid xs sx={{ textAlign: 'right', color: '#039BE5' }}>
-                        + 30000 <span style={{ textDecoration: 'underline' }}>đ</span>
+                      <Grid xs item>Inflow</Grid>
+                      <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
+                        + {moneyFlow.inflow} <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
                     </Grid>
                     <Grid container>
@@ -200,81 +255,99 @@ export default function TransactionPage() {
                         Outflow
                       </Grid>
                       <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
-                        - 30000 <span style={{ textDecoration: 'underline' }}>đ</span>
+                        - {moneyFlow.outflow} <span style={{ textDecoration: 'underline' }}>đ</span>
                       </Grid>
                     </Grid>
                     <hr />
                     <p style={{ textAlign: 'right' }}>
-                      0 <span style={{ textDecoration: 'underline' }}>đ</span>
+                      {moneyFlow.inflow - moneyFlow.outflow} <span style={{ textDecoration: 'underline' }}>đ</span>
                     </p>
                   </CardContent>
                   <Divider />
                   {listTransaction.map((item, index) => (
-                    <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleExpand(`panel${index + 1}`)}>
-                      <AccordionSummary
-                        aria-controls={`panel${index + 1}bh-content`}
-                        id={`panel${index + 1}bh-header`}
-                        sx={{ width: '100%', height: '60px', flexShrink: 0, justifyContent: 'flex-start', padding: '24px' }}
+                    <>
+                      <Box sx={{ heght: '20px', border: '1px solid #b3d4fc' }}></Box>
+                      <Accordion
+                        expanded={expanded === `panel${index + 1}`}
+                        onChange={handleExpand(`panel${index + 1}`)}
                       >
-                        <Grid container spacing={2} sx={{ pt: '10px' }}>
-                          <Grid item xs={2} sx={{textAlign: 'center'}}>
-                            {' '}
-                            <Avatar src={item.wallet_icon} />
-                          </Grid>
-                          <Grid item xs={5} sx={{ mt: '6px' }}>
-                            {item.wallet_name}
-                          </Grid>
-                          {item.type === 'expense' ? (
-                            <Grid item xs={5} sx={{ color: '#E51C23', textAlign: 'right', mt: '6px' }}>
-                              - {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                        <AccordionSummary
+                          aria-controls={`panel${index + 1}bh-content`}
+                          id={`panel${index + 1}bh-header`}
+                          sx={{
+                            width: '100%',
+                            height: '60px',
+                            flexShrink: 0,
+                            justifyContent: 'flex-start',
+                            padding: '24px',
+                          }}
+                        >
+                          <Grid container spacing={2} sx={{ pt: '10px' }}>
+                            <Grid item xs={2} sx={{ textAlign: 'center' }}>
+                              {' '}
+                              <Avatar src={item.wallet_icon} />
                             </Grid>
-                          ) : (
-                            <Grid item xs={5} sx={{ color: '#039BE5', textAlign: 'right', mt: '6px' }}>
-                              + {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                            <Grid item xs={5} sx={{ mt: '6px' }}>
+                              {item.wallet_name}
                             </Grid>
-                          )}
-                        </Grid>
-                      </AccordionSummary>
-                      <AccordionDetails sx={{height: '235px', pb: 0}}>
-                        <Typography sx={{height: '40px'}}>
+                            {item.category_type === 'expense' ? (
+                              <Grid item xs={5} sx={{ color: '#E51C23', textAlign: 'right', mt: '6px' }}>
+                                - {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                              </Grid>
+                            ) : (
+                              <Grid item xs={5} sx={{ color: '#039BE5', textAlign: 'right', mt: '6px' }}>
+                                + {item.amount} <span style={{ textDecoration: 'underline' }}>đ</span>
+                              </Grid>
+                            )}
+                          </Grid>
+                        </AccordionSummary>
+                        <AccordionDetails sx={{ height: '235px', pb: 0 }}>
+                          <Typography sx={{ height: '40px' }}>
+                            <Grid container>
+                              <Grid item xs sx={{ mt: 0, mb: 0 }}>
+                                <h3 style={{ margin: 0 }}>Transaction Details</h3>
+                              </Grid>
+                              <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                                <Button variant="outlined" color="success">
+                                  EDIT
+                                </Button>
+                              </Grid>
+                              <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                                <Button variant="outlined" color="error" onClick={()=>handleDeleteTrans(item._id)}>
+                                  DELETE
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          </Typography>
+                          <hr />
                           <Grid container>
-                            <Grid item xs sx={{mt: 0, mb: 0}}>
-                              <h3 style={{margin: 0}}>Transaction Details</h3>
+                            <Grid item xs={2}>
+                              <Avatar src={item.wallet_icon} sx={{ mr: 10 }} />
                             </Grid>
-                            <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                              <Button variant="outlined" color="success">
-                                EDIT
-                              </Button>
+                            <Grid item xs sx={{ mt: '3px' }}>
+                              <h3 style={{ margin: 0 }}>{item.wallet_name}</h3>
+                              <Typography>
+                                <p style={{ fontSize: '12px' }}>{item.date} </p>
+                                <hr />
+                                <p style={{ margin: '8px 0px' }}>{item.note} </p>
+                                {item.category_type === 'income' ? (
+                                  <p style={{ color: '#039BE5', marginBottom: 0 }}>
+                                    + {item.amount}{' '}
+                                    <span style={{ color: '#039BE5', textDecoration: 'underline' }}>đ</span>
+                                  </p>
+                                ) : (
+                                  <p style={{ color: '#E51C23', marginBottom: 0 }}>
+                                    - {item.amount}{' '}
+                                    <span style={{ color: '#E51C23', textDecoration: 'underline' }}>đ</span>
+                                  </p>
+                                )}
+                              </Typography>
                             </Grid>
-                            <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                              <Button variant="outlined" color="error">
-                                DELETE
-                              </Button>
-                            </Grid>
+                            <Grid item xs></Grid>
                           </Grid>
-                        </Typography>
-                        <hr />
-                        <Grid container>
-                          <Grid item xs={2}>
-                            <Avatar src={item.wallet_icon} sx={{ mr: 10 }} />
-                          </Grid>
-                          <Grid item xs sx={{mt: '3px'}}>
-                            <h3 style={{ margin: 0 }}>{item.wallet_name}</h3>
-                            <Typography>
-                              <p style={{ fontSize: '12px' }}>{item.date} </p>
-                              <hr />
-                              <p style={{ margin: '8px 0px' }}>{item.note} </p>
-                              {item.category_type === 'income' ? (
-                                <p style={{ color: '#039BE5', marginBottom: 0 }}>+ {item.amount} <span style={{ color: '#039BE5', textDecoration: 'underline'}}>đ</span></p>
-                              ) : (
-                                <p style={{ color: '#E51C23', marginBottom: 0 }}>- {item.amount} <span style={{color: '#E51C23', textDecoration: 'underline' }}>đ</span></p>
-                              )}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs></Grid>
-                        </Grid>
-                      </AccordionDetails>
-                    </Accordion>
+                        </AccordionDetails>
+                      </Accordion>
+                    </>
                   ))}
                 </Card>
               </Grid>
@@ -302,7 +375,6 @@ export default function TransactionPage() {
                 <InputLabel>Wallet</InputLabel>
                 <Select
                   onChange={handleChange}
-                  defaultValue="Cash"
                   label="Wallet"
                   name="wallet_id"
                   value={defaultWallet}
@@ -319,7 +391,7 @@ export default function TransactionPage() {
             <Grid item xs={4}>
               <FormControl fullWidth margin="dense">
                 <InputLabel>Categories</InputLabel>
-                <Select onChange={handleChange} label="Categories" name="category_id">
+                <Select onChange={handleChange} label="Categories" name="category_id" value = {transaction.category_id}>
                   {listCategory.map((category) => (
                     <MenuItem key={category.name} value={category._id}>
                       <Avatar src={category.icon} />
@@ -338,6 +410,7 @@ export default function TransactionPage() {
                 variant="outlined"
                 type="number"
                 margin="dense"
+                value = {transaction.amount}
                 InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
               />
             </Grid>
@@ -362,6 +435,7 @@ export default function TransactionPage() {
                 label="Note"
                 variant="outlined"
                 type="text"
+                value = {transaction.not}
               />
             </Grid>
           </Grid>
