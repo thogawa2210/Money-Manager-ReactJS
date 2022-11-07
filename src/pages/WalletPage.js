@@ -39,7 +39,7 @@ import { forwardRef } from 'react';
 import { Box } from '@mui/system';
 
 function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -51,11 +51,12 @@ export default function WalletPage() {
     const [open, setOpen] = useState(false);
     const [totalMoney, setTotalMoney] = useState(0);
     // Create Wallet
-
     const [openCreate, setOpenCreate] = React.useState(false);
     const [icon, setIcon] = useState('');
-
-    const [wallet, setWallet] = useState()
+    const [wallet, setWallet] = useState({
+        name : '',
+        amount : ''
+    })
     const [value, setValue] = useState(dayjs());
     const [openAddForm, setOpenAddForm] = useState(false);
     const idUser = JSON.parse(localStorage.getItem('user')).user_id
@@ -81,9 +82,25 @@ export default function WalletPage() {
            amount : wallet.amount,
            user_id : idUser
         }
-        console.log(icon);
         const result = await axios.post('http://localhost:3001/wallet/create',data)
-        console.log(result)
+ 
+        if(result.data.type === "success") { 
+            Swal.fire({
+                icon: 'success',
+                title: 'Update Successfully!'
+            }).then(
+                setOpenCreate(false),
+                dispatch(changeFlag(1)),
+                setWallet({
+                    ...wallet,
+                    name : '',
+                    amount : ''
+                })
+            );
+
+        } else {
+            alert(result.data.message)
+        }
     }
 
 
@@ -195,7 +212,6 @@ export default function WalletPage() {
             </>
         );
     };
-
     return (
         <>
 
@@ -253,7 +269,7 @@ export default function WalletPage() {
 
                             <Typography sx={{ width: '33%', flexShrink: 0 }}>
                                 <Grid item xs={2}>
-                                    <Avatar src={item.wallet_icon} sx={{ mr: 0 }} />{item.name}
+                                    <Avatar src={item.icon} sx={{ mr: 0 }} />{item.name}
                                 </Grid>
                             </Typography>
                             <Typography sx={{ color: 'text.secondary' }}>Ví {index + 1}</Typography>
@@ -331,6 +347,7 @@ export default function WalletPage() {
                                         name="icon" 
                                         onChange={handleChangeIcon}
                                     >
+
                                         <MenuItem value={`/assets/icons/wallets/cash.svg`}>
                                             <Avatar src={`/assets/icons/wallets/cash.svg`} sx={{ mr: 0 }} />
                                             </MenuItem>
@@ -352,10 +369,10 @@ export default function WalletPage() {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name" variant="outlined" />
+                            <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name" variant="outlined" value={wallet.name} />
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField name="amount" onChange={handleChangeCreate} fullWidth={true} label="Amount" variant="outlined" type="number" />
+                            <TextField name="amount" onChange={handleChangeCreate} fullWidth={true} label="Amount" variant="outlined" type="number"value={wallet.amount} />
                         </Grid>
                         <Grid item xs={4}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
