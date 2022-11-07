@@ -1,9 +1,9 @@
 import {useEffect, useState} from 'react';
 // @mui
 import {Box, MenuItem, Stack, IconButton, Popover, Typography, Divider} from '@mui/material';
-import wallets from '../../../_mock/wallet'
 import axios from "axios";
-import { useSelector} from "react-redux";
+import { useSelector, useDispatch} from "react-redux";
+import { addTotal } from '../../../features/totalSlice';
 
 
 
@@ -26,6 +26,7 @@ export default function WalletUser() {
         wallets:[]
     })
     const [total, setTotal] = useState(0)
+    const dispatch = useDispatch()
 
     const {flag} = useSelector(state => state.flag)
 
@@ -53,6 +54,8 @@ export default function WalletUser() {
         ).catch(error => console.log(error.message))
         toTalMoney(userId).then(res => setTotal(res.data.total))
             .catch(error => console.log(error.message))
+        dispatch(addTotal(total))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[flag])
 
 

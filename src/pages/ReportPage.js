@@ -17,12 +17,19 @@ import {
 import transaction from '../_mock/transaction';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 function ReportPage() {
   const [chartLabels, setChartLabels] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [menu, setMenu] = useState();
   const [openChooseDay, setOpenChooseDay] = useState(false);
+  const [form, setForm] = useState({
+    date: '',
+    walletID: '',
+  });
+    const [defaultWallet, setDefaultWallet] = useState('');
+    const totalWallet = useSelector(state => state.total.wallet.amount)
 
   useEffect(() => {
     let result = [];
@@ -96,6 +103,7 @@ function ReportPage() {
     getAllWallet(userID)
       .then((res) => {
         if (res.data.type === 'success') {
+          setDefaultWallet(res.data.wallet[0]._id);
           setWallets(res.data.wallet);
         } else {
           console.log(res.data.message);
@@ -104,9 +112,23 @@ function ReportPage() {
       .catch((err) => console.log(err));
   }, []);
 
-  const handleChangeMenuFilter = () => {};
+  console.log(form);
 
   const handleFilter = () => {};
+
+    const handleChangeMenu = (e) => {
+        let target = e.target.name
+        switch (target) {
+            case 'walletID':
+                setDefaultWallet(e.target.value)
+                setForm({...form, walletID: e.target.value})
+                break;
+            case 'date':
+                setForm({...form, date: e.target.value})
+                break;
+            default:
+        }
+  };
 
   return (
     <>
@@ -132,11 +154,13 @@ function ReportPage() {
                       id="demo-select-small"
                       value={menu}
                       label="Age"
-                      onChange={handleChangeMenuFilter}
+                      name="date"
+                      onChange={handleChangeMenu}
                     >
-                      <MenuItem value={10}>This month</MenuItem>
-                      <MenuItem value={20}>Last month </MenuItem>
-                      <MenuItem value={30}>Custom</MenuItem>
+                      <MenuItem value={'today'}>Today</MenuItem>
+                      <MenuItem value={'this month'}>This month</MenuItem>
+                      <MenuItem value={'last month'}>Last month </MenuItem>
+                      <MenuItem value={'custom'}>Custom</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -144,16 +168,15 @@ function ReportPage() {
                   <FormControl size="small" fullWidth sx={{ pl: '4px' }}>
                     <InputLabel id="select-wallet">Wallet </InputLabel>
                     <Select
-                      labelId="select-wallet"
-                      id="select-wallet"
-                      value={menu}
-                      label="Age"
-                      onChange={handleChangeMenuFilter}
+                      value={defaultWallet}
+                      label="Wallet"
+                      onChange={handleChangeMenu}
+                      name="walletID"
                       sx={{ pl: 0 }}
                     >
                       <Grid container>
                         {wallets.map((wallet, index) => (
-                          <MenuItem key={index + 1} value={wallet.name} sx={{ width: '100%', height: '100%' }}>
+                          <MenuItem key={wallet.name} value={wallet._id} sx={{ width: '100%', height: '100%' }}>
                             <Grid item xs>
                               <Avatar src={wallet.icon} />
                             </Grid>
