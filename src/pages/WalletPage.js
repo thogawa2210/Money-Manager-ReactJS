@@ -1,7 +1,13 @@
-import {Helmet} from 'react-helmet-async';
-import {useEffect, useState} from 'react';
-import {changeFlag} from '../features/flagSlice';
+import { Helmet } from 'react-helmet-async';
+import { useEffect, useState } from 'react';
+import { changeFlag } from '../features/flagSlice';
+import * as React from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Avatar,
     Button,
     Dialog,
@@ -14,25 +20,70 @@ import {
     ListItem,
     ListItemAvatar,
     ListItemText,
-    Paper,Stack,
+    Paper, Slide, Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
     TextField, Typography,
 } from '@mui/material';
 import axios from 'axios';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import Iconify from "../components/iconify";
+import { DesktopDatePicker, LocalizationProvider } from '@mui/lab';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import { forwardRef } from 'react';
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
-
+const Transition = forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 export default function WalletPage() {
     const [detail, setDetail] = useState(<h5>Choose wallet to see details</h5>);
     const [wallets, setWallets] = useState([]);
     const [walletEdit, setWalletEdit] = useState([]);
     const [open, setOpen] = useState(false);
     const [totalMoney, setTotalMoney] = useState(0);
+     // Create Wallet
 
+  const [openCreate, setOpenCreate] = React.useState(false);
+
+  const [wallet, setWallet] = useState()
+  const [value, setValue] = useState(dayjs());
+  const [openAddForm, setOpenAddForm] = useState(false);
+const idUser = JSON.parse(localStorage.getItem('user')).user_id
+  const handleClickOpenCreate = () => {
+    setOpenCreate(true);
+  };
+  const handleCloseCreate = () => {
+    setOpenCreate(false);
+  };
+  const handleChangeCreate = (e) => {
+    setWallet({
+      ...wallet,
+      [e.target.name]: e.target.value
+    });
+
+  };
+  const handleSubmitCreate = async () => {
+    setOpenAddForm(false);
+    const result = await axios.post('http://localhost:3001/wallet/create')
+    console.log(result)
+  }
+
+    // Detail wallet
+    const [expanded, setExpanded] = React.useState(false);
+
+    const handleChangeDetail = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
+    };
+    //Done
     const flag = useSelector((state) => state.flag);
     const dispatch = useDispatch();
 
@@ -66,9 +117,9 @@ export default function WalletPage() {
 
     const onChangeEdit = (e) => {
         if (e.target.name === 'amount') {
-            setWalletEdit({...walletEdit, [e.target.name]: parseInt(e.target.value)});
+            setWalletEdit({ ...walletEdit, [e.target.name]: parseInt(e.target.value) });
         } else {
-            setWalletEdit({...walletEdit, [e.target.name]: e.target.value});
+            setWalletEdit({ ...walletEdit, [e.target.name]: e.target.value });
         }
     };
 
@@ -117,11 +168,11 @@ export default function WalletPage() {
         setDetail(
             <>
                 <h4>Wallet detail</h4>
-                <hr/>
+                <hr />
                 <p>Wallet Name: {wallet[0].name}</p>
-                <hr/>
+                <hr />
                 <p>Wallet Amount: {numberWithCommas(wallet[0].amount)}</p>
-                <hr/>
+                <hr />
                 <Button variant="contained" color="primary" onClick={() => handleClickOpen(id)}>
                     Edit
                 </Button>
@@ -134,42 +185,16 @@ export default function WalletPage() {
 
     return (
         <>
-            <Helmet>
-                <title> Wallet | Money Manager Master </title>
-            </Helmet>
+
 
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                 <Typography variant="h3" gutterBottom>
-                    Wallet
+                    Wallet Manager
                 </Typography>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}>
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}  onClick={handleClickOpenCreate}>
                     New Wallet
                 </Button>
             </Stack>
-
-            <Paper elevation={3} sx={{padding: 2}}>
-                <Grid container spacing={2}>
-
-                    <Grid item xs={5} alignItems="center">
-                        <h3>Total: {numberWithCommas(totalMoney)} VNĐ</h3>
-                        <List>
-                            {wallets.slice(0, 3).map((item) => (
-                                <ListItem button onClick={() => handleClick(item._id)} key={item._id}>
-                                    <ListItemAvatar>
-                                        <Avatar alt={item.name} src={item.icon}/>
-                                    </ListItemAvatar>
-                                    <ListItemText primary={item.name} secondary={numberWithCommas(item.amount)}/>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Grid>
-
-                    <Grid item xs={7}>
-                        <div>{detail}</div>
-                    </Grid>
-                </Grid>
-            </Paper>
-
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Edit wallet</DialogTitle>
                 <DialogContent>
@@ -202,6 +227,121 @@ export default function WalletPage() {
                     <Button onClick={() => handleSaveEdit(walletEdit._id)}>Save</Button>
                 </DialogActions>
             </Dialog>
+            {/* Detail Wallet */}
+            <div>
+                {wallets.map((item, index) => (
+                    <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1bh-content"
+                            id="panel1bh-header"
+                        >
+
+                            <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                            <Grid item xs={2}>
+                            <Avatar src={item.wallet_icon} sx={{ mr: 0 }} />{item.name}
+                            </Grid>
+                            </Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>Ví {index + 1}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+
+                                {/* Table */}
+                                <TableContainer component={Paper}>
+                                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Wallet Name</TableCell>
+                                                <TableCell align="right">Wallet Amount</TableCell>
+                                                <TableCell align="right">Wallet Action</TableCell>
+
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>             
+                            <TableRow
+                                                key={item.name}
+                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            >
+                                                <TableCell component="th" scope="row">
+                               
+                                             {item.name}
+                                                </TableCell>
+                                                <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
+                                                <TableCell align="right">
+                                                    <Button variant="contained" color="primary" onClick={() => handleClickOpen(item._id)}>
+                                                        Edit
+                                                    </Button>
+                                                    <Button variant="contained" color="error" onClick={() => handleDeleteWallet(item._id)}>
+                                                        Delete
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                                {/* done Table */}
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                ))}
+            </div>
+            {/* Done */}
+
+          {/* Dialog create wallet/>*/}
+    
+      <Dialog
+        TransitionComponent={Transition}
+        fullWidth={true}
+        maxWidth='md'
+        keepMounted
+        open={openCreate}
+        onClose={handleCloseCreate}>
+        <DialogTitle>{"Add Wallet"}</DialogTitle>
+
+        <DialogContent>
+          <DialogContentText>
+            Form dialogs allow users to fill out form fields within a dialog. For example, if your site prompts for potential subscribers to fill in their email address, they can fill out the email field and touch 'Submit'.
+          </DialogContentText>
+          <Grid container spacing={4}>
+            <Grid item xs={6}>
+              <TextField name="icon" onChange={handleChangeCreate} fullWidth={true} label="Icon" variant="outlined" />
+            </Grid>
+
+            <Grid item xs={6}>
+              <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name" variant="outlined" />
+            </Grid>
+
+            <Grid item xs={6}>
+              <TextField name="user_id" onChange={handleChangeCreate} fullWidth={true} variant="outlined" />{idUser} 
+            </Grid>
+            <Grid item xs={6}>
+              <TextField name="amount" onChange={handleChangeCreate} fullWidth={true} label="Amount" variant="outlined" type="number" />
+            </Grid>
+            <Grid item xs={6}>
+
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DesktopDatePicker
+                  fullWidth
+                  label="Date desktop"
+                  inputFormat="DD/MM/YYYY"
+                  value={value}
+                  name="date"
+                  onChange={handleChangeCreate}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+          </Grid>
+
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleCloseCreate}>Cancel</Button>
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleSubmitCreate}>Save</Button>
+        </DialogActions>
+      </Dialog>
         </>
     );
 }
