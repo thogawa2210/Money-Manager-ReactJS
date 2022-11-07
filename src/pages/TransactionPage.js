@@ -149,9 +149,9 @@ export default function TransactionPage() {
   const handleDeleteTrans = (id) => {
     Swal.fire({
       icon: 'warning',
-          title: 'Delete This Transaction',
-          text: 'Are you sure?',
-          showCancelButton: true
+      title: 'Delete This Transaction',
+      text: 'Are you sure?',
+      showCancelButton: true
     })
       .then(result => {
         if (result.isConfirmed) {
@@ -171,9 +171,9 @@ export default function TransactionPage() {
               text: 'Try again!',
               showConfirmButton: false,
               timer: 1500
-          }))
-      }
-    })
+            }))
+        }
+      })
   }
 
   const handleSubmit = async () => {
@@ -309,7 +309,7 @@ export default function TransactionPage() {
                                 </Button>
                               </Grid>
                               <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                                <Button variant="outlined" color="error" onClick={()=>handleDeleteTrans(item._id)}>
+                                <Button variant="outlined" color="error" onClick={() => handleDeleteTrans(item._id)}>
                                   DELETE
                                 </Button>
                               </Grid>
