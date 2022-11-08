@@ -25,6 +25,7 @@ import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
 import axios from 'axios';
 import getFormatDate from './../getDateFormat';
+import transaction from "../_mock/transaction";
 
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);

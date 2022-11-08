@@ -532,7 +532,10 @@ export default function TransactionPage() {
                             <FormControl fullWidth margin="dense">
                                 <InputLabel>Categories</InputLabel>
                                 <Select onChange={handleChange} label="Categories" name="category_id"
-                                        value={transaction.category_id} sx={{ height: '56px' }}>
+                                        value={transaction.category_id} sx={{ height: '56px' }}
+                                        inputProps={{ readOnly: true }}
+                                        onClick={()=> console.log(1)}
+                                >
                                     <ListSubheader>Expense</ListSubheader>
                                     {listCategory.map((category) =>{
                                         if (category.type === "expense")
