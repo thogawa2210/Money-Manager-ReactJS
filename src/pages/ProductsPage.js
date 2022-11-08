@@ -1,115 +1,41 @@
 import { Helmet } from 'react-helmet-async';
-import { forwardRef, useState } from 'react';
-import { Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, Slide, Stack, TableBody, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField, Typography } from '@mui/material';
+import { forwardRef, useEffect, useState } from 'react';
+import { Avatar, Box, Button, Card, CardContent, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, Slide, Stack, TableFooter, TablePagination, TextField, Typography } from '@mui/material';
 import Iconify from 'src/components/iconify';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { changeFlag } from 'src/features/flagSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import Table from 'src/theme/overrides/Table';
-import Paper from '@mui/material/Paper';
-import styled from '@emotion/styled';
 import { useTheme } from '@emotion/react';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import PropTypes from 'prop-types';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-function TablePaginationActions(props) {
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onPageChange } = props;
-
-  const handleFirstPageButtonClick = (event) => {
-    onPageChange(event, 0);
-  };
-
-  const handleBackButtonClick = (event) => {
-    onPageChange(event, page - 1);
-  };
-
-  const handleNextButtonClick = (event) => {
-    onPageChange(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (event) => {
-    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  };
-
-  return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="previous page"
-      >
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </Box>
-  );
-}
-
-TablePaginationActions.propTypes = {
-  count: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-};
-
-function createData(name, calories, fat) {
-  return { name, calories, fat };
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7),
-  createData('Donut', 452, 25.0),
-  createData('Eclair', 262, 16.0),
-  createData('Frozen yoghurt', 159, 6.0),
-  createData('Gingerbread', 356, 16.0),
-  createData('Honeycomb', 408, 3.2),
-  createData('Ice cream sandwich', 237, 9.0),
-  createData('Jelly Bean', 375, 0.0),
-  createData('KitKat', 518, 26.0),
-  createData('Lollipop', 392, 0.2),
-  createData('Marshmallow', 318, 0),
-  createData('Nougat', 360, 19.0),
-  createData('Oreo', 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
-
 export default function ProductsPage() {
+  const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
+  const [openEditCreateCategory, setOpenEditCreateCategory] = useState(false);
   const [icon, setIcon] = useState('');
   const [type, setType] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [categoriesEdit, setCategoriesEdit] = useState([]);
   const [category, setCategory] = useState({
     name: '',
     type: '',
     icon: ''
-  })
+  });
+  const userId = JSON.parse(localStorage.getItem('user'));
   const [openAddForm, setOpenAddForm] = useState(false);
   const idUser = JSON.parse(localStorage.getItem('user')).user_id
   const handleClickOpenCreateCategory = () => {
@@ -176,12 +102,113 @@ export default function ProductsPage() {
   const handleChangeType = (event) => {
     setType(event.target.value);
   };
-// Table detail category
+  // Table detail category
+  const getCategoryById = async () => {
+    const userId = JSON.parse(localStorage.getItem('user'));
+    return await axios.get(` http://localhost:3001/category/get-category-byuser/${userId.user_id}`);
+  };
 
+  useEffect(() => {
+    getCategoryById()
+      .then((res) => setCategories(res.data.categoryOfUser))
+      .catch((error) => console.log(error.message));
+  }, [flag]);
+
+
+  const handleDeleteCategory = (id) => {
+    Swal.fire({
+      title: 'Are you sure to delete?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await axios.delete(`http://localhost:3001/category/delete-category/${id}`, userId)
+          .then(res => {
+            dispatch(changeFlag(1))
+          })
+          .catch(err => console.log(err))
+        Swal.fire(
+          'Deleted!',
+          'Category has been deleted.',
+          'success'
+        )
+      }
+    });
+  };
+//  Update Category
+const handleClickOpenEditCategory = () => {
+  setOpenEditCreateCategory(true);
+};
+const handleCloseEdit = () => {
+  setOpenEditCreateCategory(false);
+};
+const handleClickOpenCategory = (id) => {
+  const categoryEdit = categories.filter((cate) => cate._id === id);
+  setCategoriesEdit(categoryEdit[0]);
+  setOpenEditCreateCategory(true);
+}
   return (
     <>
-      <Button onClick={handleClickOpenCreateCategory}> Create</Button>
-      {/* Dialog create wallet/>*/}
+      <Grid container spacing={3}>
+        <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+            <Typography variant="h3">Category</Typography>
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenCreateCategory}>
+              New Category
+            </Button>
+          </Stack>
+        </Grid>
+        <Grid item xs />
+        <Grid item xs={8} sx={{ padding: 0 }}>
+          <Stack>
+            <Grid>
+              <Grid>
+                <Card>
+                  <CardContent sx={{ pb: 0 }}>
+                    {/* Table */}
+                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>N.O</TableCell>
+                          <TableCell align="center">Icon</TableCell>
+                          <TableCell align="center">Name Category</TableCell>
+                          <TableCell align="center">Type&nbsp;</TableCell>
+                          <TableCell align="center">Action</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {categories.map((item, index) => (
+                          <TableRow key={index}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">{index + 1}</TableCell>
+                            <TableCell align="center"><Avatar src={item.icon}></Avatar></TableCell>
+                            <TableCell align="center"><strong>{item.name}</strong></TableCell>
+                            <TableCell align="right">{item.type}</TableCell>
+                            <TableCell align="right">
+                              <Button variant="outlined" color="success"  onClick={() => handleClickOpenCategory(item._id)} >Edit</Button>
+                              <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+
+                      </TableBody>
+                    </Table>
+                    {/* Done Table */}
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Stack>
+        </Grid>
+        <Grid item xs />
+      </Grid>
+
+      {/* Dialog create Category/>*/}
       <Dialog
         TransitionComponent={Transition}
         fullWidth={true}
@@ -257,7 +284,81 @@ export default function ProductsPage() {
           <Button variant="contained" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCreate}>Save</Button>
         </DialogActions>
       </Dialog>
-      {/* Table Category */}
+      {/* Update Category */}
+      <Dialog
+        TransitionComponent={Transition}
+        fullWidth={true}
+        maxWidth='md'
+        keepMounted
+        open={openEditCreateCategory}
+        onClose={handleCloseCreate}>
+        <DialogTitle>{"Add Wallet"}</DialogTitle>
+        <DialogContentText>
+        </DialogContentText>
+        <DialogContent>
+          <Grid container spacing={3}>
+            {/* Select icon */}
+            <Grid item xs={2}>
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl sx={{ width: 100 }}>
+                  <InputLabel id="demo-simple-select-label">Icon</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="icon"
+                    name="icon"
+                    onChange={(event) => handleChangeIcon(event)}
+                    sx={{ height: 55 }}
+                  >
+                    <MenuItem value={`/assets/icons/category/car.svg`}>
+                      <Avatar src={`/assets/icons/category/car.svg`} sx={{ mr: 0 }} />
+                    </MenuItem>
+                    <MenuItem value={`/assets/icons/category/food.svg`}>
+                      <Avatar src={`/assets/icons/category/food.svg`} sx={{ mr: 0 }} />
+                    </MenuItem>
+                    <MenuItem value={`/assets/icons/category/house.svg`}>
+                      <Avatar src={`/assets/icons/category/house.svg`} sx={{ mr: 0 }} />
+                    </MenuItem>
+                    <MenuItem value={`/assets/icons/category/salary.svg`}>
+                      <Avatar src={`/assets/icons/category/salary.svg`} sx={{ mr: 0 }} />
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+            <Grid item xs={5} >
+              <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name Category" variant="outlined" value={category.name} />
+            </Grid>
+            <Grid item xs={2}>
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl sx={{ width: 300 }}>
+                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="type"
+                    name="type"
+                    onChange={(event) => handleChangeType(event)}
+                    sx={{ height: 55 }}
+                  >
+                    <MenuItem value={`expense`}>
+                      Expense
+                    </MenuItem>
+                    <MenuItem value={`income`}>
+                      Income
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+          </Grid>
+
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleCloseEdit}>Cancel</Button>
+          <Button variant="contained" startIcon={<Iconify icon="uis:check" />} onClick={handleClickOpenEditCategory}>Save</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
