@@ -29,7 +29,8 @@ import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
 import axios from 'axios';
 import getFormatDate from './../getDateFormat';
-import transaction from '../_mock/transaction';
+import transaction from "../_mock/transaction";
+import {Box} from "@mui/system";
 
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);
@@ -272,14 +273,16 @@ function ReportPage() {
         </Toolbar>
       </AppBar>
 
-      <Grid item xs={12} md={6} lg={8}>
-        <AppWebsiteVisits
-          title="This month Reports"
-          subheader="(+43%) than last year"
-          chartLabels={chartLabels}
-          chartData={chartData}
-        />
-      </Grid>
+      <Box sx={{mt: "10px"}}>
+        <Grid item xs={12} md={6} lg={8}>
+          <AppWebsiteVisits
+              title="This month Reports"
+              subheader="(+43%) than last year"
+              chartLabels={chartLabels}
+              chartData={chartData}
+          />
+        </Grid>
+      </Box>
 
       <Dialog
         open={openChooseDay}

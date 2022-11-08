@@ -57,6 +57,7 @@ export default function TransactionPage() {
   const [value, setValue] = useState(dayjs());
   const [openAddForm, setOpenAddForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
+  const [openCategory, setOpenCategory] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [listTransaction, setListTransaction] = useState([]);
   const [listWallet, setListWallet] = useState([]);
@@ -171,7 +172,7 @@ export default function TransactionPage() {
     setOpenAddForm(false);
   };
 
-  const handleClickEditAddForm = (id) => {
+  const handleClickEditForm = (id) => {
     const editTransaction = listTransaction.filter((transaction) => transaction._id === id);
     setValue(dayjs(editTransaction[0].date));
     setEditTransaction(editTransaction[0]);
@@ -181,6 +182,14 @@ export default function TransactionPage() {
   const handleCloseEditForm = () => {
     setValue(dayjs());
     setOpenEditForm(false);
+  };
+
+  const handleClickOpenCategory = () => {
+    setOpenCategory(true);
+  };
+
+  const closeCategory = () => {
+    setOpenCategory(false);
   };
 
   const deleteTransApi = async (id) => {
@@ -448,7 +457,7 @@ export default function TransactionPage() {
                                 <Button
                                   variant="outlined"
                                   color="success"
-                                  onClick={() => handleClickEditAddForm(item._id)}
+                                  onClick={() => handleClickEditForm(item._id)}
                                 >
                                   EDIT
                                 </Button>
@@ -636,11 +645,11 @@ export default function TransactionPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" color="error" onClick={handleCloseAddForm}>
+          <Button variant="outlined" onClick={handleCloseAddForm}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={handleSubmit}>
-            Submit
+          <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleSubmit}>
+            Save
           </Button>
         </DialogActions>
       </Dialog>
@@ -751,11 +760,11 @@ export default function TransactionPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" color="error" onClick={handleCloseEditForm}>
+          <Button variant="outlined" onClick={handleCloseEditForm}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={handleEdit}>
-            Submit
+          <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleEdit}>
+            Save
           </Button>
         </DialogActions>
       </Dialog>
