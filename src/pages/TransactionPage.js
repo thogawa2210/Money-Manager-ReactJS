@@ -25,7 +25,7 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Box,
+    Box, ListSubheader,
 } from '@mui/material';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
@@ -497,12 +497,22 @@ export default function TransactionPage() {
                                 <InputLabel>Categories</InputLabel>
                                 <Select onChange={handleChange} label="Categories" name="category_id"
                                         value={transaction.category_id}>
-                                    {listCategory.map((category) => (
-                                        <MenuItem key={category.name} value={category._id}>
-                                            <Avatar src={category.icon}/>
-                                            <ListItemText primary={category.name}/>
-                                        </MenuItem>
-                                    ))}
+                                    <ListSubheader>Expense</ListSubheader>
+                                    {listCategory.map((category) =>{
+                                        if (category.type === "expense")
+                                            return (<MenuItem key={category.name} value={category._id}>
+                                                <Avatar src={category.icon}/>
+                                                <ListItemText primary={category.name}/>
+                                            </MenuItem>)
+                                    })}
+                                    <ListSubheader>Income</ListSubheader>
+                                    {listCategory.map((category) =>{
+                                        if (category.type === "income")
+                                            return (<MenuItem key={category.name} value={category._id}>
+                                                <Avatar src={category.icon}/>
+                                                <ListItemText primary={category.name}/>
+                                            </MenuItem>)
+                                    })}
                                 </Select>
                             </FormControl>
                         </Grid>
