@@ -158,7 +158,7 @@ export default function TransactionPage() {
             }
         } else {
             setValue(e);
-            setTransaction({...editTransaction, date: dayjs(e).format('MM/DD/YYYY')});
+            setEditTransaction({...editTransaction, date: dayjs(e).format('MM/DD/YYYY')});
         }
     };
 
@@ -265,6 +265,7 @@ export default function TransactionPage() {
     };
 
     const handleEdit = async () => {
+        console.log(editTransaction)
         if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
             setOpenEditForm(false);
             Swal.fire({
@@ -506,7 +507,7 @@ export default function TransactionPage() {
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField
+                            <TextField sx={{height:'73'}}
                                 name="amount"
                                 onChange={handleChange}
                                 fullWidth={true}
