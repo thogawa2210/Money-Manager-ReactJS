@@ -4,6 +4,7 @@ import { AppWebsiteVisits } from '../sections/@dashboard/app';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 import {
   AppBar,
@@ -20,7 +21,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogContentText,
   DialogActions,
   Slide,
   TextField,
@@ -29,8 +29,8 @@ import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
 import axios from 'axios';
 import getFormatDate from './../getDateFormat';
-import transaction from "../_mock/transaction";
-import {Box} from "@mui/system";
+import { Box } from '@mui/system';
+import { getPickersCalendarHeaderUtilityClass } from '@mui/x-date-pickers/CalendarPicker/pickersCalendarHeaderClasses';
 
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);
@@ -77,14 +77,27 @@ function ReportPage() {
   const [wallets, setWallets] = useState([]);
   const [defaultWallet, setDefaultWallet] = useState('');
   const [defaultDate, setDefaultDate] = useState('today');
-  const [pickStartDate, setPickStartDate] = useState('');
-  const [pickEndDate, setPickEndDate] = useState('');
+  const [pickDate, setPickDate] = useState({
+    pick_start: '',
+    pick_end: '',
+  });
 
   useEffect(() => {
     const data = getDataBarChart();
     setChartLabels(data.chartLabels);
     setChartData(data.chartData);
   }, []);
+
+  const handleCloseDialogChooseDate = () => {
+    setOpenChooseDay(false);
+    setDefaultDate('today');
+    setPickDate({
+      pick_start: '',
+      pick_end: '',
+    });
+  };
+
+  console.log(pickDate);
 
   const getWalletsApi = async (id) => {
     return axios.get(`http://localhost:3001/wallet/get-all-wallet/${id}`);
@@ -273,13 +286,13 @@ function ReportPage() {
         </Toolbar>
       </AppBar>
 
-      <Box sx={{mt: "10px"}}>
+      <Box sx={{ mt: '10px' }}>
         <Grid item xs={12} md={6} lg={8}>
           <AppWebsiteVisits
-              title="This month Reports"
-              subheader="(+43%) than last year"
-              chartLabels={chartLabels}
-              chartData={chartData}
+            title="This month Reports"
+            subheader="(+43%) than last year"
+            chartLabels={chartLabels}
+            chartData={chartData}
           />
         </Grid>
       </Box>
@@ -291,27 +304,48 @@ function ReportPage() {
         onClose={() => setOpenChooseDay(false)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        <Typography variant="h5" padding={3} pb={0}>
+          Choose <span style={{ color: 'red' }}>Start Date</span> And <span style={{ color: 'green' }}>End Date</span>{' '}
+        </Typography>
         <DialogContent>
-          <Grid container spacing={3}>
-            <Grid item xs></Grid>
-            <Grid item xs></Grid>
-            <Grid item xs></Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  inputFormat="MM/DD/YYYY"
+                  disableFuture={true}
+                  label="Start Date"
+                  value={pickDate.pick_start}
+                  onChange={(newValue) => {
+                    setPickDate({ ...pickDate, pick_start: dayjs(newValue).format('MM/DD/YYYY') });
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  disableFuture={true}
+                  label="End Date"
+                  inputFormat="MM/DD/YYYY"
+                  value={pickDate.pick_end}
+                  onChange={(newValue) => {
+                    setPickDate({ ...pickDate, pick_end: dayjs(newValue).format('MM/DD/YYYY') });
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
           </Grid>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Basic example"
-              value={pickStartDate}
-              onChange={(newValue) => {
-                setPickStartDate(newValue);
-              }}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenChooseDay(false)} variant='outlined' color='error' >Cancel</Button>
-          <Button onClick={() => setOpenChooseDay(false)} variant='outlined' color='success'>Submit</Button>
+          <Button onClick={handleCloseDialogChooseDate} variant="outlined" color="error">
+            Cancel
+          </Button>
+          <Button onClick={() => setOpenChooseDay(false)} variant="outlined" color="success">
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
     </>
