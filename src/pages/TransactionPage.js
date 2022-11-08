@@ -198,7 +198,9 @@ export default function TransactionPage() {
       icon: 'warning',
       title: 'Delete This Transaction',
       text: 'Are you sure?',
+      confirmButtonColor: '#54D62C',
       showCancelButton: true,
+      cancelButtonColor: '#FF4842',
     }).then((result) => {
       if (result.isConfirmed) {
         deleteTransApi(id)
@@ -232,6 +234,8 @@ export default function TransactionPage() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill all the required fields',
+        showConfirmButton: false,
+        timer: 1500,
       });
     } else {
       await axios
@@ -249,12 +253,16 @@ export default function TransactionPage() {
             Swal.fire({
               icon: 'success',
               title: 'Add transaction successfully!',
+              showConfirmButton: false,
+              timer: 1500,
             });
           } else {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
+              showConfirmButton: false,
+              timer: 1500,
             });
           }
         })
@@ -271,6 +279,8 @@ export default function TransactionPage() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill all the required fields',
+        showConfirmButton: false,
+        timer: 1500,
       });
     } else {
       await axios
@@ -281,6 +291,8 @@ export default function TransactionPage() {
             Swal.fire({
               icon: 'success',
               title: 'Edit transaction successfully!',
+              showConfirmButton: false,
+              timer: 1500,
             });
             dispatch(changeFlag(1));
           } else {
@@ -288,6 +300,8 @@ export default function TransactionPage() {
               icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
+              showConfirmButton: false,
+              timer: 1500,
             });
           }
         })
@@ -622,11 +636,11 @@ export default function TransactionPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseAddForm}>
+          <Button variant="outlined" color="error" onClick={handleCloseAddForm}>
             Cancel
           </Button>
-          <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleSubmit}>
-            Save
+          <Button variant="outlined" color="success" onClick={handleSubmit}>
+            Submit
           </Button>
         </DialogActions>
       </Dialog>
@@ -737,11 +751,11 @@ export default function TransactionPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseEditForm}>
+          <Button variant="outlined" color="error" onClick={handleCloseEditForm}>
             Cancel
           </Button>
-          <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleEdit}>
-            Save
+          <Button variant="outlined" color="success" onClick={handleEdit}>
+            Submit
           </Button>
         </DialogActions>
       </Dialog>
