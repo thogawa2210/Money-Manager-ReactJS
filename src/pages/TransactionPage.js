@@ -207,9 +207,7 @@ export default function TransactionPage() {
       icon: 'warning',
       title: 'Delete This Transaction',
       text: 'Are you sure?',
-      confirmButtonColor: '#54D62C',
       showCancelButton: true,
-      cancelButtonColor: '#FF4842',
     }).then((result) => {
       if (result.isConfirmed) {
         deleteTransApi(id)
@@ -243,8 +241,6 @@ export default function TransactionPage() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill all the required fields',
-        showConfirmButton: false,
-        timer: 1500,
       });
     } else {
       await axios
@@ -262,16 +258,12 @@ export default function TransactionPage() {
             Swal.fire({
               icon: 'success',
               title: 'Add transaction successfully!',
-              showConfirmButton: false,
-              timer: 1500,
             });
           } else {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
-              showConfirmButton: false,
-              timer: 1500,
             });
           }
         })
@@ -288,8 +280,6 @@ export default function TransactionPage() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill all the required fields',
-        showConfirmButton: false,
-        timer: 1500,
       });
     } else {
       await axios
@@ -300,8 +290,6 @@ export default function TransactionPage() {
             Swal.fire({
               icon: 'success',
               title: 'Edit transaction successfully!',
-              showConfirmButton: false,
-              timer: 1500,
             });
             dispatch(changeFlag(1));
           } else {
@@ -309,8 +297,6 @@ export default function TransactionPage() {
               icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
-              showConfirmButton: false,
-              timer: 1500,
             });
           }
         })
@@ -367,7 +353,6 @@ export default function TransactionPage() {
                   </Grid>
                   <hr />
                   <Typography sx={{ textAlign: 'right', mt: '16px' }}>
-                    {moneyFlow.inflow - moneyFlow.outflow > 0 ? '+' : '-'}{' '}
                     {numberWithCommas(moneyFlow.inflow - moneyFlow.outflow)}{' '}
                     <Typography component="span" sx={{ textDecoration: 'underline' }}>
                       đ
@@ -579,7 +564,7 @@ export default function TransactionPage() {
                   value={transaction.category_id}
                   sx={{ height: '56px' }}
                   inputProps={{ readOnly: true }}
-                  onClick={() => console.log(1)}
+                  onClick={handleClickOpenCategory}
                 >
                   <ListSubheader>Expense</ListSubheader>
                   {listCategory.map((category) => {
@@ -615,7 +600,9 @@ export default function TransactionPage() {
                 type="number"
                 margin="dense"
                 value={transaction.amount}
-                InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">VNĐ</InputAdornment>,
+                }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -766,6 +753,14 @@ export default function TransactionPage() {
           <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleEdit}>
             Save
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openCategory} onClose={closeCategory}>
+        <DialogTitle>Choose Category</DialogTitle>
+        <DialogContent>Tab Categories here</DialogContent>
+        <DialogActions>
+          <Button onClick={closeCategory}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </>
