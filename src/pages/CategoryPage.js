@@ -21,7 +21,7 @@ import Paper from '@mui/material/Paper';
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-export default function ProductsPage() {
+export default function CategoryPage() {
   const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
   const [openCreateCategory, setOpenCreateCategory] = useState(false);

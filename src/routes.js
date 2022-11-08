@@ -7,7 +7,7 @@ import BlogPage from './pages/BlogPage';
 import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
-import ProductsPage from './pages/ProductsPage';
+import CategoryPage from './pages/CategoryPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import SignupPage from './pages/SignupPage';
 import VerifyRegister from './sections/auth/login/VerifyRegister';
@@ -28,7 +28,7 @@ export default function Router() {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'report', element: <ReportPage /> },
         { path: 'profile', element: <UserPage /> },
-        { path: 'products', element: <ProductsPage /> },
+        { path: 'category', element: <CategoryPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'wallet', element: <WalletPage /> },
         {
