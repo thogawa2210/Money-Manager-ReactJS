@@ -534,7 +534,7 @@ export default function TransactionPage() {
                                 <Select onChange={handleChange} label="Categories" name="category_id"
                                         value={transaction.category_id} sx={{ height: '56px' }}>
                                     <ListSubheader>Expense</ListSubheader>
-                                    {listCategory.map((category) =>{
+                                    {listCategory.map((category) => {
                                         if (category.type === "expense")
                                             return (<MenuItem key={category.name} value={category._id}>
                                                 <Avatar src={category.icon}/>
