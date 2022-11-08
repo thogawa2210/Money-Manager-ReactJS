@@ -32,7 +32,6 @@ import getFormatDate from './../getDateFormat';
 import transaction from "../_mock/transaction";
 import {Box} from "@mui/system";
 
-
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);
   let month = date.getMonth() + 1;
