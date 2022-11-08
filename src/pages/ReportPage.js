@@ -1,6 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import * as React from 'react';
 import { AppWebsiteVisits } from '../sections/@dashboard/app';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import {
   AppBar,
   Button,
@@ -19,6 +23,7 @@ import {
   DialogContentText,
   DialogActions,
   Slide,
+  TextField,
 
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -72,6 +77,8 @@ function ReportPage() {
   const [wallets, setWallets] = useState([]);
   const [defaultWallet, setDefaultWallet] = useState('');
   const [defaultDate, setDefaultDate] = useState('today');
+  const [pickStartDate, setPickStartDate] = useState('');
+  const [pickEndDate, setPickEndDate] = useState('');
 
   useEffect(() => {
     const data = getDataBarChart();
@@ -285,10 +292,16 @@ function ReportPage() {
       >
         <DialogTitle>{"Use Google's location service?"}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
-          </DialogContentText>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DatePicker
+        label="Basic example"
+        value={pickStartDate}
+        onChange={(newValue) => {
+          setPickStartDate(newValue);
+        }}
+        renderInput={(params) => <TextField {...params} />}
+      />
+    </LocalizationProvider>
         </DialogContent>
         <DialogActions>
           <Button onClick={()=>setOpenChooseDay(false)}>Disagree</Button>

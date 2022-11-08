@@ -551,7 +551,7 @@ export default function TransactionPage() {
                                     {listCategory.map((category) =>{
                                         if (category.type === "expense")
                                             return (<MenuItem key={category.name} value={category._id}>
-                                                <Avatar src={category.icon}/>
+                                                <Avatar src={category.icon} sx={{ height: '56px' }} />
                                                 <ListItemText primary={category.name}/>
                                             </MenuItem>)
                                     })}
@@ -631,7 +631,7 @@ export default function TransactionPage() {
             <Grid item xs={4}>
               <FormControl fullWidth margin="dense">
                 <InputLabel>Wallet</InputLabel>
-                <Select onChange={handleChangeEdit} label="Wallet" name="wallet_id" value={editTransaction.wallet_id}>
+                <Select onChange={handleChangeEdit} label="Wallet" name="wallet_id" value={editTransaction.wallet_id} sx={{ height: '56px' }}>
                   {listWallet.map((wallet) => (
                     <MenuItem key={wallet._id} value={wallet._id}>
                       <Avatar src={wallet.icon} />
@@ -649,6 +649,7 @@ export default function TransactionPage() {
                   label="Categories"
                   name="category_id"
                   value={editTransaction.category_id}
+                  sx={{ height: '56px' }}
                 >
                   <ListSubheader>Expense</ListSubheader>
                   {listCategory.map((category) => {
@@ -665,7 +666,7 @@ export default function TransactionPage() {
                     if (category.type === 'income')
                       return (
                         <MenuItem key={category.name} value={category._id}>
-                          <Avatar src={category.icon} />
+                          <Avatar src={category.icon}/>
                           <ListItemText primary={category.name} />
                         </MenuItem>
                       );
@@ -682,6 +683,7 @@ export default function TransactionPage() {
                 variant="outlined"
                 type="number"
                 margin="dense"
+                sx={{height:'73'}}
                 value={editTransaction.amount}
                 InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
               />
