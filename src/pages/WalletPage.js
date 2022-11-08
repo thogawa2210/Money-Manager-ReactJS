@@ -208,8 +208,6 @@ export default function WalletPage() {
 
     return (
         <>
-
-
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                 <Typography variant="h3" gutterBottom>
                     Wallet Manager
@@ -247,13 +245,11 @@ export default function WalletPage() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={() => handleSaveEdit(walletEdit._id)}>Save</Button>
+                    <Button onClick={() => handleSaveEdit(walletEdit._id)} >Save</Button>
                 </DialogActions>
             </Dialog>
             {/* Detail Wallet */}
-
             <Grid container spacing={3}>
-
                 <Grid item xs />
                 <Grid item xs={8} sx={{ padding: 0 }}>
                     {wallets.map((item, index) => (
@@ -263,17 +259,14 @@ export default function WalletPage() {
                                 aria-controls="panel1bh-content"
                                 id="panel1bh-header"
                             >
-         
                                 <Typography sx={{ width: '80%', flexShrink: 0 }}>
-                                        <Avatar src={item.icon} sx={{ mr: 0 }} />
-                                        <ListItemText primary={item.name} sx={{pr : 22}}/>
+                                    <Avatar src={item.icon} sx={{ mr: 0 }} />
+                                    <ListItemText primary={item.name} sx={{ pr: 22 }} />
                                 </Typography>
-                                
                                 <Typography sx={{ color: 'text.secondary' }} >Wallet {index + 1}</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography>
-
                                     {/* Table */}
                                     <TableContainer component={Paper}>
                                         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -291,15 +284,14 @@ export default function WalletPage() {
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                 >
                                                     <TableCell component="th" scope="row">
-
                                                         {item.name}
                                                     </TableCell>
                                                     <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
                                                     <TableCell align="right">
-                                                        <Button variant="contained" color="primary" onClick={() => handleClickOpen(item._id)}>
+                                                        <Button variant="outlined" color="success" onClick={() => handleClickOpen(item._id)}>
                                                             Edit
                                                         </Button>
-                                                        <Button variant="contained" color="error" onClick={() => handleDeleteWallet(item._id)}>
+                                                        <Button variant="outlined" color="error" onClick={() => handleDeleteWallet(item._id)}>
                                                             Delete
                                                         </Button>
                                                     </TableCell>
@@ -315,11 +307,8 @@ export default function WalletPage() {
                 </Grid>
                 <Grid item xs />
             </Grid>
-
             {/* Done */}
-
             {/* Dialog create wallet/>*/}
-
             <Dialog
                 TransitionComponent={Transition}
                 fullWidth={true}
@@ -329,10 +318,8 @@ export default function WalletPage() {
                 onClose={handleCloseCreate}>
                 <DialogTitle>{"Add Wallet"}</DialogTitle>
                 <DialogContentText>
-                        
-                    </DialogContentText>
+                </DialogContentText>
                 <DialogContent >
-          
                     <Grid container spacing={3}>
                         <Grid item xs={2}>
 
@@ -368,18 +355,16 @@ export default function WalletPage() {
 
                         </Grid>
                         <Grid item xs={5} >
-                            <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name Wallet" variant="outlined" value={wallet.name}  />
+                            <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name Wallet" variant="outlined" value={wallet.name} />
                         </Grid>
                         <Grid item xs={5}>
                             <TextField name="amount" onChange={handleChangeCreate} fullWidth={true} label="Amount" variant="outlined" type="number" value={wallet.amount} />
                         </Grid>
-
                     </Grid>
-
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="outlined"  onClick={handleCloseCreate}>Cancel</Button>
-                    <Button variant="contained" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCreate}>Save</Button>
+                    <Button variant="outlined" onClick={handleCloseCreate}>Cancel</Button>
+                    <Button sx={{ color: 'white' }} variant="contained" color="success" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCreate}>Save</Button>
                 </DialogActions>
             </Dialog>
         </>
