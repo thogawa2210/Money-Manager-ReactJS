@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import * as React from 'react';
-import { AppWebsiteVisits } from '../sections/@dashboard/app';
+import {AppCurrentVisits, AppWebsiteVisits} from '../sections/@dashboard/app';
 import {
   AppBar,
   Button,
@@ -26,6 +26,8 @@ import getDataBarChart from '../getDataBarChart';
 import axios from 'axios';
 import getFormatDate from './../getDateFormat';
 import transaction from "../_mock/transaction";
+import {useTheme} from "@mui/material/styles";
+import {Box} from "@mui/system";
 
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);
@@ -72,7 +74,7 @@ function ReportPage() {
   const [wallets, setWallets] = useState([]);
   const [defaultWallet, setDefaultWallet] = useState('');
   const [defaultDate, setDefaultDate] = useState('today');
-
+  const theme = useTheme();
   useEffect(() => {
     const data = getDataBarChart();
     setChartLabels(data.chartLabels);
@@ -275,6 +277,47 @@ function ReportPage() {
           chartData={chartData}
         />
       </Grid>
+
+
+      <Box sx={{mt:'10px'}}>
+      <Grid container spacing={2} >
+      <Grid item xs={6} md={6}>
+        <AppCurrentVisits
+            title="Income"
+            chartData={[
+              { label: 'America', value: 9000 },
+              { label: 'Asia', value: 5435 },
+              { label: 'Europe', value: 1443 },
+              { label: 'Africa', value: 4443 },
+            ]}
+            chartColors={[
+              theme.palette.primary.main,
+              theme.palette.info.main,
+              theme.palette.warning.main,
+              theme.palette.error.main,
+            ]}
+        />
+      </Grid>
+        <Grid item xs={6} md={6}>
+          <AppCurrentVisits
+              title="Expense"
+              chartData={[
+                { label: 'America', value: 9000 },
+                { label: 'Asia', value: 5435 },
+                { label: 'Europe', value: 1443 },
+                { label: 'Africa', value: 4443 },
+              ]}
+              chartColors={[
+                theme.palette.primary.main,
+                theme.palette.info.main,
+                theme.palette.warning.main,
+                theme.palette.error.main,
+              ]}
+          />
+        </Grid>
+      </Grid>
+      </Box>
+
 
       <Dialog
         open={openChooseDay}
