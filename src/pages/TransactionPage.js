@@ -24,7 +24,8 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box,ListSubheader
+  Box,
+  ListSubheader,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -43,7 +44,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 function numberWithCommas(x) {
-    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 function getDayy(x) {
@@ -145,21 +146,21 @@ export default function TransactionPage() {
     }
   };
 
-    const handleChangeEdit = (e) => {
-        if (e.target) {
-            if (e.target.name === 'amount') {
-                setEditTransaction({...editTransaction, [e.target.name]: parseInt(e.target.value)});
-            } else if (e.target.name === 'wallet_id') {
-                // setDefaultWallet(e.target.value);
-                setEditTransaction({...editTransaction, [e.target.name]: e.target.value});
-            } else {
-                setEditTransaction({...editTransaction, [e.target.name]: e.target.value});
-            }
-        } else {
-            setValue(e);
-            setEditTransaction({...editTransaction, date: dayjs(e).format('MM/DD/YYYY')});
-        }
-    };
+  const handleChangeEdit = (e) => {
+    if (e.target) {
+      if (e.target.name === 'amount') {
+        setEditTransaction({ ...editTransaction, [e.target.name]: parseInt(e.target.value) });
+      } else if (e.target.name === 'wallet_id') {
+        // setDefaultWallet(e.target.value);
+        setEditTransaction({ ...editTransaction, [e.target.name]: e.target.value });
+      } else {
+        setEditTransaction({ ...editTransaction, [e.target.name]: e.target.value });
+      }
+    } else {
+      setValue(e);
+      setEditTransaction({ ...editTransaction, date: dayjs(e).format('MM/DD/YYYY') });
+    }
+  };
 
   const handleClickOpenAddForm = () => {
     setOpenAddForm(true);
@@ -313,43 +314,53 @@ export default function TransactionPage() {
         <Grid item xs={8} sx={{ padding: 0 }}>
           <Stack>
             <Grid>
-              <Grid>
-                <Card>
-                  <CardContent sx={{ pb: 0 }}>
-                    <Typography sx={{ padding: 0, margin: 0 }} variant="h4">
-                      Transaction Info
-                    </Typography>
-                    <hr />
-                    <Grid container>
-                      <Grid xs item>
-                        Inflow
-                      </Grid>
-                      <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
-                        + {numberWithCommas(moneyFlow.inflow)}{' '}
-                        <Typography component="span" sx={{ textDecoration: 'underline' }}>
-                          đ
-                        </Typography>
-                      </Grid>
+              <Card>
+                <CardContent>
+                  <Typography sx={{ padding: 0, margin: 0 }} variant="h4">
+                    Transaction Info
+                  </Typography>
+                  <hr />
+                  <Grid container>
+                    <Grid xs item>
+                      Inflow
                     </Grid>
-                    <Grid container>
-                      <Grid item xs={6}>
-                        Outflow
-                      </Grid>
-                      <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
-                        - {numberWithCommas(moneyFlow.outflow)}{' '}
-                        <Typography component="span" sx={{ textDecoration: 'underline' }}>
-                          đ
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <hr />
-                    <Typography sx={{ textAlign: 'right', mt: '14px', mb: '14px' }}>
-                      {numberWithCommas(moneyFlow.inflow - moneyFlow.outflow)}{' '}
+                    <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
+                      + {numberWithCommas(moneyFlow.inflow)}{' '}
                       <Typography component="span" sx={{ textDecoration: 'underline' }}>
                         đ
                       </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      Outflow
+                    </Grid>
+                    <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
+                      - {numberWithCommas(moneyFlow.outflow)}{' '}
+                      <Typography component="span" sx={{ textDecoration: 'underline' }}>
+                        đ
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <hr />
+                  <Typography sx={{ textAlign: 'right', mt: '16px' }}>
+                    {numberWithCommas(moneyFlow.inflow - moneyFlow.outflow)}{' '}
+                    <Typography component="span" sx={{ textDecoration: 'underline' }}>
+                      đ
                     </Typography>
-                  </CardContent>
+                  </Typography>
+                </CardContent>
+
+                <Box
+                  component="main"
+                  sx={{
+                    maxHeight: '350px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    overflowY: 'scroll',
+                  }}
+                >
                   {listTransaction.map((item, index) => (
                     <div key={index}>
                       <Box sx={{ heght: '20px', border: '1px solid #EAFCDE' }}></Box>
@@ -494,8 +505,8 @@ export default function TransactionPage() {
                       </Accordion>
                     </div>
                   ))}
-                </Card>
-              </Grid>
+                </Box>
+              </Card>
             </Grid>
           </Stack>
         </Grid>
@@ -604,106 +615,112 @@ export default function TransactionPage() {
                 </DialogActions>
             </Dialog>
 
-            <Dialog
-                open={openEditForm}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={handleCloseEditForm}
+      <Dialog
+        open={openEditForm}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseEditForm}
+        fullWidth={true}
+        maxWidth="md"
+      >
+        <DialogTitle>{'Edit Transaction'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Remember to Record Your Transactions Today.</DialogContentText>
+          <hr />
+          <Grid container spacing={4}>
+            <Grid item xs={4}>
+              <FormControl fullWidth margin="dense">
+                <InputLabel>Wallet</InputLabel>
+                <Select onChange={handleChangeEdit} label="Wallet" name="wallet_id" value={editTransaction.wallet_id}>
+                  {listWallet.map((wallet) => (
+                    <MenuItem key={wallet._id} value={wallet._id}>
+                      <Avatar src={wallet.icon} />
+                      <ListItemText primary={wallet.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}>
+              <FormControl fullWidth margin="dense">
+                <InputLabel>Categories</InputLabel>
+                <Select
+                  onChange={handleChangeEdit}
+                  label="Categories"
+                  name="category_id"
+                  value={editTransaction.category_id}
+                >
+                  <ListSubheader>Expense</ListSubheader>
+                  {listCategory.map((category) => {
+                    if (category.type === 'expense')
+                      return (
+                        <MenuItem key={category.name} value={category._id}>
+                          <Avatar src={category.icon} />
+                          <ListItemText primary={category.name} />
+                        </MenuItem>
+                      );
+                  })}
+                  <ListSubheader>Income</ListSubheader>
+                  {listCategory.map((category) => {
+                    if (category.type === 'income')
+                      return (
+                        <MenuItem key={category.name} value={category._id}>
+                          <Avatar src={category.icon} />
+                          <ListItemText primary={category.name} />
+                        </MenuItem>
+                      );
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                name="amount"
+                onChange={handleChangeEdit}
                 fullWidth={true}
-                maxWidth="md"
-            >
-                <DialogTitle>{'Edit Transaction'}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Remember to Record Your Transactions Today.</DialogContentText>
-                    <hr/>
-                    <Grid container spacing={4}>
-                        <Grid item xs={4}>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel>Wallet</InputLabel>
-                                <Select onChange={handleChangeEdit} label="Wallet" name="wallet_id"
-                                        value={editTransaction.wallet_id}>
-                                    {listWallet.map((wallet) => (
-                                        <MenuItem key={wallet._id} value={wallet._id}>
-                                            <Avatar src={wallet.icon}/>
-                                            <ListItemText primary={wallet.name}/>
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel>Categories</InputLabel>
-                                <Select onChange={handleChangeEdit} label="Categories" name="category_id"
-                                        value={editTransaction.category_id}>
-                                    <ListSubheader>Expense</ListSubheader>
-                                    {listCategory.map((category) => {
-                                            if(category.type === 'expense') return (<MenuItem key={category.name} value={category._id}>
-                                                    <Avatar src={category.icon}/>
-                                                    <ListItemText primary={category.name}/>
-                                                </MenuItem>
-                                            )
-                                    })}
-                                    <ListSubheader>Income</ListSubheader>
-                                    {listCategory.map((category) => {
-                                        if(category.type === 'income') return (<MenuItem key={category.name} value={category._id}>
-                                                <Avatar src={category.icon}/>
-                                                <ListItemText primary={category.name}/>
-                                            </MenuItem>
-                                        )
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <TextField
-                                name="amount"
-                                onChange={handleChangeEdit}
-                                fullWidth={true}
-                                label="Amount"
-                                variant="outlined"
-                                type="number"
-                                margin="dense"
-                                value={editTransaction.amount}
-                                InputProps={{startAdornment: <InputAdornment position="start">VNĐ</InputAdornment>}}
-                            />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DesktopDatePicker
-                                    label="Date desktop"
-                                    inputFormat="DD/MM/YYYY"
-                                    value={value}
-                                    name="date"
-                                    disableFuture={true}
-                                    onChange={handleChangeEdit}
-                                    renderInput={(params) => <TextField {...params} fullWidth/>}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
-                        <Grid item xs={8}>
-                            <TextField
-                                name="note"
-                                onChange={handleChangeEdit}
-                                fullWidth={true}
-                                label="Note"
-                                variant="outlined"
-                                type="text"
-                                value={editTransaction.note}
-                            />
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button variant="outlined" onClick={handleCloseEditForm}>
-                        Cancel
-                    </Button>
-                    <Button sx={{color: 'white'}} variant="contained" color="success" onClick={handleEdit}>
-                        Save
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-        </>
-    );
+                label="Amount"
+                variant="outlined"
+                type="number"
+                margin="dense"
+                value={editTransaction.amount}
+                InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DesktopDatePicker
+                  label="Date desktop"
+                  inputFormat="DD/MM/YYYY"
+                  value={value}
+                  name="date"
+                  disableFuture={true}
+                  onChange={handleChangeEdit}
+                  renderInput={(params) => <TextField {...params} fullWidth />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={8}>
+              <TextField
+                name="note"
+                onChange={handleChangeEdit}
+                fullWidth={true}
+                label="Note"
+                variant="outlined"
+                type="text"
+                value={editTransaction.note}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleCloseEditForm}>
+            Cancel
+          </Button>
+          <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleEdit}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }
