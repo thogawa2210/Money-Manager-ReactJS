@@ -24,7 +24,6 @@ import {
   DialogActions,
   Slide,
   TextField,
-
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
@@ -32,6 +31,7 @@ import axios from 'axios';
 import getFormatDate from './../getDateFormat';
 import transaction from "../_mock/transaction";
 import {Box} from "@mui/system";
+
 
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);
@@ -114,7 +114,7 @@ function ReportPage() {
         break;
       case 'date':
         if (e.target.value === 'custom') {
-          setOpenChooseDay(true)
+          setOpenChooseDay(true);
         }
         setDefaultDate(e.target.value);
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -190,7 +190,6 @@ function ReportPage() {
             .catch((err) => console.log(err));
         }
       } else {
-       
       }
     }
   };
@@ -290,25 +289,30 @@ function ReportPage() {
         open={openChooseDay}
         TransitionComponent={Transition}
         keepMounted
-        onClose={()=>setOpenChooseDay(false)}
+        onClose={() => setOpenChooseDay(false)}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>{"Use Google's location service?"}</DialogTitle>
         <DialogContent>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
-        label="Basic example"
-        value={pickStartDate}
-        onChange={(newValue) => {
-          setPickStartDate(newValue);
-        }}
-        renderInput={(params) => <TextField {...params} />}
-      />
-    </LocalizationProvider>
+          <Grid container spacing={3}>
+            <Grid item xs></Grid>
+            <Grid item xs></Grid>
+            <Grid item xs></Grid>
+          </Grid>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Basic example"
+              value={pickStartDate}
+              onChange={(newValue) => {
+                setPickStartDate(newValue);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>setOpenChooseDay(false)}>Disagree</Button>
-          <Button onClick={()=>setOpenChooseDay(false)}>Agree</Button>
+          <Button onClick={() => setOpenChooseDay(false)} variant='outlined' color='error' >Cancel</Button>
+          <Button onClick={() => setOpenChooseDay(false)} variant='outlined' color='success'>Submit</Button>
         </DialogActions>
       </Dialog>
     </>
