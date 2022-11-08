@@ -146,21 +146,21 @@ export default function TransactionPage() {
     }
   };
 
-  const handleChangeEdit = (e) => {
-    if (e.target) {
-      if (e.target.name === 'amount') {
-        setEditTransaction({ ...editTransaction, [e.target.name]: parseInt(e.target.value) });
-      } else if (e.target.name === 'wallet_id') {
-        // setDefaultWallet(e.target.value);
-        setEditTransaction({ ...editTransaction, [e.target.name]: e.target.value });
-      } else {
-        setEditTransaction({ ...editTransaction, [e.target.name]: e.target.value });
-      }
-    } else {
-      setValue(e);
-      setTransaction({ ...editTransaction, date: dayjs(e).format('MM/DD/YYYY') });
-    }
-  };
+    const handleChangeEdit = (e) => {
+        if (e.target) {
+            if (e.target.name === 'amount') {
+                setEditTransaction({...editTransaction, [e.target.name]: parseInt(e.target.value)});
+            } else if (e.target.name === 'wallet_id') {
+                // setDefaultWallet(e.target.value);
+                setEditTransaction({...editTransaction, [e.target.name]: e.target.value});
+            } else {
+                setEditTransaction({...editTransaction, [e.target.name]: e.target.value});
+            }
+        } else {
+            setValue(e);
+            setEditTransaction({...editTransaction, date: dayjs(e).format('MM/DD/YYYY')});
+        }
+    };
 
   const handleClickOpenAddForm = () => {
     setOpenAddForm(true);
