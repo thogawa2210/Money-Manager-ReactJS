@@ -1,4 +1,4 @@
-import {Helmet} from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import dayjs from 'dayjs';
 import {
     Avatar,
@@ -27,124 +27,124 @@ import {
     AccordionSummary,
     Box, ListSubheader,
 } from '@mui/material';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
-import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
-import {forwardRef, useEffect, useState} from 'react';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { forwardRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import Iconify from '../components/iconify';
 import Swal from 'sweetalert2';
-import {changeFlag} from '../features/flagSlice';
-import {useDispatch, useSelector} from 'react-redux';
+import { changeFlag } from '../features/flagSlice';
+import { useDispatch, useSelector } from 'react-redux';
 //css
 import '../css/transaction.css';
 
 const Transition = forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 function getDayy(x) {
-    const day = ['Sunday ', 'Monday', 'Tuesday ', 'Wednesday ', 'Thursday', 'Friday ', 'Sunday '];
-    return day[x];
+  const day = ['Sunday ', 'Monday', 'Tuesday ', 'Wednesday ', 'Thursday', 'Friday ', 'Sunday '];
+  return day[x];
 }
 
 export default function TransactionPage() {
-    const flag = useSelector((state) => state.flag.flag);
-    const [value, setValue] = useState(dayjs());
-    const [openAddForm, setOpenAddForm] = useState(false);
-    const [openEditForm, setOpenEditForm] = useState(false);
-    // eslint-disable-next-line no-unused-vars
-    const [listTransaction, setListTransaction] = useState([]);
-    const [listWallet, setListWallet] = useState([]);
-    const [listCategory, setListCategory] = useState([]);
-    const [transaction, setTransaction] = useState({
-        wallet_id: '',
-        category_id: '',
-        amount: 0,
-        note: '',
-        date: dayjs(value).format('MM/DD/YYYY'),
-    });
-    const [editTransaction, setEditTransaction] = useState({
-        wallet_id: '',
-        category_id: '',
-        amount: 0,
-        note: '',
-        date: dayjs(value).format('MM/DD/YYYY'),
-    });
-    const [defaultWallet, setDefaultWallet] = useState('');
-    const [expanded, setExpanded] = useState(false);
-    const [moneyFlow, setMoneyFlow] = useState({
-        inflow: 0,
-        outflow: 0,
-    });
+  const flag = useSelector((state) => state.flag.flag);
+  const [value, setValue] = useState(dayjs());
+  const [openAddForm, setOpenAddForm] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [listTransaction, setListTransaction] = useState([]);
+  const [listWallet, setListWallet] = useState([]);
+  const [listCategory, setListCategory] = useState([]);
+  const [transaction, setTransaction] = useState({
+    wallet_id: '',
+    category_id: '',
+    amount: 0,
+    note: '',
+    date: dayjs(value).format('MM/DD/YYYY'),
+  });
+  const [editTransaction, setEditTransaction] = useState({
+    wallet_id: '',
+    category_id: '',
+    amount: 0,
+    note: '',
+    date: dayjs(value).format('MM/DD/YYYY'),
+  });
+  const [defaultWallet, setDefaultWallet] = useState('');
+  const [expanded, setExpanded] = useState(false);
+  const [moneyFlow, setMoneyFlow] = useState({
+    inflow: 0,
+    outflow: 0,
+  });
 
-    //redux
-    const dispatch = useDispatch();
+  //redux
+  const dispatch = useDispatch();
 
-    const handleExpand = (panel) => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false);
-    };
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
-    const getDataApi = async () => {
-        const userId = JSON.parse(localStorage.getItem('user')).user_id;
-        return await axios.get(`http://localhost:3001/transaction/transaction-this-month/${userId}`);
-    };
+  const getDataApi = async () => {
+    const userId = JSON.parse(localStorage.getItem('user')).user_id;
+    return await axios.get(`http://localhost:3001/transaction/transaction-this-month/${userId}`);
+  };
 
-    const getData = async () => {
-        const userId = JSON.parse(localStorage.getItem('user')).user_id;
-        await axios
-            .get(`http://localhost:3001/category/get-category/${userId}`)
-            .then((res) => setListCategory(res.data.categoryUser))
-            .catch((err) => console.log(err));
-        await axios
-            .get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
-            .then((res) => setListWallet(res.data.wallet))
-            .catch((err) => console.log(err));
-    };
+  const getData = async () => {
+    const userId = JSON.parse(localStorage.getItem('user')).user_id;
+    await axios
+      .get(`http://localhost:3001/category/get-category/${userId}`)
+      .then((res) => setListCategory(res.data.categoryUser))
+      .catch((err) => console.log(err));
+    await axios
+      .get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
+      .then((res) => setListWallet(res.data.wallet))
+      .catch((err) => console.log(err));
+  };
 
-    useEffect(() => {
-        getData();
-    }, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
-    useEffect(() => {
-        getDataApi()
-            .then((res) => {
-                setListTransaction(res.data.data.list);
-                setMoneyFlow({
-                    inflow: res.data.data.inflow,
-                    outflow: res.data.data.outflow,
-                });
-            })
-            .catch((err) => console.log(err));
-    }, [flag]);
+  useEffect(() => {
+    getDataApi()
+      .then((res) => {
+        setListTransaction(res.data.data.list);
+        setMoneyFlow({
+          inflow: res.data.data.inflow,
+          outflow: res.data.data.outflow,
+        });
+      })
+      .catch((err) => console.log(err));
+  }, [flag]);
 
-    useEffect(() => {
-        if (listWallet.length > 0) {
-            setDefaultWallet(listWallet[0]._id);
-            setTransaction({...transaction, wallet_id: listWallet[0]._id});
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [listWallet]);
+  useEffect(() => {
+    if (listWallet.length > 0) {
+      setDefaultWallet(listWallet[0]._id);
+      setTransaction({ ...transaction, wallet_id: listWallet[0]._id });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listWallet]);
 
-    const handleChange = (e) => {
-        if (e.target) {
-            if (e.target.name === 'amount') {
-                setTransaction({...transaction, [e.target.name]: parseInt(e.target.value)});
-            } else if (e.target.name === 'wallet_id') {
-                setDefaultWallet(e.target.value);
-                setTransaction({...transaction, [e.target.name]: e.target.value});
-            } else {
-                setTransaction({...transaction, [e.target.name]: e.target.value});
-            }
-        } else {
-            setValue(e);
-            setTransaction({...transaction, date: dayjs(e).format('MM/DD/YYYY')});
-        }
-    };
+  const handleChange = (e) => {
+    if (e.target) {
+      if (e.target.name === 'amount') {
+        setTransaction({ ...transaction, [e.target.name]: parseInt(e.target.value) });
+      } else if (e.target.name === 'wallet_id') {
+        setDefaultWallet(e.target.value);
+        setTransaction({ ...transaction, [e.target.name]: e.target.value });
+      } else {
+        setTransaction({ ...transaction, [e.target.name]: e.target.value });
+      }
+    } else {
+      setValue(e);
+      setTransaction({ ...transaction, date: dayjs(e).format('MM/DD/YYYY') });
+    }
+  };
 
     const handleChangeEdit = (e) => {
         if (e.target) {
@@ -162,309 +162,346 @@ export default function TransactionPage() {
         }
     };
 
-    const handleClickOpenAddForm = () => {
-        setOpenAddForm(true);
-    };
+  const handleClickOpenAddForm = () => {
+    setOpenAddForm(true);
+  };
 
-    const handleCloseAddForm = () => {
-        setValue(dayjs())
-        setOpenAddForm(false);
-    };
+  const handleCloseAddForm = () => {
+    setValue(dayjs());
+    setOpenAddForm(false);
+  };
 
-    const handleClickEditAddForm = (id) => {
-        const editTransaction = listTransaction.filter((transaction) => transaction._id === id);
-        setValue(dayjs(editTransaction[0].date))
-        setEditTransaction(editTransaction[0]);
-        setOpenEditForm(true);
-    };
+  const handleClickEditAddForm = (id) => {
+    const editTransaction = listTransaction.filter((transaction) => transaction._id === id);
+    setValue(dayjs(editTransaction[0].date));
+    setEditTransaction(editTransaction[0]);
+    setOpenEditForm(true);
+  };
 
-    const handleCloseEditForm = () => {
-        setValue(dayjs())
-        setOpenEditForm(false);
-    };
+  const handleCloseEditForm = () => {
+    setValue(dayjs());
+    setOpenEditForm(false);
+  };
 
-    const deleteTransApi = async (id) => {
-        return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`);
-    };
+  const deleteTransApi = async (id) => {
+    return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`);
+  };
 
-    useEffect(() => {
-        const userId = JSON.parse(localStorage.getItem('user')).user_id;
-        setTransaction({...transaction, user_id: userId});
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+  useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem('user')).user_id;
+    setTransaction({ ...transaction, user_id: userId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    const handleDeleteTrans = (id) => {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Delete This Transaction',
-            text: 'Are you sure?',
-            showCancelButton: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                deleteTransApi(id)
-                    .then((res) => {
-                        dispatch(changeFlag(1));
-                        setExpanded(false);
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Delete Success!',
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                    })
-                    .catch((err) =>
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Something Wrong!',
-                            text: 'Try again!',
-                            showConfirmButton: false,
-                            timer: 1500,
-                        })
-                    );
-            }
-        });
-    };
-
-    const handleSubmit = async () => {
-        if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
-            setOpenAddForm(false);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please fill all the required fields',
-            });
-        } else {
-            await axios
-                .post('http://localhost:3001/transaction/add-transaction', transaction)
-                .then((res) => {
-                    if (res.status === 200) {
-                        dispatch(changeFlag(1));
-                        setTransaction({
-                            ...transaction,
-                            category_id: '',
-                            amount: 0,
-                            note: '',
-                            date: dayjs(value).format('MM/DD/YYYY'),
-                        });
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Add transaction successfully!',
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!',
-                        });
-                    }
-                })
-                .catch((err) => console.log(err));
-            setOpenAddForm(false);
+  const handleDeleteTrans = (id) => {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Delete This Transaction',
+      text: 'Are you sure?',
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteTransApi(id)
+          .then((res) => {
             dispatch(changeFlag(1));
-        }
-    };
-
-    const handleEdit = async () => {
-        console.log(editTransaction)
-        if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
-            setOpenEditForm(false);
+            setExpanded(false);
             Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please fill all the required fields',
+              icon: 'success',
+              title: 'Delete Success!',
+              showConfirmButton: false,
+              timer: 1500,
             });
-        } else {
-            await axios.put(`http://localhost:3001/transaction/update-transaction/${editTransaction._id}`, editTransaction)
-                .then((res) => {
-                    setOpenEditForm(false);
-                    if(res.status === 200) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Edit transaction successfully!',
-                        });
-                        dispatch(changeFlag(1));
-                    }else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!',
-                        });
-                    }
-                })
-                .catch((err) => console.log(err))
-        }
+          })
+          .catch((err) =>
+            Swal.fire({
+              icon: 'warning',
+              title: 'Something Wrong!',
+              text: 'Try again!',
+              showConfirmButton: false,
+              timer: 1500,
+            })
+          );
+      }
+    });
+  };
+
+  const handleSubmit = async () => {
+    if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
+      setOpenAddForm(false);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please fill all the required fields',
+      });
+    } else {
+      await axios
+        .post('http://localhost:3001/transaction/add-transaction', transaction)
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch(changeFlag(1));
+            setTransaction({
+              ...transaction,
+              category_id: '',
+              amount: 0,
+              note: '',
+              date: dayjs(value).format('MM/DD/YYYY'),
+            });
+            Swal.fire({
+              icon: 'success',
+              title: 'Add transaction successfully!',
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+      setOpenAddForm(false);
+      dispatch(changeFlag(1));
     }
+  };
 
-    return (
-        <>
-            <Helmet>
-                <title> Transaction | Money Manager Master </title>
-            </Helmet>
+  const handleEdit = async () => {
+    if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
+      setOpenEditForm(false);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please fill all the required fields',
+      });
+    } else {
+      await axios
+        .put(`http://localhost:3001/transaction/update-transaction/${editTransaction._id}`, editTransaction)
+        .then((res) => {
+          setOpenEditForm(false);
+          if (res.status === 200) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Edit transaction successfully!',
+            });
+            dispatch(changeFlag(1));
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
-            <Grid container spacing={3}>
-                <Grid item xs={12} sx={{padding: '0px', height: '50px'}}>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                        <Typography variant="h3">Transaction</Typography>
-                        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}
-                                onClick={handleClickOpenAddForm}>
-                            New Transaction
-                        </Button>
-                    </Stack>
-                </Grid>
-                <Grid item xs/>
-                <Grid item xs={8} sx={{padding: 0}}>
-                    <Stack>
-                        <Grid>
-                            <Grid>
-                                <Card>
-                                    <CardContent sx={{pb: 0}}>
-                                        <h2 style={{padding: 0, margin: 0}}>Transaction Info</h2>
-                                        <hr/>
-                                        <Grid container>
-                                            <Grid xs item>
-                                                Inflow
-                                            </Grid>
-                                            <Grid xs item sx={{textAlign: 'right', color: '#039BE5'}}>
-                                                + {numberWithCommas(moneyFlow.inflow)} <span
-                                                style={{textDecoration: 'underline'}}>đ</span>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid container>
-                                            <Grid item xs={6}>
-                                                Outflow
-                                            </Grid>
-                                            <Grid item xs={6} sx={{textAlign: 'right', color: '#E51C23'}}>
-                                                - {numberWithCommas(moneyFlow.outflow)} <span
-                                                style={{textDecoration: 'underline'}}>đ</span>
-                                            </Grid>
-                                        </Grid>
-                                        <hr/>
-                                        <p style={{textAlign: 'right'}}>
-                                            {numberWithCommas(moneyFlow.inflow - moneyFlow.outflow)}{' '}
-                                            <span style={{textDecoration: 'underline'}}>đ</span>
-                                        </p>
-                                    </CardContent>
-                                    <Divider/>
-                                    {listTransaction.map((item, index) => (
-                                        <>
-                                            <Box sx={{heght: '20px', border: '1px solid #b3d4fc'}}></Box>
-                                            <Accordion
-                                                expanded={expanded === `panel${index + 1}`}
-                                                onChange={handleExpand(`panel${index + 1}`)}
-                                            >
-                                                <AccordionSummary
-                                                    aria-controls={`panel${index + 1}bh-content`}
-                                                    id={`panel${index + 1}bh-header`}
-                                                    sx={{
-                                                        width: '100%',
-                                                        height: '60px',
-                                                        flexShrink: 0,
-                                                        justifyContent: 'flex-start',
-                                                        padding: '24px',
-                                                    }}
-                                                >
-                                                    <Grid container spacing={2} sx={{pt: '4px'}}>
-                                                        <Grid item xs={2} sx={{textAlign: 'center'}}>
-                                                            {' '}
-                                                            <Avatar src={item.category_icon}/>
-                                                        </Grid>
-                                                        <Grid item xs={5} sx={{mt: '6px'}}>
-                                                            {item.category_name}
-                                                        </Grid>
-                                                        {item.category_type === 'expense' ? (
-                                                            <Grid item xs={5} sx={{
-                                                                color: '#E51C23',
-                                                                textAlign: 'right',
-                                                                mt: '6px'
-                                                            }}>
-                                                                - {numberWithCommas(item.amount)} <span
-                                                                style={{textDecoration: 'underline'}}>đ</span>
-                                                            </Grid>
-                                                        ) : (
-                                                            <Grid item xs={5} sx={{
-                                                                color: '#039BE5',
-                                                                textAlign: 'right',
-                                                                mt: '6px'
-                                                            }}>
-                                                                + {numberWithCommas(item.amount)} <span
-                                                                style={{textDecoration: 'underline'}}>đ</span>
-                                                            </Grid>
-                                                        )}
-                                                    </Grid>
-                                                </AccordionSummary>
-                                                <AccordionDetails sx={{height: '235px', pb: 0}}>
-                                                    <Typography sx={{height: '40px'}}>
-                                                        <Grid container>
-                                                            <Grid item xs sx={{mt: 0, mb: 0}}>
-                                                                <h3 style={{margin: 0}}>Transaction Details</h3>
-                                                            </Grid>
-                                                            <Grid item xs={2} sx={{textAlign: 'right'}}>
-                                                                <Button variant="outlined" color="success"
-                                                                        onClick={() => handleClickEditAddForm(item._id)}>
-                                                                    EDIT
-                                                                </Button>
-                                                            </Grid>
-                                                            <Grid item xs={2} sx={{textAlign: 'right'}}>
-                                                                <Button variant="outlined" color="error"
-                                                                        onClick={() => handleDeleteTrans(item._id)}>
-                                                                    DELETE
-                                                                </Button>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Typography>
-                                                    <hr/>
-                                                    <Grid container>
-                                                        <Grid item xs={2}>
-                                                            <Avatar src={item.category_icon} sx={{mr: 10}}/>
-                                                        </Grid>
-                                                        <Grid item xs sx={{mt: '3px'}}>
-                                                            <h3 style={{margin: 0}}>{item.category_name}</h3>
-                                                            <Typography>
-                                                                <p style={{
-                                                                    marginTop: '0px',
-                                                                    marginBottom: '0px',
-                                                                    fontSize: '10px'
-                                                                }}>{item.wallet_name}</p>
-                                                                <p style={{fontSize: '10px', fontWeight: 'light'}}>
-                                                                    {getDayy(new Date(`${item.date}`).getDay())}, {item.date}{' '}
-                                                                </p>
-                                                                <hr/>
-                                                                <p style={{
-                                                                    margin: '8px 0px',
-                                                                    fontSize: '12px'
-                                                                }}>{item.note} </p>
-                                                                {item.category_type === 'income' ? (
-                                                                    <p style={{color: '#039BE5', marginBottom: 0}}>
-                                                                        + {numberWithCommas(item.amount)}{' '}
-                                                                        <span style={{
-                                                                            color: '#039BE5',
-                                                                            textDecoration: 'underline'
-                                                                        }}>đ</span>
-                                                                    </p>
-                                                                ) : (
-                                                                    <p style={{color: '#E51C23', marginBottom: 0}}>
-                                                                        - {numberWithCommas(item.amount)}{' '}
-                                                                        <span style={{
-                                                                            color: '#E51C23',
-                                                                            textDecoration: 'underline'
-                                                                        }}>đ</span>
-                                                                    </p>
-                                                                )}
-                                                            </Typography>
-                                                        </Grid>
-                                                        <Grid item xs></Grid>
-                                                    </Grid>
-                                                </AccordionDetails>
-                                            </Accordion>
-                                        </>
-                                    ))}
-                                </Card>
+  return (
+    <>
+      <Helmet>
+        <title> Transaction | Money Manager Master </title>
+      </Helmet>
+
+      <Grid container spacing={3}>
+        <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+            <Typography variant="h3">Transaction</Typography>
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
+              New Transaction
+            </Button>
+          </Stack>
+        </Grid>
+        <Grid item xs />
+        <Grid item xs={8} sx={{ padding: 0 }}>
+          <Stack>
+            <Grid>
+              <Grid>
+                <Card>
+                  <CardContent sx={{ pb: 0 }}>
+                    <Typography sx={{ padding: 0, margin: 0 }} variant="h4">
+                      Transaction Info
+                    </Typography>
+                    <hr />
+                    <Grid container>
+                      <Grid xs item>
+                        Inflow
+                      </Grid>
+                      <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
+                        + {numberWithCommas(moneyFlow.inflow)}{' '}
+                        <Typography component="span" sx={{ textDecoration: 'underline' }}>
+                          đ
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        Outflow
+                      </Grid>
+                      <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
+                        - {numberWithCommas(moneyFlow.outflow)}{' '}
+                        <Typography component="span" sx={{ textDecoration: 'underline' }}>
+                          đ
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <hr />
+                    <Typography sx={{ textAlign: 'right', mt: '14px', mb: '14px' }}>
+                      {numberWithCommas(moneyFlow.inflow - moneyFlow.outflow)}{' '}
+                      <Typography component="span" sx={{ textDecoration: 'underline' }}>
+                        đ
+                      </Typography>
+                    </Typography>
+                  </CardContent>
+                  {listTransaction.map((item, index) => (
+                    <div key={index}>
+                      <Box sx={{ heght: '20px', border: '1px solid #EAFCDE' }}></Box>
+                      <Accordion
+                        expanded={expanded === `panel${index + 1}`}
+                        onChange={handleExpand(`panel${index + 1}`)}
+                      >
+                        <AccordionSummary
+                          aria-controls={`panel${index + 1}bh-content`}
+                          id={`panel${index + 1}bh-header`}
+                          sx={{
+                            width: '100%',
+                            height: '60px',
+                            flexShrink: 0,
+                            justifyContent: 'flex-start',
+                            padding: '24px',
+                            backgroundColor: '#ECFFE0',
+                          }}
+                        >
+                          <Grid container spacing={2} sx={{ pt: '4px' }}>
+                            <Grid item xs={2} sx={{ textAlign: 'center' }}>
+                              {' '}
+                              <Avatar src={item.category_icon} />
                             </Grid>
-                        </Grid>
-                    </Stack>
-                </Grid>
-                <Grid item xs/>
+                            <Grid item xs={5} sx={{ mt: '8px' }}>
+                              {item.category_name}
+                            </Grid>
+                            {item.category_type === 'expense' ? (
+                              <Grid
+                                item
+                                xs={5}
+                                sx={{
+                                  color: '#E51C23',
+                                  textAlign: 'right',
+                                  mt: '6px',
+                                }}
+                              >
+                                - {numberWithCommas(item.amount)}{' '}
+                                <Typography component="span" sx={{ textDecoration: 'underline' }}>
+                                  đ
+                                </Typography>
+                              </Grid>
+                            ) : (
+                              <Grid
+                                item
+                                xs={5}
+                                sx={{
+                                  color: '#039BE5',
+                                  textAlign: 'right',
+                                  mt: '6px',
+                                }}
+                              >
+                                + {numberWithCommas(item.amount)}{' '}
+                                <Typography component="span" style={{ textDecoration: 'underline' }}>
+                                  đ
+                                </Typography>
+                              </Grid>
+                            )}
+                          </Grid>
+                        </AccordionSummary>
+                        <AccordionDetails sx={{ height: '235px', pb: 0 }}>
+                          <Typography sx={{ height: '40px' }}>
+                            <Grid container>
+                              <Grid item xs sx={{ mt: 0, mb: 0 }}>
+                                <Typography variant="h4" style={{ margin: 0 }}>
+                                  Transaction Details
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                                <Button
+                                  variant="outlined"
+                                  color="success"
+                                  onClick={() => handleClickEditAddForm(item._id)}
+                                >
+                                  EDIT
+                                </Button>
+                              </Grid>
+                              <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                                <Button variant="outlined" color="error" onClick={() => handleDeleteTrans(item._id)}>
+                                  DELETE
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          </Typography>
+                          <hr />
+                          <Grid container>
+                            <Grid item xs={2}>
+                              <Avatar src={item.category_icon} sx={{ mr: 10 }} />
+                            </Grid>
+                            <Grid item xs sx={{ mt: '3px' }}>
+                              <h3 style={{ margin: 0 }}>{item.category_name}</h3>
+                              <Typography
+                                sx={{
+                                  marginTop: '0px',
+                                  marginBottom: '0px',
+                                  fontSize: '14px',
+                                }}
+                              >
+                                {item.wallet_name}
+                              </Typography>
+                              <Typography sx={{ fontSize: '12px', fontWeight: 'light' }}>
+                                {getDayy(new Date(`${item.date}`).getDay())}, {item.date}{' '}
+                              </Typography>
+                              <hr />
+                              <Typography
+                                sx={{
+                                  margin: '8px 0px',
+                                  fontSize: '12px',
+                                }}
+                              >
+                                {item.note}{' '}
+                              </Typography>
+                              {item.category_type === 'income' ? (
+                                <Typography sx={{ color: '#039BE5', marginBottom: 0 }}>
+                                  + {numberWithCommas(item.amount)}{' '}
+                                  <span
+                                    sx={{
+                                      color: '#039BE5',
+                                      textDecoration: 'underline',
+                                    }}
+                                  >
+                                    đ
+                                  </span>
+                                </Typography>
+                              ) : (
+                                <Typography sx={{ color: '#E51C23', marginBottom: 0 }}>
+                                  - {numberWithCommas(item.amount)}{' '}
+                                  <span
+                                    sx={{
+                                      color: '#E51C23',
+                                      textDecoration: 'underline',
+                                    }}
+                                  >
+                                    đ
+                                  </span>
+                                </Typography>
+                              )}
+                            </Grid>
+                            <Grid item xs></Grid>
+                          </Grid>
+                        </AccordionDetails>
+                      </Accordion>
+                    </div>
+                  ))}
+                </Card>
+              </Grid>
             </Grid>
+          </Stack>
+        </Grid>
+        <Grid item xs />
+      </Grid>
 
             <Dialog
                 open={openAddForm}
@@ -482,7 +519,7 @@ export default function TransactionPage() {
                         <Grid item xs={4}>
                             <FormControl fullWidth margin="dense">
                                 <InputLabel>Wallet</InputLabel>
-                                <Select onChange={handleChange} label="Wallet" name="wallet_id" value={defaultWallet}>
+                                <Select onChange={handleChange} label="Wallet" name="wallet_id" value={defaultWallet} sx={{ height: '56px' }}>
                                     {listWallet.map((wallet) => (
                                         <MenuItem key={wallet._id} value={wallet._id}>
                                             <Avatar src={wallet.icon}/>
@@ -496,7 +533,7 @@ export default function TransactionPage() {
                             <FormControl fullWidth margin="dense">
                                 <InputLabel>Categories</InputLabel>
                                 <Select onChange={handleChange} label="Categories" name="category_id"
-                                        value={transaction.category_id}>
+                                        value={transaction.category_id} sx={{ height: '56px' }}>
                                     <ListSubheader>Expense</ListSubheader>
                                     {listCategory.map((category) =>{
                                         if (category.type === "expense")
