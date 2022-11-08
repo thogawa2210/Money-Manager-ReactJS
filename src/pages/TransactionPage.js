@@ -209,7 +209,7 @@ export default function TransactionPage() {
       text: 'Are you sure?',
       showCancelButton: true,
       confirmButtonColor: '#54D62C',
-      cancelButtonColor: '#FF4842'
+      cancelButtonColor: '#FF4842',
     }).then((result) => {
       if (result.isConfirmed) {
         deleteTransApi(id)
@@ -244,7 +244,7 @@ export default function TransactionPage() {
         title: 'Oops...',
         text: 'Please fill all the required fields',
         showConfirmButton: false,
-              timer: 1500,
+        timer: 1500,
       });
     } else {
       await axios
@@ -289,7 +289,7 @@ export default function TransactionPage() {
         title: 'Oops...',
         text: 'Please fill all the required fields',
         showConfirmButton: false,
-              timer: 1500,
+        timer: 1500,
       });
     } else {
       await axios
@@ -624,7 +624,7 @@ export default function TransactionPage() {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DesktopDatePicker
                   label="Date desktop"
-                  inputFormat="DD/MM/YYYY"
+                  inputFormat="MM/DD/YYYY"
                   value={value}
                   name="date"
                   disableFuture={true}
@@ -647,7 +647,7 @@ export default function TransactionPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseAddForm} color='error'>
+          <Button variant="outlined" onClick={handleCloseAddForm} color="error">
             Cancel
           </Button>
           <Button variant="outlined" color="success" onClick={handleSubmit}>
@@ -739,7 +739,7 @@ export default function TransactionPage() {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DesktopDatePicker
                   label="Date desktop"
-                  inputFormat="DD/MM/YYYY"
+                  inputFormat="MM/DD/YYYY"
                   value={value}
                   name="date"
                   disableFuture={true}
@@ -775,7 +775,9 @@ export default function TransactionPage() {
         <DialogTitle>Choose Category</DialogTitle>
         <DialogContent>Tab Categories here</DialogContent>
         <DialogActions>
-          <Button onClick={closeCategory} variant='outlined' color='error'>Cancel</Button>
+          <Button onClick={closeCategory} variant="outlined" color="error">
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
     </>
