@@ -339,7 +339,7 @@ export default function WalletPage() {
                             {/* Select icon */}
                             <Box sx={{ minWidth: 120 }}>
                                 <FormControl sx={{ width: 100 }}>
-                                    <InputLabel id="demo-simple-select-label"   >Icon</InputLabel>
+                                    <InputLabel id="demo-simple-select-label">Icon</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
