@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import * as React from 'react';
 import { AppWebsiteVisits } from '../sections/@dashboard/app';
 import {
   AppBar,
@@ -12,6 +13,13 @@ import {
   MenuItem,
   Avatar,
   ListItemText,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  DialogActions,
+  Slide,
+
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
@@ -47,6 +55,10 @@ const getLastStartEndDate = (date) => {
     end_date: `${thisMonth}/${daysOfMonth}/${year}`,
   };
 };
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function ReportPage() {
   const [chartLabels, setChartLabels] = useState([]);
@@ -92,6 +104,9 @@ function ReportPage() {
         setForm({ ...form, [e.target.name]: e.target.value });
         break;
       case 'date':
+        if (e.target.value === 'custom') {
+          setOpenChooseDay(true)
+        }
         setDefaultDate(e.target.value);
         setForm({ ...form, [e.target.name]: e.target.value });
         break;
@@ -166,7 +181,7 @@ function ReportPage() {
             .catch((err) => console.log(err));
         }
       } else {
-        setOpenChooseDay(true)
+       
       }
     }
   };
@@ -259,6 +274,26 @@ function ReportPage() {
           chartData={chartData}
         />
       </Grid>
+
+      <Dialog
+        open={openChooseDay}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={()=>setOpenChooseDay(false)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Let Google help apps determine location. This means sending anonymous
+            location data to Google, even when no apps are running.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={()=>setOpenChooseDay(false)}>Disagree</Button>
+          <Button onClick={()=>setOpenChooseDay(false)}>Agree</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
