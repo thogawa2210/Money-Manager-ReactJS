@@ -21,21 +21,22 @@ import Paper from '@mui/material/Paper';
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const TransitionEdit = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 export default function ProductsPage() {
   const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
-  const [openEditCreateCategory, setOpenEditCreateCategory] = useState(false);
   const [icon, setIcon] = useState('');
   const [type, setType] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [categoriesEdit, setCategoriesEdit] = useState([]);
+  const [categories, setCategories] = useState([])
   const [category, setCategory] = useState({
     name: '',
     type: '',
     icon: ''
-  });
-  const userId = JSON.parse(localStorage.getItem('user'));
+  })
   const [openAddForm, setOpenAddForm] = useState(false);
   const idUser = JSON.parse(localStorage.getItem('user')).user_id
   const handleClickOpenCreateCategory = () => {
@@ -103,17 +104,16 @@ export default function ProductsPage() {
     setType(event.target.value);
   };
   // Table detail category
-  const getCategoryById = async () => {
+  const getWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
-    return await axios.get(` http://localhost:3001/category/get-category-byuser/${userId.user_id}`);
+    return await axios.get(` http://localhost:3001/category/get-category-byuser/${userId.user_id}`, idUser);
   };
 
   useEffect(() => {
-    getCategoryById()
+    getWallet()
       .then((res) => setCategories(res.data.categoryOfUser))
       .catch((error) => console.log(error.message));
   }, [flag]);
-
 
   const handleDeleteCategory = (id) => {
     Swal.fire({
@@ -126,7 +126,7 @@ export default function ProductsPage() {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:3001/category/delete-category/${id}`, userId)
+        await axios.delete(`http://localhost:3001/category/delete-category/${id}`)
           .then(res => {
             dispatch(changeFlag(1))
           })
@@ -139,18 +139,36 @@ export default function ProductsPage() {
       }
     });
   };
-//  Update Category
-const handleClickOpenEditCategory = () => {
-  setOpenEditCreateCategory(true);
-};
-const handleCloseEdit = () => {
-  setOpenEditCreateCategory(false);
-};
-const handleClickOpenCategory = (id) => {
-  const categoryEdit = categories.filter((cate) => cate._id === id);
-  setCategoriesEdit(categoryEdit[0]);
-  setOpenEditCreateCategory(true);
-}
+  // Update Category
+  const [categoryEdit, setCategoryEdit] = useState([])
+
+
+  const handleClickEditAddForm = (id) => {
+    const editCategory = categories.filter((categories) => categories._id === id);
+    setCategoryEdit(editCategory[0]);
+    setOpenEditCategory(true);
+  };
+
+  const [iconEdit, setIconEdit] = useState('');
+  const [openEditCategory, setOpenEditCategory] = useState(false);
+
+  const handleCloseEdit = () => {
+    setCategoryEdit([])
+    setOpenEditCategory(false);
+  };
+  const handleChangeIconEdit = (event) => {
+    setIconEdit(event.target.value);
+  };
+  const handleChangeEdit = (e) => {
+    setCategoryEdit({
+      ...categoryEdit,
+      [e.target.name]: e.target.value
+    });
+  };
+  const handleSubmitEdit = async () => {
+
+  }
+  console.log(categoryEdit)
   return (
     <>
       <Grid container spacing={3}>
@@ -190,7 +208,7 @@ const handleClickOpenCategory = (id) => {
                             <TableCell align="center"><strong>{item.name}</strong></TableCell>
                             <TableCell align="right">{item.type}</TableCell>
                             <TableCell align="right">
-                              <Button variant="outlined" color="success"  onClick={() => handleClickOpenCategory(item._id)} >Edit</Button>
+                              <Button variant="outlined" color="success" onClick={() => handleClickEditAddForm(item._id)}>Edit</Button>
                               <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
                             </TableCell>
                           </TableRow>
@@ -208,7 +226,7 @@ const handleClickOpenCategory = (id) => {
         <Grid item xs />
       </Grid>
 
-      {/* Dialog create Category/>*/}
+      {/* Dialog create wallet/>*/}
       <Dialog
         TransitionComponent={Transition}
         fullWidth={true}
@@ -286,13 +304,13 @@ const handleClickOpenCategory = (id) => {
       </Dialog>
       {/* Update Category */}
       <Dialog
-        TransitionComponent={Transition}
+        TransitionComponent={TransitionEdit}
         fullWidth={true}
         maxWidth='md'
         keepMounted
-        open={openEditCreateCategory}
-        onClose={handleCloseCreate}>
-        <DialogTitle>{"Add Wallet"}</DialogTitle>
+        open={openEditCategory}
+        onClose={handleCloseEdit}>
+        <DialogTitle>{"Edit Wallet"}</DialogTitle>
         <DialogContentText>
         </DialogContentText>
         <DialogContent>
@@ -307,7 +325,8 @@ const handleClickOpenCategory = (id) => {
                     id="demo-simple-select"
                     label="icon"
                     name="icon"
-                    onChange={(event) => handleChangeIcon(event)}
+                    value={categoryEdit.icon}
+                    onChange={(event) => handleChangeIconEdit(event)}
                     sx={{ height: 55 }}
                   >
                     <MenuItem value={`/assets/icons/category/car.svg`}>
@@ -327,8 +346,9 @@ const handleClickOpenCategory = (id) => {
               </Box>
             </Grid>
             <Grid item xs={5} >
-              <TextField name="name" onChange={handleChangeCreate} fullWidth={true} label="Name Category" variant="outlined" value={category.name} />
+              <TextField name="name" onChange={handleChangeEdit} fullWidth={true} label="Name Category" variant="outlined" value={categoryEdit.name}/>
             </Grid>
+            {/*  */}
             <Grid item xs={2}>
               <Box sx={{ minWidth: 120 }}>
                 <FormControl sx={{ width: 300 }}>
@@ -338,6 +358,7 @@ const handleClickOpenCategory = (id) => {
                     id="demo-simple-select"
                     label="type"
                     name="type"
+                    value={categoryEdit.type}
                     onChange={(event) => handleChangeType(event)}
                     sx={{ height: 55 }}
                   >
@@ -356,9 +377,10 @@ const handleClickOpenCategory = (id) => {
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleCloseEdit}>Cancel</Button>
-          <Button variant="contained" startIcon={<Iconify icon="uis:check" />} onClick={handleClickOpenEditCategory}>Save</Button>
+          <Button variant="contained" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitEdit}>Save</Button>
         </DialogActions>
       </Dialog>
+
     </>
   );
 }
