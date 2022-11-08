@@ -1,6 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import * as React from 'react';
 import { AppWebsiteVisits } from '../sections/@dashboard/app';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import {
   AppBar,
   Button,
@@ -19,13 +23,14 @@ import {
   DialogContentText,
   DialogActions,
   Slide,
-
+  TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
 import axios from 'axios';
 import getFormatDate from './../getDateFormat';
 import transaction from "../_mock/transaction";
+import {Box} from "@mui/system";
 
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);
@@ -72,6 +77,8 @@ function ReportPage() {
   const [wallets, setWallets] = useState([]);
   const [defaultWallet, setDefaultWallet] = useState('');
   const [defaultDate, setDefaultDate] = useState('today');
+  const [pickStartDate, setPickStartDate] = useState('');
+  const [pickEndDate, setPickEndDate] = useState('');
 
   useEffect(() => {
     const data = getDataBarChart();
@@ -106,7 +113,7 @@ function ReportPage() {
         break;
       case 'date':
         if (e.target.value === 'custom') {
-          setOpenChooseDay(true)
+          setOpenChooseDay(true);
         }
         setDefaultDate(e.target.value);
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -182,7 +189,6 @@ function ReportPage() {
             .catch((err) => console.log(err));
         }
       } else {
-       
       }
     }
   };
@@ -267,32 +273,45 @@ function ReportPage() {
         </Toolbar>
       </AppBar>
 
-      <Grid item xs={12} md={6} lg={8}>
-        <AppWebsiteVisits
-          title="This month Reports"
-          subheader="(+43%) than last year"
-          chartLabels={chartLabels}
-          chartData={chartData}
-        />
-      </Grid>
+      <Box sx={{mt: "10px"}}>
+        <Grid item xs={12} md={6} lg={8}>
+          <AppWebsiteVisits
+              title="This month Reports"
+              subheader="(+43%) than last year"
+              chartLabels={chartLabels}
+              chartData={chartData}
+          />
+        </Grid>
+      </Box>
 
       <Dialog
         open={openChooseDay}
         TransitionComponent={Transition}
         keepMounted
-        onClose={()=>setOpenChooseDay(false)}
+        onClose={() => setOpenChooseDay(false)}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>{"Use Google's location service?"}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
-          </DialogContentText>
+          <Grid container spacing={3}>
+            <Grid item xs></Grid>
+            <Grid item xs></Grid>
+            <Grid item xs></Grid>
+          </Grid>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Basic example"
+              value={pickStartDate}
+              onChange={(newValue) => {
+                setPickStartDate(newValue);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>setOpenChooseDay(false)}>Disagree</Button>
-          <Button onClick={()=>setOpenChooseDay(false)}>Agree</Button>
+          <Button onClick={() => setOpenChooseDay(false)} variant='outlined' color='error' >Cancel</Button>
+          <Button onClick={() => setOpenChooseDay(false)} variant='outlined' color='success'>Submit</Button>
         </DialogActions>
       </Dialog>
     </>
