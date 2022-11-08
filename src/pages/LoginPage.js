@@ -88,7 +88,7 @@ export default function LoginPage() {
                   icon: 'success',
                   title: 'Login Successfully!',
                   showConfirmButton: false,
-                  timer: 1000,
+                  timer: 1500,
                 });
                 localStorage.setItem(
                   'user',
@@ -100,7 +100,8 @@ export default function LoginPage() {
                 Swal.fire({
                   icon: 'error',
                   title: 'Something Wrong! Try again!',
-                  showConfirmButton: true,
+                  showConfirmButton: false,
+                  timer: 1500
                 });
                 break;
               default:
@@ -110,7 +111,8 @@ export default function LoginPage() {
             Swal.fire({
               icon: 'error',
               title: 'Something wrong! Please try again',
-              showConfirmButton: true,
+              showConfirmButton: false,
+              timer: 1500
             })
           );
       } catch (err) {

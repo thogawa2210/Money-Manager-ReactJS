@@ -139,6 +139,7 @@ export default function UserPage() {
             icon: 'success',
             title: `${res.data.message}`,
             showConfirmButton: true,
+            confirmButtonColor: '#54D62C'
           }).then((result) => {
             if (result.isConfirmed) {
               dispatch(changeFlag(1));
@@ -149,18 +150,24 @@ export default function UserPage() {
           Swal.fire({
             icon: 'error',
             title: `${res.data.message}`,
-            timer: 1000,
+            timer: 1500,
             showConfirmButton: false,
           });
         } else if (res.data.type === 'warning') {
           setOpenPass(false);
-          Swal.fire('Warning', 'Your old password and your new password are the same', 'warning');
+          Swal.fire({
+            title: 'Warning',
+            icon: 'warning',
+            text: 'Your old password and your new password are the same',
+            showConfirmButton: false,
+            timer: 1500
+          });
         } else {
           setOpenPass(false);
           Swal.fire({
             icon: 'warning',
             title: `Something wrong! Try again!`,
-            timer: 1000,
+            timer: 1500,
             showConfirmButton: false,
           });
         }
@@ -186,6 +193,7 @@ export default function UserPage() {
             icon: 'success',
             title: 'Change your name success!',
             showConfirmButton: true,
+            confirmButtonColor: '#54D62C'
           }).then((result) => {
             if (result.isConfirmed) {
               dispatch(changeFlag(1));
@@ -195,7 +203,6 @@ export default function UserPage() {
       })
       .catch((err) => console.log(err));
   };
-  console.log(form);
 
   useEffect(() => {
     const user_id = JSON.parse(localStorage.getItem('user')).user_id;
