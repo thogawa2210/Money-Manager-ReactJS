@@ -10,7 +10,6 @@ import {
   AccordionSummary,
   Avatar,
   Button,
-  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
@@ -38,9 +37,6 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import Iconify from '../components/iconify';
-import { DesktopDatePicker, LocalizationProvider } from '@mui/lab';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
 import { forwardRef } from 'react';
 import { Box } from '@mui/system';
 
@@ -51,7 +47,6 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function WalletPage() {
-  const [detail, setDetail] = useState(<h5>Choose wallet to see details</h5>);
   const [wallets, setWallets] = useState([]);
   const [walletEdit, setWalletEdit] = useState([]);
   const [open, setOpen] = useState(false);
@@ -63,7 +58,6 @@ export default function WalletPage() {
     name: '',
     amount: '',
   });
-  const [value, setValue] = useState(dayjs());
   const [openAddForm, setOpenAddForm] = useState(false);
   const idUser = JSON.parse(localStorage.getItem('user')).user_id;
   const handleClickOpenCreate = () => {
@@ -209,7 +203,6 @@ export default function WalletPage() {
           .delete(`http://localhost:3001/wallet/delete/${id}`)
           .then((res) => {
             dispatch(changeFlag(1));
-            setDetail(<h5>Choose wallet to see details</h5>);
           })
           .catch((err) => console.log(err));
         Swal.fire({
@@ -234,7 +227,6 @@ export default function WalletPage() {
           timer: 1500,
         });
         dispatch(changeFlag(1));
-        setDetail(<h5>Choose wallet to see details</h5>);
       })
       .catch((err) => console.log(err));
     setOpen(false);
