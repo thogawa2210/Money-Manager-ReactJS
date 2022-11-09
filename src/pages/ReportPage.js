@@ -168,7 +168,6 @@ function ReportPage() {
     let day = new Date();
     let { start_date, end_date } = getStartEndDate(day);
     let { last_start, last_end } = getLastStartEndDate(day);
-
     if (form && form.date && form.wallet_id) {
       switch (form.date) {
         case 'today':
