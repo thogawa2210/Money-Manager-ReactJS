@@ -14,6 +14,7 @@ import {
   FormControl,
   Grid,
   IconButton,
+  InputAdornment,
   InputLabel,
   ListSubheader,
   MenuItem,
@@ -104,20 +105,18 @@ export default function ProductsPage() {
   // Done
 
 
+  const idUser = JSON.parse(localStorage.getItem('user')).user_id;
   const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
-  const [icon, setIcon] = useState('');
-  const [type, setType] = useState('');
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState({
     name: '',
     type: '',
-    icon: '',
+    icon: ''
   });
   const [openAddForm, setOpenAddForm] = useState(false);
-
-  const idUser = JSON.parse(localStorage.getItem('user')).user_id;
+  // Create
   const handleClickOpenCreateCategory = () => {
     setOpenCreateCategory(true);
   };
@@ -130,17 +129,16 @@ export default function ProductsPage() {
       [e.target.name]: e.target.value,
     });
   };
+
   const handleSubmitCreate = async () => {
     setOpenAddForm(false);
     let data = {
-      icon: icon,
+      icon: category.icon,
       name: category.name,
-      type: type,
+      type: category.type,
       user_id: idUser,
     };
-
-
-    if (category.name === '') {
+    if (category.name === '' || category.type === '' ) {
       setOpenCreateCategory(false);
       Swal.fire({
         icon: 'error',
@@ -157,17 +155,17 @@ export default function ProductsPage() {
           title: 'Create Category Successfully!',
           showConfirmButton: false,
           timer: 1500
-
         }).then(
-          setOpenCreateCategory(false),
-          dispatch(changeFlag(1)),
           setCategory({
             ...category,
+            icon : null,
             name: '',
+            type : null
           }),
-          setType(''),
-          setIcon('')
-        );
+          setOpenCreateCategory(false),
+          dispatch(changeFlag(1)),
+        )
+        .catch((error) => console.log(error.message));
       } else {
         Swal.fire({
           icon: 'warning',
@@ -177,19 +175,14 @@ export default function ProductsPage() {
         })
         setOpenCreateCategory(false)
         setCategory({
+          icon: '',
           name: '',
           type: '',
-          icon: '',
         });
       }
     }
   };
-  const handleChangeIcon = (event) => {
-    setIcon(event.target.value);
-  };
-  const handleChangeType = (event) => {
-    setType(event.target.value);
-  };
+
   // Table detail category
   const getWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
@@ -217,16 +210,15 @@ export default function ProductsPage() {
           .delete(`http://localhost:3001/category/delete-category/${id}`)
           .then((res) => {
             dispatch(changeFlag(1));
+            Swal.fire({
+              icon: 'success',
+              text: 'Deleted!',
+              title: 'Category has been deleted.',
+              showConfirmButton: false,
+              timer: 1500
+            })
           })
           .catch(err => console.log(err))
-        Swal.fire({
-          icon: 'success',
-          text: 'Deleted!',
-          title: 'Category has been deleted.',
-          showConfirmButton: false,
-          timer: 1500
-        })
-
       }
     });
   };
@@ -234,29 +226,19 @@ export default function ProductsPage() {
   //  Update Category
   //  Xu li lay form du lieu
   const [openEditCategory, setOpenEditCategory] = useState(false);
-  const [iconEdit, setIconEdit] = useState('');
-  const [typeEdit, setTypeEdit] = useState('');
-  const [textEdit, setTextEdit] = useState('');
-  const [editForm, setEditForm] = useState({});
+  const [categoryEdit, setCategorytEdit] = useState({
+    icon: '',
+  });
+  const [editForm, setEditForm] = useState([]);
 
-  const handleChangeIconEdit = (event) => {
-    setIconEdit(event.target.value);
-  };
-  const handleChangeTypeEdit = (event) => {
-    setTypeEdit(event.target.value);
-  };
-  const handleChangeText = async (e) => {
-    setTextEdit({
-      ...textEdit,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const data = {
-    icon: iconEdit,
-    name: textEdit.name,
-    type: typeEdit,
-    user_id: idUser,
-  };
+  const handleChangeEdit = async (e) => {
+    setCategorytEdit({
+      ...categoryEdit,
+      [e.target.value] : e.target.name
+    })
+  }
+
+
 
   // Xử lý hàm trả về thông tin update
 
@@ -264,10 +246,17 @@ export default function ProductsPage() {
     setOpenEditCategory(false);
   };
   const handleClickOpenCategory = async (id) => {
-    await axios.get(`http://localhost:3001/category/get-category-id/${id}`).then((res) => {
-      setEditForm(res.data.category);
+    const categoryEdit = categories.filter((cate) => cate._id === id );
+    setEditForm(categoryEdit[0]);
       setOpenEditCategory(true);
-    });
+  };
+
+  const data = {
+    _id : editForm._id,
+    icon: setCategorytEdit.icon,
+    name: setCategorytEdit.name,
+    type: setCategorytEdit.type,
+    user_id: idUser,
   };
 
   const handleSubmitCateEdit = async () => {
@@ -295,21 +284,23 @@ export default function ProductsPage() {
             .put(` http://localhost:3001/category/update-categody/${editForm._id}`, data)
             .then((res) => {
               dispatch(changeFlag(1));
+              Swal.fire({
+                icon: 'success',
+                title: 'Edited!',
+                text: 'Category has been edited.',
+                showConfirmButton: false,
+                timer: 1500
+              })
+    
             })
             .catch(err => console.log(err))
-          Swal.fire({
-            icon: 'success',
-            title: 'Edited!',
-            text: 'Category has been edited.',
-            showConfirmButton: false,
-            timer: 1500
-          })
+   
         }
       });
     }
   };
 
-
+  console.log(editForm);
   return (
     <>
       <Helmet>
@@ -426,7 +417,7 @@ export default function ProductsPage() {
 
       {/* Dialog create category/>*/}
       <Dialog
-        TransitionComponent={Transition}
+        TransitionComponent={TransitionEdit}
         fullWidth={true}
         maxWidth="md"
         keepMounted
@@ -447,11 +438,10 @@ export default function ProductsPage() {
                     id="demo-simple-select"
                     label="icon"
                     name="icon"
-                    onChange={(event) => handleChangeIcon(event)}
+                    onChange={handleChangeCreate}
                     sx={{ height: 55 }}
                   >
-               {type === "expense"? mockExpense.map((item)=> {
-      
+               {category.type === "expense"? mockExpense.map((item)=> {
                 return(
                   <MenuItem value={item.icon }>
                   <Avatar src={item.icon } sx={{ mr: 0 }} />
@@ -467,18 +457,7 @@ export default function ProductsPage() {
                 )
                
                }) } 
-                    {/* <MenuItem value={`/assets/icons/category/car.svg`}>
-                      <Avatar src={`/assets/icons/category/car.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
-                    <MenuItem value={`/assets/icons/category/food.svg`}>
-                      <Avatar src={`/assets/icons/category/food.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
-                    <MenuItem value={`/assets/icons/category/house.svg`}>
-                      <Avatar src={`/assets/icons/category/house.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
-                    <MenuItem value={`/assets/icons/category/salary.svg`}>
-                      <Avatar src={`/assets/icons/category/salary.svg`} sx={{ mr: 0 }} />
-                    </MenuItem> */}
+               
                   </Select>
                 </FormControl>
               </Box>
@@ -503,7 +482,7 @@ export default function ProductsPage() {
                     id="demo-simple-select"
                     label="type"
                     name="type"
-                    onChange={(event) => handleChangeType(event)}
+                    onChange={handleChangeCreate}
                     sx={{ height: 55 }}
                   >
                     <MenuItem value={`expense`}>Expense</MenuItem>
@@ -520,92 +499,85 @@ export default function ProductsPage() {
         </DialogActions>
       </Dialog>
       {/* Update Category */}
+      
       <Dialog
-        TransitionComponent={TransitionEdit}
-        fullWidth={true}
-        maxWidth="md"
-        keepMounted
-        open={openEditCategory}
-        onClose={handleCloseCreate}
-      >
-        <DialogTitle>{'Edit Category'}</DialogTitle>
-        <DialogContentText></DialogContentText>
-        <DialogContent>
-          <Grid container spacing={3}>
+      TransitionComponent={TransitionEdit}
+      fullWidth
+      maxWidth="md"
+      keepMounted
+      open={openEditCategory}
+      onClose={() => handleCloseEdit(false)}
+    >
+      <DialogTitle>{'Edit Wallet'}</DialogTitle>
+      <DialogContentText></DialogContentText>
+      <DialogContent>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
             {/* Select icon */}
-            <Grid item xs={2}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 100 }}>
-                  <InputLabel id="demo-simple-select-label">Icon</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="icon"
-                    name="icon"
-                    onChange={(event) => handleChangeIconEdit(event)}
-                    sx={{ height: 55 }}
-                    value={editForm.icon + ''}
-                  >
-                   {type === "expense"? mockExpense.map((item)=> {
-               
-                return(
-                  <MenuItem value={item.icon }>
-                  <Avatar src={item.icon } sx={{ mr: 0 }} />
-                </MenuItem>
-                )
-               }
-               
-               ) : mockIncome.map((item)=> {
-                return (
-                  <MenuItem value={item.icon}>
-                  <Avatar src={item.icon} sx={{ mr: 0 }} />
-                </MenuItem>
-                )
-               
-               }) } 
-                  </Select>
-                </FormControl>
-              </Box>
-            </Grid>
-            <Grid item xs={5}>
-              <TextField
-                name="name"
-                onChange={(e) => handleChangeText(e)}
-                fullWidth={true}
-                variant="outlined"
-                placeholder={editForm.name}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 300 }}>
-                 
-
-                  <TextField
-                    id="outlined-select-currency"
-                    select
-                    label="Type"
-                    onChange={(event) => handleChangeTypeEdit(event)}
-                    placeholder={editForm.type + ''}
-                    helperText="Please select your currency"
-
-                  >
-                    {currencies.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </FormControl>
-              </Box>
-            </Grid>
+            <Box sx={{ minWidth: 120 }}>
+              <FormControl sx={{ width: 100 }}>
+                <InputLabel>Icon</InputLabel>
+                <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}   >
+                {editForm.type  === "expense"? mockExpense.map((item,index)=> {
+                  return(
+                    <MenuItem value={item.icon} key={index.icon}>
+                    <Avatar src={item.icon } sx={{ mr: 0 }} />
+                  </MenuItem>
+                  )
+                 }
+                 ) : mockIncome.map((item)=> {
+                  return (
+                    <MenuItem value={item.icon}>
+                    <Avatar src={item.icon} sx={{ mr: 0 }} />
+                  </MenuItem>
+                  )
+                 }) } 
+                </Select>
+              </FormControl>
+            </Box>
           </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" color="error" onClick={handleCloseEdit}>Cancel</Button>
-          <Button variant="outlined" color="success" onClick={handleSubmitCateEdit}>Submit</Button>
-        </DialogActions>
-      </Dialog>
+          <Grid item xs={5}>
+            <TextField
+              required
+              name="name"
+              label="Name"
+              onChange={handleChangeEdit}
+              fullWidth
+              variant="outlined"
+              placeholder={editForm.name}
+      
+            />
+          </Grid>
+          <Grid item xs={5}>
+    
+          <TextField
+          id="outlined-select-currency"
+          select
+          label="Type"
+          onChange={handleChangeEdit}
+          helperText="Please select your currency"
+          
+        >
+          {currencies.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" color="error" onClick={handleCloseEdit}>
+          Cancel
+        </Button>
+        <Button variant="outlined" color="success" onClick={() => handleSubmitCateEdit(editForm._id)}>
+          Submit
+        </Button>
+      </DialogActions>
+    </Dialog>
+      
     </>
   );
 }
