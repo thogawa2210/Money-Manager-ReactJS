@@ -27,16 +27,16 @@ function VerifyRegister() {
         icon: 'success',
         title: 'Verify Successfuly!',
         showConfirmButton: false,
-        timer: 2000,
+        timer: 1500,
       });
       navigate('/login');
     } else {
       Swal.fire({
-        icon: 'info',
+        icon: 'error',
         title: 'Oops...',
         text: 'Verify Error',
-        footer: '<a href="/login">Go to Login</a>',
       });
+      navigate('/signup');
     }
   };
 
