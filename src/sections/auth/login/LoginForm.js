@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link, Stack, IconButton, InputAdornment, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 // components
 import Iconify from '../../../components/iconify';
@@ -72,6 +72,8 @@ export default function LoginForm() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill out all the required fields',
+        showConfirmButton: false,
+        timer: 1500,
       });
     } else {
       callApi()
@@ -84,35 +86,31 @@ export default function LoginForm() {
     if (data.type === 'success') {
       const user = {
         user_id: data.data.data._id,
-        token: data.data.token
+        token: data.data.token,
       };
       localStorage.setItem('user', JSON.stringify(user));
       Swal.fire({
         icon: 'success',
         title: 'Login successfuly!',
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1500,
       });
       navigate('/');
-    } else if (data.type === 'error') {
+    } else if (data.type === 'notexist') {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: data.message,
-      });
-    } else if (data.type === 'notexist') {
-      Swal.fire({
-        icon: 'info',
-        title: 'Oops...',
-        text: data.message,
-        footer: '<a href="/signup">Create new account?</a>',
+        confirmButtonColor: '#54D62C',
+        footer: '<a href="/signup">Create new account?</a>'
       });
     } else {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Something went wrong. Please try again!',
-        footer: '<a href="/signup">Create new account?</a>',
+        text: data.message,
+        showConfirmButton: false,
+        timer: 1500,
       });
     }
   };
