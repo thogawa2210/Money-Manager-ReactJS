@@ -246,8 +246,8 @@ export default function WalletPage() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={() => handleSaveEdit(walletEdit._id)}>Save</Button>
+          <Button variant="outlined" onClick={handleClose} color="error" >Cancel</Button>
+          <Button  variant="outlined" color="success" onClick={() => handleSaveEdit(walletEdit._id)}>Submit</Button>
         </DialogActions>
       </Dialog>
       {/* Detail Wallet */}
@@ -285,10 +285,10 @@ export default function WalletPage() {
                           </TableCell>
                           <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
                           <TableCell align="right">
-                            <Button variant="contained" color="primary" onClick={() => handleClickOpen(item._id)}>
+                            <Button variant="outlined" color="primary" onClick={() => handleClickOpen(item._id)}>
                               Edit
                             </Button>
-                            <Button variant="contained" color="error" onClick={() => handleDeleteWallet(item._id)}>
+                            <Button variant="outlined" color="error" onClick={() => handleDeleteWallet(item._id)}>
                               Delete
                             </Button>
                           </TableCell>
@@ -374,11 +374,11 @@ export default function WalletPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseCreate}>
+          <Button variant="outlined" color="error" onClick={handleCloseCreate}>
             Cancel
           </Button>
-          <Button variant="contained" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCreate}>
-            Save
+          <Button variant="outlined" color="success" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCreate}>
+            Submit
           </Button>
         </DialogActions>
       </Dialog>
