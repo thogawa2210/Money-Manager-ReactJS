@@ -260,7 +260,6 @@ export default function WalletPage() {
               {/* Select icon */}
               <Box sx={{ minWidth: 120 }}>
                 <FormControl sx={{ width: 100 }}>
-                  <InputLabel>Icon</InputLabel>
                   <Select name="icon" onChange={onChangeEdit} sx={{ height: 55 }} value={walletEdit.icon}>
                     {mockWallet.map((item) => (
                       <MenuItem value={item.icon} key={item.icon}>
