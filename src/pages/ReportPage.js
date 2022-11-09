@@ -159,7 +159,6 @@ function ReportPage() {
   },[])
 
   const getTransCustomApi = async (data) => {
-    console.log(dataApi)
     return await axios.post('http://localhost:3001/transaction/get-transaction-custom', data);
   };
 
