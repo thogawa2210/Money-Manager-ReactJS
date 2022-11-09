@@ -1,11 +1,11 @@
 import { Helmet } from 'react-helmet-async';
 import * as React from 'react';
-import { AppWebsiteVisits } from '../sections/@dashboard/app';
+import {AppCurrentVisits, AppWebsiteVisits} from '../sections/@dashboard/app';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-
+import {useTheme} from "@mui/material/styles";
 import {
   AppBar,
   Button,
@@ -31,7 +31,9 @@ import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
 import axios from 'axios';
 import getFormatDate from './../getDateFormat';
+import getCircleData from '../getCircleData';
 import Swal from 'sweetalert2';
+
 
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);
@@ -98,7 +100,7 @@ function ReportPage() {
   const [error, setError] = useState(false);
   const [error1, setError1] = useState(false);
   const userID = JSON.parse(localStorage.getItem('user')).user_id;
-
+  const theme = useTheme();
   const handleCloseDialogChooseDate = () => {
     setPickDate({
       pick_start: null,
@@ -108,6 +110,9 @@ function ReportPage() {
     setDefaultDate('today');
     setForm({ ...form, date: 'today' });
   };
+
+  const [incomeData, setIcomeData] = useState([])
+  const [expenseData, setExpensData] = useState([])
 
   const closeChooseDay = () => {
     setOpenChooseDay(false);
@@ -208,6 +213,9 @@ function ReportPage() {
     getTransCustomApi(dataApi)
       .then((res) => {
         const data = getDataBarChart(res.data.data);
+        const circleData = getCircleData(res.data.data)
+        setIcomeData(circleData.income);
+        setExpensData(circleData.expense);
         setChartLabels(data.chartLabels);
         setChartData(data.chartData);
       })
@@ -249,6 +257,9 @@ function ReportPage() {
     getTransCustomApi(data)
         .then((res) => {
           const data = getDataBarChart(res.data.data);
+          const circleData = getCircleData(res.data.data)
+          setIcomeData(circleData.income);
+          setExpensData(circleData.expense);
           setChartLabels(data.chartLabels);
           setChartData(data.chartData);
         })
@@ -343,6 +354,34 @@ function ReportPage() {
             chartLabels={chartLabels}
             chartData={chartData}
           />
+        </Grid>
+      </Box>
+      <Box sx={{mt:'10px'}}>
+        <Grid container spacing={2}>
+          <Grid item xs={6} md={6}>
+            <AppCurrentVisits
+                title="Income"
+                chartData={incomeData}
+                chartColors={[
+                  theme.palette.primary.main,
+                  theme.palette.info.main,
+                  theme.palette.warning.main,
+                  theme.palette.error.main,
+                ]}
+            />
+          </Grid>
+          <Grid item xs={6} md={6}>
+            <AppCurrentVisits
+                title="Expense"
+                chartData={expenseData}
+                chartColors={[
+                  theme.palette.primary.main,
+                  theme.palette.info.main,
+                  theme.palette.warning.main,
+                  theme.palette.error.main,
+                ]}
+            />
+          </Grid>
         </Grid>
       </Box>
 
