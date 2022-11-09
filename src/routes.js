@@ -23,8 +23,8 @@ export default function Router() {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
+        { element: <Navigate to="/dashboard/transaction" />, index: true },
+        { path: 'transaction', element: <TransactionPage /> },
         { path: 'report', element: <ReportPage /> },
         { path: 'profile', element: <UserPage /> },
         { path: 'category', element: <CategoryPage /> },
@@ -33,7 +33,6 @@ export default function Router() {
           path: 'logout',
           element: <LogoutPage />,
         },
-        { path: 'transaction', element: <TransactionPage /> },
       ],
     },
     {
@@ -53,7 +52,7 @@ export default function Router() {
     {
       element: <SimpleLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        { element: <Navigate to="/dashboard/transaction" />, index: true },
         { path: '404', element: <Page404 /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
