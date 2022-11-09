@@ -48,24 +48,31 @@ const getStartEndDate = (date) => {
 const getLastStartEndDate = (date) => {
   let month = date.getMonth();
   let year = date.getFullYear();
-  let thisMonth, daysOfMonth;
-  if (month !== 0) {
-    thisMonth = month.toString().length > 1 ? month : '0' + month;
+  let lastMonth, daysOfMonth;
+  if (month > 0) {
+    lastMonth = month.toString().length > 1 ? month : '0' + month;
     daysOfMonth = new Date(year, month, 0).getDate();
+  } else if (month === 0) {
+    lastMonth = 1;
+    daysOfMonth = new Date(year, lastMonth, 0).getDate();
   } else {
-    thisMonth = 12;
+    lastMonth = 12;
     year = year - 1;
-    daysOfMonth = new Date(year, thisMonth, 0).getDate();
+    daysOfMonth = new Date(year, lastMonth, 0).getDate();
   }
   return {
-    start_date: `${thisMonth}/01/${year}`,
-    end_date: `${thisMonth}/${daysOfMonth}/${year}`,
+    last_start: `${lastMonth}/01/${year}`,
+    last_end: `${lastMonth}/${daysOfMonth}/${year}`,
   };
 };
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+let day = new Date();
+let { start_date, end_date } = getStartEndDate(day);
+let { last_start, last_end } = getLastStartEndDate(day);
 
 function ReportPage() {
   const [chartLabels, setChartLabels] = useState([]);
@@ -92,7 +99,6 @@ function ReportPage() {
   const [error1, setError1] = useState(false);
   const userID = JSON.parse(localStorage.getItem('user')).user_id;
 
-
   useEffect(() => {
     const data = getDataBarChart();
     setChartLabels(data.chartLabels);
@@ -106,13 +112,13 @@ function ReportPage() {
     });
     setOpenChooseDay(false);
     setDefaultDate('today');
-    setForm({...form, date: 'today'})
+    setForm({ ...form, date: 'today' });
   };
 
   const closeChooseDay = () => {
     setOpenChooseDay(false);
     setDefaultDate('today');
-    setForm({...form, date: 'today'})
+    setForm({ ...form, date: 'today' });
   };
 
   const getWalletsApi = async (id) => {
@@ -137,7 +143,7 @@ function ReportPage() {
     switch (e.target.name) {
       case 'wallet_id':
         setDefaultWallet(e.target.value);
-        setForm({ ...form, wallet_id: e.target.value });
+        setForm({ ...form, [e.target.name]: e.target.value });
         break;
       case 'date':
         if (e.target.value === 'custom') {
@@ -155,45 +161,41 @@ function ReportPage() {
   };
 
   useEffect(() => {
-    setDataApi({...dataApi, user_id: userID})
-  },[])
+    setDataApi({ ...dataApi, user_id: userID });
+  }, []);
 
   const getTransCustomApi = async (data) => {
-    console.log(dataApi)
+    console.log(dataApi);
     return await axios.post('http://localhost:3001/transaction/get-transaction-custom', data);
   };
 
-  const handleFilter = (e) => {
-    console.log(form)
-    let day = new Date();
-    let { start_date, end_date } = getStartEndDate(day);
-    let { last_start, last_end } = getLastStartEndDate(day);
+  useEffect(() => {
     if (form && form.date && form.wallet_id) {
       switch (form.date) {
         case 'today':
           if (form.wallet_id === 'total') {
-            setDataApi({ ...dataApi, start_date: '', end_date: '' });
+            setDataApi({ ...dataApi, start_date: '', end_date: '', wallet_id: '' });
           } else {
-            setDataApi({ ...dataApi, wallet_id: form.wallet_id , start_date: '', end_date: ''});
+            setDataApi({ ...dataApi, wallet_id: form.wallet_id, start_date: '', end_date: '' });
           }
           break;
         case 'this month':
           if (form.wallet_id === 'total') {
-            setDataApi({ ...dataApi, start_date: start_date, end_date: end_date });
+            setDataApi({ ...dataApi, start_date: start_date, end_date: end_date, wallet_id: '' });
           } else {
             setDataApi({ ...dataApi, start_date: start_date, end_date: end_date, wallet_id: form.wallet_id });
           }
           break;
         case 'last month':
           if (form.wallet_id === 'total') {
-            setDataApi({ ...dataApi, start_date: last_start, end_date: last_end });
+            setDataApi({ ...dataApi, start_date: last_start, end_date: last_end, wallet_id: '' });
           } else {
             setDataApi({ ...dataApi, start_date: last_start, end_date: last_end, wallet_id: form.wallet_id });
           }
           break;
         case 'custom':
           if (form.wallet_id === 'total') {
-            setDataApi({ ...dataApi, start_date: pickDate.pick_start, end_date: pickDate.pick_end });
+            setDataApi({ ...dataApi, start_date: pickDate.pick_start, end_date: pickDate.pick_end, wallet_id: '' });
           } else {
             setDataApi({
               ...dataApi,
@@ -205,16 +207,17 @@ function ReportPage() {
           break;
         default:
       }
-
-      getTransCustomApi(dataApi)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, dataApi, pickDate]);
+
+  const handleFilter = (e) => {
+    getTransCustomApi(dataApi)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   };
-
-
 
   const handleChangePickDate = (value) => {
     let date_end = dayjs(value).format('MM/DD/YYYY');
@@ -223,7 +226,7 @@ function ReportPage() {
       setError(true);
       setTimeout(() => {
         setError(false);
-      }, 2500);
+      }, 3000);
     } else {
       setPickDate({ ...pickDate, pick_end: date_end });
     }
@@ -234,7 +237,7 @@ function ReportPage() {
       setError1(true);
       setTimeout(() => {
         setError1(false);
-      }, 2500);
+      }, 3000);
     } else {
       setOpenChooseDay(false);
     }
@@ -263,7 +266,7 @@ function ReportPage() {
                       <MenuItem value={'today'}>Today</MenuItem>
                       <MenuItem value={'this month'}>This month</MenuItem>
                       <MenuItem value={'last month'}>Last month </MenuItem>
-                      <MenuItem value={'custom'}>Custom</MenuItem>
+                      <MenuItem value={'custom'} onClick={()=>setOpenChooseDay(true)}>Custom</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -343,7 +346,10 @@ function ReportPage() {
         </Typography>
         {error ? (
           <Stack spacing={2} sx={{ padding: 2 }}>
-            <Alert severity="error">You cannot choose an end date before a start date! Please try again!</Alert>
+            <Alert severity="error">
+              You cannot select the end date to be the day before the start date or select the same date! Please try
+              again!
+            </Alert>
           </Stack>
         ) : (
           ''
