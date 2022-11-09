@@ -9,6 +9,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  InputAdornment,
   Avatar,
   Button,
   Dialog,
@@ -49,12 +50,12 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 export default function WalletPage() {
   const [wallets, setWallets] = useState([]);
-  const [walletEdit, setWalletEdit] = useState([]);
+  const [walletEdit, setWalletEdit] = useState({
+    icon: '',
+  });
   const [open, setOpen] = useState(false);
-  const [totalMoney, setTotalMoney] = useState(0);
   // Create Wallet
   const [openCreate, setOpenCreate] = React.useState(false);
-  const [icon, setIcon] = useState('');
   const [wallet, setWallet] = useState({
     icon: '',
     name: '',
@@ -76,7 +77,6 @@ export default function WalletPage() {
   };
   const handleSubmitCreate = async () => {
     setOpenAddForm(false);
-
     let data = {
       icon: wallet.icon,
       name: wallet.name,
@@ -100,11 +100,10 @@ export default function WalletPage() {
             setOpenCreate(false);
             dispatch(changeFlag(1));
             setWallet({
-              ...wallet,
               name: '',
               amount: '',
+              icon: '',
             });
-            setIcon('');
             Swal.fire({
               icon: 'success',
               title: 'Update Successfully!',
@@ -121,11 +120,10 @@ export default function WalletPage() {
               timer: 1500,
             });
             setWallet({
-              ...wallet,
+              icon: '',
               name: '',
               amount: '',
             });
-            setIcon('');
           }
         })
         .catch((err) => {
@@ -147,18 +145,14 @@ export default function WalletPage() {
   const handleChangeDetail = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  //Done
+
   const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
 
-  const handleClickOpen = (id) => {
+  const handleOpenEdit = (id) => {
     const walletEdit = wallets.filter((wallet) => wallet._id === id);
     setWalletEdit(walletEdit[0]);
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const getAllWallet = async () => {
@@ -166,28 +160,23 @@ export default function WalletPage() {
     return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`);
   };
 
-  const toTalMoney = async () => {
-    const userId = JSON.parse(localStorage.getItem('user'));
-    return await axios.get(`http://localhost:3001/wallet/total/${userId.user_id}`);
-  };
-
-  console.log(wallet)
-
   useEffect(() => {
     getAllWallet()
       .then((res) => setWallets(res.data.wallet))
       .catch((error) => console.log(error.message));
-    toTalMoney()
-      .then((res) => setTotalMoney(res.data.total))
-      .catch((error) => console.log(error.message));
   }, [flag]);
 
+  const onCancelEdit = () => {
+    setOpen(false);
+    setWalletEdit({
+      icon: '',
+      name: '',
+      amount: '',
+    });
+  };
+
   const onChangeEdit = (e) => {
-    if (e.target.name === 'amount') {
-      setWalletEdit({ ...walletEdit, [e.target.name]: parseInt(e.target.value) });
-    } else {
-      setWalletEdit({ ...walletEdit, [e.target.name]: e.target.value });
-    }
+    setWalletEdit({ ...walletEdit, [e.target.name]: e.target.value });
   };
 
   const handleDeleteWallet = (id) => {
@@ -204,23 +193,30 @@ export default function WalletPage() {
           .delete(`http://localhost:3001/wallet/delete/${id}`)
           .then((res) => {
             dispatch(changeFlag(1));
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Wallet has been deleted.',
+              showConfirmButton: false,
+              timer: 1500,
+            });
           })
           .catch((err) => console.log(err));
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Wallet has been deleted.',
-          showConfirmButton: false,
-          timer: 1500,
-        });
       }
     });
   };
 
   const handleSaveEdit = async (id) => {
+    console.log(id);
+    let data = {
+      icon: walletEdit.icon,
+      name: walletEdit.name,
+      amount: walletEdit.amount,
+    };
     await axios
-      .put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
+      .put(`http://localhost:3001/wallet/update/${id}`, data)
       .then((res) => {
+        setOpen(false);
         Swal.fire({
           icon: 'success',
           title: 'Update Successfully!',
@@ -230,7 +226,6 @@ export default function WalletPage() {
         dispatch(changeFlag(1));
       })
       .catch((err) => console.log(err));
-    setOpen(false);
   };
 
   return (
@@ -240,42 +235,73 @@ export default function WalletPage() {
       </Helmet>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" gutterBottom sx={{ml: '20px'}}>
           Wallet Manager
         </Typography>
-        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenCreate}>
+        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenCreate} sx={{mr: '20px'}}>
           New Wallet
         </Button>
       </Stack>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit wallet</DialogTitle>
+
+      {/* Edit Wallet */}
+      <Dialog
+        TransitionComponent={Transition}
+        fullWidth
+        maxWidth="md"
+        keepMounted
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        <DialogTitle>{'Edit Wallet'}</DialogTitle>
+        <DialogContentText></DialogContentText>
         <DialogContent>
-          <DialogContentText>Please enter your update infomation</DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="name"
-            label="Wallet Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={walletEdit.name}
-            onChange={onChangeEdit}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            name="amount"
-            label="Wallet Amount"
-            type="number"
-            fullWidth
-            variant="standard"
-            value={walletEdit.amount}
-            onChange={onChangeEdit}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              {/* Select icon */}
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl sx={{ width: 100 }}>
+                  <InputLabel>Icon</InputLabel>
+                  <Select name="icon" onChange={onChangeEdit} sx={{ height: 55 }} value={walletEdit.icon}>
+                    {mockWallet.map((item) => (
+                      <MenuItem value={item.icon} key={item.icon}>
+                        <Avatar src={item.icon} sx={{ mr: 0 }} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+            <Grid item xs={5}>
+              <TextField
+                required
+                name="name"
+                onChange={onChangeEdit}
+                fullWidth
+                variant="outlined"
+                value={walletEdit.name}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">Name</InputAdornment>,
+                }}
+              />
+            </Grid>
+            <Grid item xs={5}>
+              <TextField
+                required
+                name="amount"
+                onChange={onChangeEdit}
+                fullWidth
+                variant="outlined"
+                type="number"
+                value={walletEdit.amount}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">Amount</InputAdornment>,
+                }}
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleClose} color="error">
+          <Button variant="outlined" color="error" onClick={onCancelEdit}>
             Cancel
           </Button>
           <Button variant="outlined" color="success" onClick={() => handleSaveEdit(walletEdit._id)}>
@@ -322,7 +348,7 @@ export default function WalletPage() {
                           </TableCell>
                           <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
                           <TableCell align="right">
-                            <Button variant="outlined" color="success" onClick={() => handleClickOpen(item._id)}>
+                            <Button variant="outlined" color="success" onClick={() => handleOpenEdit(item._id)}>
                               Edit
                             </Button>
                             <Button variant="outlined" color="error" onClick={() => handleDeleteWallet(item._id)}>
@@ -346,7 +372,7 @@ export default function WalletPage() {
       {/* Dialog create wallet/>*/}
       <Dialog
         TransitionComponent={Transition}
-        fullWidth={true}
+        fullWidth
         maxWidth="md"
         keepMounted
         open={openCreate}
@@ -382,7 +408,7 @@ export default function WalletPage() {
               <TextField
                 name="name"
                 onChange={handleChangeCreate}
-                fullWidth={true}
+                fullWidth
                 label="Name Wallet"
                 variant="outlined"
                 value={wallet.name}
@@ -392,7 +418,7 @@ export default function WalletPage() {
               <TextField
                 name="amount"
                 onChange={handleChangeCreate}
-                fullWidth={true}
+                fullWidth
                 label="Amount"
                 variant="outlined"
                 type="number"
