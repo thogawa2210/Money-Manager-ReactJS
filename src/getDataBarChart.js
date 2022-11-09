@@ -1,16 +1,3 @@
-import transaction from "./_mock/transaction";
-
-const getTransactions = (startDate, endDate) => {
-    let result = [];
-    transaction.forEach((transaction) => {
-        if (Date.parse(transaction.date) >= Date.parse(startDate)
-            && Date.parse(transaction.date) <= Date.parse(endDate)) {
-            result.push(transaction)
-        }
-    })
-    return result
-}
-
 export default function getDataBarChart(data){
     const transactions = data.transactions;
     const startDate = new Date(data.startDate);
