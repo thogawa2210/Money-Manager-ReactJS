@@ -5,7 +5,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-
 import {
   AppBar,
   Button,
@@ -31,6 +30,7 @@ import axios from 'axios';
 import getFormatDate from './../getDateFormat';
 import { Box } from '@mui/system';
 import { getPickersCalendarHeaderUtilityClass } from '@mui/x-date-pickers/CalendarPicker/pickersCalendarHeaderClasses';
+import ChartPage from "./ChartPage";
 
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);
@@ -296,6 +296,9 @@ function ReportPage() {
             />
           </Grid>
         </Box>
+
+
+        <ChartPage/>
 
         <Dialog
             open={openChooseDay}
