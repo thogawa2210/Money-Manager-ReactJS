@@ -397,7 +397,7 @@ export default function TransactionPage() {
                                         overflowY: 'scroll',
                                     }}
                                 >
-                                    {listTransaction.map((item, index) => (
+                                    {listTransaction?.map((item, index) => (
                                         <div key={index}>
                                             <Box sx={{ heght: '20px', border: '1px solid #EAFCDE' }}></Box>
                                             <Accordion
@@ -593,7 +593,7 @@ export default function TransactionPage() {
                                     inputProps={{ readOnly: true }}
                                     onClick={handleClickOpenCategory}
                                 >
-                                    {listCategory.map((category) => (
+                                    {listCategory?.map((category) => (
                                         <MenuItem key={category.name} value={category._id}>
                                             <Avatar src={category.icon} />
                                             <ListItemText primary={category.name} />
@@ -677,7 +677,7 @@ export default function TransactionPage() {
                                     value={editTransaction.wallet_id}
                                     sx={{ height: '56px' }}
                                 >
-                                    {listWallet.map((wallet) => (
+                                    {listWallet?.map((wallet) => (
                                         <MenuItem key={wallet._id} value={wallet._id}>
                                             <Avatar src={wallet.icon} />
                                             <ListItemText primary={wallet.name} />
@@ -698,7 +698,7 @@ export default function TransactionPage() {
                                     inputProps={{ readOnly: true }}
                                     onClick={handleClickOpenCategory}
                                 >
-                                    {listCategory.map((category) => (
+                                    {listCategory?.map((category) => (
                                         <MenuItem key={category.name} value={category._id}>
                                             <Avatar src={category.icon} />
                                             <ListItemText primary={category.name} />
@@ -769,7 +769,7 @@ export default function TransactionPage() {
                                 </TabList>
                             </Box>
                             <TabPanel value="income" centered>
-                                {listCategory.map((category) => {
+                                {listCategory?.map((category) => {
                                     if (category.type === 'income')
                                         return (
                                             <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
@@ -780,7 +780,7 @@ export default function TransactionPage() {
                                 })}
                             </TabPanel>
                             <TabPanel value="expense">
-                                {listCategory.map((category) => {
+                                {listCategory?.map((category) => {
                                     if (category.type === 'expense')
                                         return (
                                             <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
