@@ -1,4 +1,4 @@
-import {Helmet} from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import dayjs from 'dayjs';
 import {
     Avatar,
@@ -25,19 +25,20 @@ import {
     AccordionDetails,
     AccordionSummary,
     Box,
-    ListSubheader,
+    ListSubheader, Tab,
 } from '@mui/material';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
-import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
-import {forwardRef, useEffect, useState} from 'react';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { forwardRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import Iconify from '../components/iconify';
 import Swal from 'sweetalert2';
-import {changeFlag} from '../features/flagSlice';
-import {useDispatch, useSelector} from 'react-redux';
+import { changeFlag } from '../features/flagSlice';
+import { useDispatch, useSelector } from 'react-redux';
 //css
 import '../css/transaction.css';
+import {TabContext, TabList, TabPanel} from "@mui/lab";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -82,6 +83,17 @@ export default function TransactionPage() {
         inflow: 0,
         outflow: 0,
     });
+    const [category, setCategory] = useState('expense');
+
+    const handleChangeCategory = (e, category) => {
+        setCategory(category)
+    }
+
+    const handleChooseCategory = (id) => {
+        setTransaction({...transaction, category_id: id});
+        setEditTransaction({...transaction, category_id: id});
+        setOpenCategory(false);
+    }
 
     //redux
     const dispatch = useDispatch();
@@ -126,7 +138,7 @@ export default function TransactionPage() {
     useEffect(() => {
         if (listWallet.length > 0) {
             setDefaultWallet(listWallet[0]._id);
-            setTransaction({...transaction, wallet_id: listWallet[0]._id});
+            setTransaction({ ...transaction, wallet_id: listWallet[0]._id });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [listWallet]);
@@ -134,32 +146,32 @@ export default function TransactionPage() {
     const handleChange = (e) => {
         if (e.target) {
             if (e.target.name === 'amount') {
-                setTransaction({...transaction, [e.target.name]: parseInt(e.target.value)});
+                setTransaction({ ...transaction, [e.target.name]: parseInt(e.target.value) });
             } else if (e.target.name === 'wallet_id') {
                 setDefaultWallet(e.target.value);
-                setTransaction({...transaction, [e.target.name]: e.target.value});
+                setTransaction({ ...transaction, [e.target.name]: e.target.value });
             } else {
-                setTransaction({...transaction, [e.target.name]: e.target.value});
+                setTransaction({ ...transaction, [e.target.name]: e.target.value });
             }
         } else {
             setValue(e);
-            setTransaction({...transaction, date: dayjs(e).format('MM/DD/YYYY')});
+            setTransaction({ ...transaction, date: dayjs(e).format('MM/DD/YYYY') });
         }
     };
 
     const handleChangeEdit = (e) => {
         if (e.target) {
             if (e.target.name === 'amount') {
-                setEditTransaction({...editTransaction, [e.target.name]: parseInt(e.target.value)});
+                setEditTransaction({ ...editTransaction, [e.target.name]: parseInt(e.target.value) });
             } else if (e.target.name === 'wallet_id') {
                 // setDefaultWallet(e.target.value);
-                setEditTransaction({...editTransaction, [e.target.name]: e.target.value});
+                setEditTransaction({ ...editTransaction, [e.target.name]: e.target.value });
             } else {
-                setEditTransaction({...editTransaction, [e.target.name]: e.target.value});
+                setEditTransaction({ ...editTransaction, [e.target.name]: e.target.value });
             }
         } else {
             setValue(e);
-            setEditTransaction({...editTransaction, date: dayjs(e).format('MM/DD/YYYY')});
+            setEditTransaction({ ...editTransaction, date: dayjs(e).format('MM/DD/YYYY') });
         }
     };
 
@@ -198,7 +210,7 @@ export default function TransactionPage() {
 
     useEffect(() => {
         const userId = JSON.parse(localStorage.getItem('user')).user_id;
-        setTransaction({...transaction, user_id: userId});
+        setTransaction({ ...transaction, user_id: userId });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -325,32 +337,31 @@ export default function TransactionPage() {
             </Helmet>
 
             <Grid container spacing={3}>
-                <Grid item xs={12} sx={{padding: '0px', height: '50px'}}>
+                <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
                     <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                         <Typography variant="h3">Transaction</Typography>
-                        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}
-                                onClick={handleClickOpenAddForm}>
+                        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
                             New Transaction
                         </Button>
                     </Stack>
                 </Grid>
-                <Grid item xs/>
-                <Grid item xs={8} sx={{padding: 0}}>
+                <Grid item xs />
+                <Grid item xs={8} sx={{ padding: 0 }}>
                     <Stack>
                         <Grid>
                             <Card>
                                 <CardContent>
-                                    <Typography sx={{padding: 0, margin: 0}} variant="h4">
+                                    <Typography sx={{ padding: 0, margin: 0 }} variant="h4">
                                         Transaction Info
                                     </Typography>
-                                    <hr/>
+                                    <hr />
                                     <Grid container>
                                         <Grid xs item>
                                             Inflow
                                         </Grid>
-                                        <Grid xs item sx={{textAlign: 'right', color: '#039BE5'}}>
+                                        <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
                                             + {numberWithCommas(moneyFlow.inflow)}{' '}
-                                            <Typography component="span" sx={{textDecoration: 'underline'}}>
+                                            <Typography component="span" sx={{ textDecoration: 'underline' }}>
                                                 đ
                                             </Typography>
                                         </Grid>
@@ -359,18 +370,18 @@ export default function TransactionPage() {
                                         <Grid item xs={6}>
                                             Outflow
                                         </Grid>
-                                        <Grid item xs={6} sx={{textAlign: 'right', color: '#E51C23'}}>
+                                        <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
                                             - {numberWithCommas(moneyFlow.outflow)}{' '}
-                                            <Typography component="span" sx={{textDecoration: 'underline'}}>
+                                            <Typography component="span" sx={{ textDecoration: 'underline' }}>
                                                 đ
                                             </Typography>
                                         </Grid>
                                     </Grid>
-                                    <hr/>
-                                    <Typography sx={{textAlign: 'right', mt: '16px'}}>
+                                    <hr />
+                                    <Typography sx={{ textAlign: 'right', mt: '16px' }}>
                                         {moneyFlow.inflow - moneyFlow.outflow > 0 ? '+' : '-'}{' '}
                                         {numberWithCommas(moneyFlow.inflow - moneyFlow.outflow)}{' '}
-                                        <Typography component="span" sx={{textDecoration: 'underline'}}>
+                                        <Typography component="span" sx={{ textDecoration: 'underline' }}>
                                             đ
                                         </Typography>
                                     </Typography>
@@ -388,7 +399,7 @@ export default function TransactionPage() {
                                 >
                                     {listTransaction.map((item, index) => (
                                         <div key={index}>
-                                            <Box sx={{heght: '20px', border: '1px solid #EAFCDE'}}></Box>
+                                            <Box sx={{ heght: '20px', border: '1px solid #EAFCDE' }}></Box>
                                             <Accordion
                                                 expanded={expanded === `panel${index + 1}`}
                                                 onChange={handleExpand(`panel${index + 1}`)}
@@ -405,12 +416,12 @@ export default function TransactionPage() {
                                                         backgroundColor: '#ECFFE0',
                                                     }}
                                                 >
-                                                    <Grid container spacing={2} sx={{pt: '4px'}}>
-                                                        <Grid item xs={2} sx={{textAlign: 'center'}}>
+                                                    <Grid container spacing={2} sx={{ pt: '4px' }}>
+                                                        <Grid item xs={2} sx={{ textAlign: 'center' }}>
                                                             {' '}
-                                                            <Avatar src={item.category_icon}/>
+                                                            <Avatar src={item.category_icon} />
                                                         </Grid>
-                                                        <Grid item xs={5} sx={{mt: '8px'}}>
+                                                        <Grid item xs={5} sx={{ mt: '8px' }}>
                                                             {item.category_name}
                                                         </Grid>
                                                         {item.category_type === 'expense' ? (
@@ -424,8 +435,7 @@ export default function TransactionPage() {
                                                                 }}
                                                             >
                                                                 - {numberWithCommas(item.amount)}{' '}
-                                                                <Typography component="span"
-                                                                            sx={{textDecoration: 'underline'}}>
+                                                                <Typography component="span" sx={{ textDecoration: 'underline' }}>
                                                                     đ
                                                                 </Typography>
                                                             </Grid>
@@ -440,23 +450,22 @@ export default function TransactionPage() {
                                                                 }}
                                                             >
                                                                 + {numberWithCommas(item.amount)}{' '}
-                                                                <Typography component="span"
-                                                                            style={{textDecoration: 'underline'}}>
+                                                                <Typography component="span" style={{ textDecoration: 'underline' }}>
                                                                     đ
                                                                 </Typography>
                                                             </Grid>
                                                         )}
                                                     </Grid>
                                                 </AccordionSummary>
-                                                <AccordionDetails sx={{height: '235px', pb: 0}}>
-                                                    <Typography sx={{height: '40px'}}>
+                                                <AccordionDetails sx={{ height: '235px', pb: 0 }}>
+                                                    <Typography sx={{ height: '40px' }}>
                                                         <Grid container>
-                                                            <Grid item xs sx={{mt: 0, mb: 0}}>
-                                                                <Typography variant="h4" style={{margin: 0}}>
+                                                            <Grid item xs sx={{ mt: 0, mb: 0 }}>
+                                                                <Typography variant="h4" style={{ margin: 0 }}>
                                                                     Transaction Details
                                                                 </Typography>
                                                             </Grid>
-                                                            <Grid item xs={2} sx={{textAlign: 'right'}}>
+                                                            <Grid item xs={2} sx={{ textAlign: 'right' }}>
                                                                 <Button
                                                                     variant="outlined"
                                                                     color="success"
@@ -465,21 +474,20 @@ export default function TransactionPage() {
                                                                     EDIT
                                                                 </Button>
                                                             </Grid>
-                                                            <Grid item xs={2} sx={{textAlign: 'right'}}>
-                                                                <Button variant="outlined" color="error"
-                                                                        onClick={() => handleDeleteTrans(item._id)}>
+                                                            <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                                                                <Button variant="outlined" color="error" onClick={() => handleDeleteTrans(item._id)}>
                                                                     DELETE
                                                                 </Button>
                                                             </Grid>
                                                         </Grid>
                                                     </Typography>
-                                                    <hr/>
+                                                    <hr />
                                                     <Grid container>
                                                         <Grid item xs={2}>
-                                                            <Avatar src={item.category_icon} sx={{mr: 10}}/>
+                                                            <Avatar src={item.category_icon} sx={{ mr: 10 }} />
                                                         </Grid>
-                                                        <Grid item xs sx={{mt: '3px'}}>
-                                                            <h3 style={{margin: 0}}>{item.category_name}</h3>
+                                                        <Grid item xs sx={{ mt: '3px' }}>
+                                                            <h3 style={{ margin: 0 }}>{item.category_name}</h3>
                                                             <Typography
                                                                 sx={{
                                                                     marginTop: '0px',
@@ -489,10 +497,10 @@ export default function TransactionPage() {
                                                             >
                                                                 {item.wallet_name}
                                                             </Typography>
-                                                            <Typography sx={{fontSize: '12px', fontWeight: 'light'}}>
+                                                            <Typography sx={{ fontSize: '12px', fontWeight: 'light' }}>
                                                                 {getDayy(new Date(`${item.date}`).getDay())}, {item.date}{' '}
                                                             </Typography>
-                                                            <hr/>
+                                                            <hr />
                                                             <Typography
                                                                 sx={{
                                                                     margin: '8px 0px',
@@ -502,7 +510,7 @@ export default function TransactionPage() {
                                                                 {item.note}{' '}
                                                             </Typography>
                                                             {item.category_type === 'income' ? (
-                                                                <Typography sx={{color: '#039BE5', marginBottom: 0}}>
+                                                                <Typography sx={{ color: '#039BE5', marginBottom: 0 }}>
                                                                     + {numberWithCommas(item.amount)}{' '}
                                                                     <span
                                                                         sx={{
@@ -514,7 +522,7 @@ export default function TransactionPage() {
                                   </span>
                                                                 </Typography>
                                                             ) : (
-                                                                <Typography sx={{color: '#E51C23', marginBottom: 0}}>
+                                                                <Typography sx={{ color: '#E51C23', marginBottom: 0 }}>
                                                                     - {numberWithCommas(item.amount)}{' '}
                                                                     <span
                                                                         sx={{
@@ -538,7 +546,7 @@ export default function TransactionPage() {
                         </Grid>
                     </Stack>
                 </Grid>
-                <Grid item xs/>
+                <Grid item xs />
             </Grid>
 
             <Dialog
@@ -552,7 +560,7 @@ export default function TransactionPage() {
                 <DialogTitle>{'Add Transaction'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>Remember to Record Your Transactions Today.</DialogContentText>
-                    <hr/>
+                    <hr />
                     <Grid container spacing={4}>
                         <Grid item xs={4}>
                             <FormControl fullWidth margin="dense">
@@ -562,12 +570,12 @@ export default function TransactionPage() {
                                     label="Wallet"
                                     name="wallet_id"
                                     value={defaultWallet}
-                                    sx={{height: '56px'}}
+                                    sx={{ height: '56px' }}
                                 >
                                     {listWallet.map((wallet) => (
                                         <MenuItem key={wallet._id} value={wallet._id}>
-                                            <Avatar src={wallet.icon}/>
-                                            <ListItemText primary={wallet.name}/>
+                                            <Avatar src={wallet.icon} />
+                                            <ListItemText primary={wallet.name} />
                                         </MenuItem>
                                     ))}
                                 </Select>
@@ -581,36 +589,22 @@ export default function TransactionPage() {
                                     label="Categories"
                                     name="category_id"
                                     value={transaction.category_id}
-                                    sx={{height: '56px'}}
-                                    inputProps={{readOnly: true}}
+                                    sx={{ height: '56px' }}
+                                    inputProps={{ readOnly: true }}
                                     onClick={handleClickOpenCategory}
                                 >
-                                    <ListSubheader>Expense</ListSubheader>
-                                    {listCategory.map((category) => {
-                                        if (category.type === 'expense')
-                                            return (
-                                                <MenuItem key={category.name} value={category._id}>
-                                                    <Avatar src={category.icon} sx={{height: '56px'}}/>
-                                                    <ListItemText primary={category.name}/>
-                                                </MenuItem>
-                                            );
-                                    })}
-                                    <ListSubheader>Income</ListSubheader>
-                                    {listCategory.map((category) => {
-                                        if (category.type === 'income')
-                                            return (
-                                                <MenuItem key={category.name} value={category._id}>
-                                                    <Avatar src={category.icon}/>
-                                                    <ListItemText primary={category.name}/>
-                                                </MenuItem>
-                                            );
-                                    })}
+                                    {listCategory.map((category) => (
+                                        <MenuItem key={category.name} value={category._id}>
+                                            <Avatar src={category.icon} />
+                                            <ListItemText primary={category.name} />
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
                             <TextField
-                                sx={{height: '73'}}
+                                sx={{ height: '73' }}
                                 name="amount"
                                 onChange={handleChange}
                                 fullWidth={true}
@@ -633,7 +627,7 @@ export default function TransactionPage() {
                                     name="date"
                                     disableFuture={true}
                                     onChange={handleChange}
-                                    renderInput={(params) => <TextField {...params} fullWidth/>}
+                                    renderInput={(params) => <TextField {...params} fullWidth />}
                                 />
                             </LocalizationProvider>
                         </Grid>
@@ -671,7 +665,7 @@ export default function TransactionPage() {
                 <DialogTitle>{'Edit Transaction'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>Remember to Record Your Transactions Today.</DialogContentText>
-                    <hr/>
+                    <hr />
                     <Grid container spacing={4}>
                         <Grid item xs={4}>
                             <FormControl fullWidth margin="dense">
@@ -681,12 +675,12 @@ export default function TransactionPage() {
                                     label="Wallet"
                                     name="wallet_id"
                                     value={editTransaction.wallet_id}
-                                    sx={{height: '56px'}}
+                                    sx={{ height: '56px' }}
                                 >
                                     {listWallet.map((wallet) => (
                                         <MenuItem key={wallet._id} value={wallet._id}>
-                                            <Avatar src={wallet.icon}/>
-                                            <ListItemText primary={wallet.name}/>
+                                            <Avatar src={wallet.icon} />
+                                            <ListItemText primary={wallet.name} />
                                         </MenuItem>
                                     ))}
                                 </Select>
@@ -700,28 +694,16 @@ export default function TransactionPage() {
                                     label="Categories"
                                     name="category_id"
                                     value={editTransaction.category_id}
-                                    sx={{height: '56px'}}
+                                    sx={{ height: '56px' }}
+                                    inputProps={{ readOnly: true }}
+                                    onClick={handleClickOpenCategory}
                                 >
-                                    <ListSubheader>Expense</ListSubheader>
-                                    {listCategory.map((category) => {
-                                        if (category.type === 'expense')
-                                            return (
-                                                <MenuItem key={category.name} value={category._id}>
-                                                    <Avatar src={category.icon}/>
-                                                    <ListItemText primary={category.name}/>
-                                                </MenuItem>
-                                            );
-                                    })}
-                                    <ListSubheader>Income</ListSubheader>
-                                    {listCategory.map((category) => {
-                                        if (category.type === 'income')
-                                            return (
-                                                <MenuItem key={category.name} value={category._id}>
-                                                    <Avatar src={category.icon}/>
-                                                    <ListItemText primary={category.name}/>
-                                                </MenuItem>
-                                            );
-                                    })}
+                                    {listCategory.map((category) => (
+                                        <MenuItem key={category.name} value={category._id}>
+                                            <Avatar src={category.icon} />
+                                            <ListItemText primary={category.name} />
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -734,21 +716,21 @@ export default function TransactionPage() {
                                 variant="outlined"
                                 type="number"
                                 margin="dense"
-                                sx={{height: '73'}}
+                                sx={{ height: '73' }}
                                 value={editTransaction.amount}
-                                InputProps={{startAdornment: <InputAdornment position="start">VNĐ</InputAdornment>}}
+                                InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
                             />
                         </Grid>
                         <Grid item xs={4}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DesktopDatePicker
                                     label="Date desktop"
-                                    inputFormat="MM/DD/YYYY"
+                                    inputFormat="DD/MM/YYYY"
                                     value={value}
                                     name="date"
                                     disableFuture={true}
                                     onChange={handleChangeEdit}
-                                    renderInput={(params) => <TextField {...params} fullWidth/>}
+                                    renderInput={(params) => <TextField {...params} fullWidth />}
                                 />
                             </LocalizationProvider>
                         </Grid>
@@ -766,18 +748,51 @@ export default function TransactionPage() {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="outlined" onClick={handleCloseEditForm} color="error">
+                    <Button variant="outlined" onClick={handleCloseEditForm}>
                         Cancel
                     </Button>
-                    <Button variant="outlined" color="success" onClick={handleEdit}>
-                        Submit
+                    <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleEdit}>
+                        Save
                     </Button>
                 </DialogActions>
             </Dialog>
 
             <Dialog open={openCategory} onClose={closeCategory}>
                 <DialogTitle>Choose Category</DialogTitle>
-                <DialogContent>Tab Categories here</DialogContent>
+                <DialogContent>
+                    <Box sx={{ width: '300px', typography: 'body1' , height: '300px'}}>
+                        <TabContext value={category} >
+                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                <TabList onChange={handleChangeCategory} centered>
+                                    <Tab label="Income" value="income" />
+                                    <Tab label="Expense" value="expense" />
+                                </TabList>
+                            </Box>
+                            <TabPanel value="income" centered>
+                                {listCategory.map((category) => {
+                                    if (category.type === 'income')
+                                        return (
+                                            <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
+                                                <Avatar src={category.icon} />
+                                                <ListItemText primary={category.name} />
+                                            </MenuItem>
+                                        );
+                                })}
+                            </TabPanel>
+                            <TabPanel value="expense">
+                                {listCategory.map((category) => {
+                                    if (category.type === 'expense')
+                                        return (
+                                            <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
+                                                <Avatar src={category.icon} />
+                                                <ListItemText primary={category.name} />
+                                            </MenuItem>
+                                        );
+                                })}
+                            </TabPanel>
+                        </TabContext>
+                    </Box>
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={closeCategory} variant="outlined" color="error">
                         Cancel
