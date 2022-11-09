@@ -11,10 +11,10 @@ const getTransactions = (startDate, endDate) => {
     return result
 }
 
-export default function getDataBarChart(){
-    const transactions = getTransactions("10/01/2022", "10/25/2022");
-    const startDate = new Date("10/01/2022");
-    const endDate = new Date("10/25/2022");
+export default function getDataBarChart(data){
+    const transactions = data.transactions;
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(data.endDate);
     const startMonth = startDate.getMonth();
     const endMonth = endDate.getMonth();
 
@@ -26,7 +26,7 @@ export default function getDataBarChart(){
         const startDay = startDate.getDate();
         const endDay = endDate.getDate();
         for(let i = startDay; i <= endDay; i++) {
-            if(i<9){
+            if(i<10){
                 chartLabels.push(`${startMonth+1}/0${i}/2022`)
             }else{
                 chartLabels.push(`${startMonth+1}/${i}/2022`)
@@ -38,7 +38,7 @@ export default function getDataBarChart(){
             let expense = 0;
             transactions.forEach((transaction) => {
                 if (transaction.date === date){
-                    if(transaction.type === 'income'){
+                    if(transaction.category_type === 'income'){
                         income += transaction.amount;
                     }else {
                         expense += transaction.amount;
@@ -58,7 +58,7 @@ export default function getDataBarChart(){
             let expense = 0;
             transactions.forEach((transaction) => {
                 if(new Date(transaction.date).getMonth() === new Date(month).getMonth()){
-                    if(transaction.type === 'income'){
+                    if(transaction.category_type === 'income'){
                         income += transaction.amount;
                     }else {
                         expense += transaction.amount;
