@@ -234,10 +234,10 @@ export default function ProductsPage() {
   const handleChangeEdit = async (e) => {
     setCategorytEdit({
       ...categoryEdit,
-      [e.target.value] : e.target.name
+      [e.target.name] : e.target.value
     })
   }
-
+console.log(categoryEdit);
 
 
   // Xử lý hàm trả về thông tin update
@@ -246,17 +246,15 @@ export default function ProductsPage() {
     setOpenEditCategory(false);
   };
   const handleClickOpenCategory = async (id) => {
-    const categoryEdit = categories.filter((cate) => cate._id === id );
-    setEditForm(categoryEdit[0]);
+    const categoryEditForm = categories.filter((cate) => cate._id === id );
+    setEditForm(categoryEditForm[0]);
       setOpenEditCategory(true);
   };
 
   const data = {
-    _id : editForm._id,
-    icon: setCategorytEdit.icon,
-    name: setCategorytEdit.name,
-    type: setCategorytEdit.type,
-    user_id: idUser,
+    icon: categoryEdit.icon,
+    name: categoryEdit.name,
+    type: categoryEdit.type,
   };
 
   const handleSubmitCateEdit = async () => {
@@ -300,7 +298,7 @@ export default function ProductsPage() {
     }
   };
 
-  console.log(editForm);
+ 
   return (
     <>
       <Helmet>
@@ -386,7 +384,7 @@ export default function ProductsPage() {
                           </TableHead>
                           <TableBody>
                             {categories.map((item, index) => {
-                              if (item.type == "expense")
+                              if (item.type === "expense")
                                 return (
                                   <TableRow key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -508,7 +506,7 @@ export default function ProductsPage() {
       open={openEditCategory}
       onClose={() => handleCloseEdit(false)}
     >
-      <DialogTitle>{'Edit Wallet'}</DialogTitle>
+      <DialogTitle>{'Edit category'}</DialogTitle>
       <DialogContentText></DialogContentText>
       <DialogContent>
         <Grid container spacing={2}>
@@ -517,17 +515,17 @@ export default function ProductsPage() {
             <Box sx={{ minWidth: 120 }}>
               <FormControl sx={{ width: 100 }}>
                 <InputLabel>Icon</InputLabel>
-                <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}   >
-                {editForm.type  === "expense"? mockExpense.map((item,index)=> {
+                <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}  value={editForm.icon} >
+                {categoryEdit.type  === "expense"? mockExpense.map((item,index)=> {
                   return(
-                    <MenuItem value={item.icon} key={index.icon}>
+                    <MenuItem value={item.icon} key={item.icon}>
                     <Avatar src={item.icon } sx={{ mr: 0 }} />
                   </MenuItem>
                   )
                  }
                  ) : mockIncome.map((item)=> {
                   return (
-                    <MenuItem value={item.icon}>
+                    <MenuItem value={item.icon} key={item.icon}>
                     <Avatar src={item.icon} sx={{ mr: 0 }} />
                   </MenuItem>
                   )
@@ -544,8 +542,7 @@ export default function ProductsPage() {
               onChange={handleChangeEdit}
               fullWidth
               variant="outlined"
-              placeholder={editForm.name}
-      
+              value={editForm.name}
             />
           </Grid>
           <Grid item xs={5}>
@@ -553,10 +550,11 @@ export default function ProductsPage() {
           <TextField
           id="outlined-select-currency"
           select
+          name='type'
           label="Type"
           onChange={handleChangeEdit}
           helperText="Please select your currency"
-          
+          value={editForm.type}
         >
           {currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -564,7 +562,6 @@ export default function ProductsPage() {
             </MenuItem>
           ))}
         </TextField>
-
           </Grid>
         </Grid>
       </DialogContent>
