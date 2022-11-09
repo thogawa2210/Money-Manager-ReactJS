@@ -90,6 +90,8 @@ function ReportPage() {
   });
   const [error, setError] = useState(false);
   const [error1, setError1] = useState(false);
+  const userID = JSON.parse(localStorage.getItem('user')).user_id;
+
 
   useEffect(() => {
     const data = getDataBarChart();
@@ -104,11 +106,13 @@ function ReportPage() {
     });
     setOpenChooseDay(false);
     setDefaultDate('today');
+    setForm({...form, date: 'today'})
   };
 
   const closeChooseDay = () => {
     setOpenChooseDay(false);
     setDefaultDate('today');
+    setForm({...form, date: 'today'})
   };
 
   const getWalletsApi = async (id) => {
@@ -116,7 +120,6 @@ function ReportPage() {
   };
 
   useEffect(() => {
-    const userID = JSON.parse(localStorage.getItem('user')).user_id;
     getWalletsApi(userID)
       .then((res) => {
         if (res.data.type === 'success') {
@@ -134,7 +137,7 @@ function ReportPage() {
     switch (e.target.name) {
       case 'wallet_id':
         setDefaultWallet(e.target.value);
-        setForm({ ...form, [e.target.name]: e.target.value });
+        setForm({ ...form, wallet_id: e.target.value });
         break;
       case 'date':
         if (e.target.value === 'custom') {
@@ -151,15 +154,17 @@ function ReportPage() {
     }
   };
 
-  console.log(pickDate, form);
+  useEffect(() => {
+    setDataApi({...dataApi, user_id: userID})
+  },[])
 
   const getTransCustomApi = async (data) => {
+    console.log(dataApi)
     return await axios.post('http://localhost:3001/transaction/get-transaction-custom', data);
   };
 
   const handleFilter = (e) => {
-    const userID = JSON.parse(localStorage.getItem('user')).user_id;
-    setDataApi({ ...dataApi, user_id: userID });
+    console.log(form)
     let day = new Date();
     let { start_date, end_date } = getStartEndDate(day);
     let { last_start, last_end } = getLastStartEndDate(day);
@@ -168,9 +173,9 @@ function ReportPage() {
       switch (form.date) {
         case 'today':
           if (form.wallet_id === 'total') {
-            setDataApi({ ...dataApi });
+            setDataApi({ ...dataApi, start_date: '', end_date: '' });
           } else {
-            setDataApi({ ...dataApi, wallet_id: form.wallet_id });
+            setDataApi({ ...dataApi, wallet_id: form.wallet_id , start_date: '', end_date: ''});
           }
           break;
         case 'this month':
@@ -204,16 +209,13 @@ function ReportPage() {
 
       getTransCustomApi(dataApi)
         .then((res) => {
-          setDefaultDate('today');
-          setPickDate({
-            pick_start: null,
-            pick_end: null,
-          });
           console.log(res);
         })
         .catch((err) => console.log(err));
     }
   };
+
+
 
   const handleChangePickDate = (value) => {
     let date_end = dayjs(value).format('MM/DD/YYYY');

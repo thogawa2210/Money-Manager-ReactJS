@@ -106,14 +106,15 @@ function SingupForm() {
         text: 'Please Check Your Email To Verify',
         icon: 'success',
         showConfirmButton: false,
-        timer: 3000,
+        timer: 1500,
       });
     } else {
       Swal.fire({
-        icon: 'info',
+        icon: 'error',
         title: 'Oops...',
         text: 'Account already exists!',
-        footer: '<a href="/login">Go to Login</a>',
+        showConfirmButton: false,
+        timer: 1500,
       });
     }
   };
@@ -124,6 +125,8 @@ function SingupForm() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill out all the required fields',
+        showConfirmButton: false,
+        timer: 1500,
       });
     } else {
       sendUser()
