@@ -25,12 +25,12 @@ import {
   TextField,
   Stack,
   Alert,
+  Box
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
 import axios from 'axios';
 import getFormatDate from './../getDateFormat';
-import { Box } from '@mui/system';
 import Swal from 'sweetalert2';
 
 const getStartEndDate = (date) => {
@@ -99,12 +99,6 @@ function ReportPage() {
   const [error1, setError1] = useState(false);
   const userID = JSON.parse(localStorage.getItem('user')).user_id;
 
-  useEffect(() => {
-    const data = getDataBarChart();
-    setChartLabels(data.chartLabels);
-    setChartData(data.chartData);
-  }, []);
-
   const handleCloseDialogChooseDate = () => {
     setPickDate({
       pick_start: null,
@@ -122,7 +116,7 @@ function ReportPage() {
   };
 
   const getWalletsApi = async (id) => {
-    return axios.get(`http://localhost:3001/wallet/get-all-wallet/${id}`);
+    return await axios.get(`http://localhost:3001/wallet/get-all-wallet/${id}`);
   };
 
   useEffect(() => {
@@ -165,7 +159,6 @@ function ReportPage() {
   }, []);
 
   const getTransCustomApi = async (data) => {
-    console.log(dataApi);
     return await axios.post('http://localhost:3001/transaction/get-transaction-custom', data);
   };
 
@@ -214,7 +207,9 @@ function ReportPage() {
   const handleFilter = (e) => {
     getTransCustomApi(dataApi)
       .then((res) => {
-        console.log(res);
+        const data = getDataBarChart(res.data.data);
+        setChartLabels(data.chartLabels);
+        setChartData(data.chartData);
       })
       .catch((err) => console.log(err));
   };
@@ -242,6 +237,23 @@ function ReportPage() {
       setOpenChooseDay(false);
     }
   };
+
+  useEffect(() => {
+    let user_id = JSON.parse(localStorage.getItem('user')).user_id;
+    let data = {
+      user_id : user_id,
+      start_date: '',
+      end_date: '',
+      wallet_id: '',
+    }
+    getTransCustomApi(data)
+        .then((res) => {
+          const data = getDataBarChart(res.data.data);
+          setChartLabels(data.chartLabels);
+          setChartData(data.chartData);
+        })
+        .catch((err) => console.log(err));
+  }, []);
 
   return (
     <>
