@@ -93,26 +93,55 @@ export default function WalletPage() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill all the required fields',
+        showConfirmButton: false,
+        timer: 1500,
       });
     } else {
-      const result = await axios.post('http://localhost:3001/wallet/create', data);
-      if (result.data.type === 'success') {
-        Swal.fire({
-          icon: 'success',
-          title: 'Update Successfully!',
-        }).then(
-          setOpenCreate(false),
-          dispatch(changeFlag(1)),
-          setWallet({
-            ...wallet,
-            name: '',
-            amount: '',
-          }),
-          setIcon('')
-        );
-      } else {
-        alert(result.data.message);
-      }
+      await axios
+        .post('http://localhost:3001/wallet/create', data)
+        .then((res) => {
+          if (res.data.type === 'success') {
+            setOpenCreate(false);
+            dispatch(changeFlag(1));
+            setWallet({
+              ...wallet,
+              name: '',
+              amount: '',
+            });
+            setIcon('');
+            Swal.fire({
+              icon: 'success',
+              title: 'Update Successfully!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            setOpenCreate(false);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: `${res.data.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            setWallet({
+              ...wallet,
+              name: '',
+              amount: '',
+            });
+            setIcon('');
+          }
+        })
+        .catch((err) => {
+          setOpenCreate(false);
+          Swal.fire({
+            icon: 'success',
+            title: 'Error!',
+            text: 'Something error! Try again!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        });
     }
   };
 
@@ -172,9 +201,8 @@ export default function WalletPage() {
       text: "You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#54D62C',
+      cancelButtonColor: '#FF4842',
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
@@ -184,7 +212,13 @@ export default function WalletPage() {
             setDetail(<h5>Choose wallet to see details</h5>);
           })
           .catch((err) => console.log(err));
-        Swal.fire('Deleted!', 'Wallet has been deleted.', 'success');
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Wallet has been deleted.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     });
   };
@@ -196,6 +230,8 @@ export default function WalletPage() {
         Swal.fire({
           icon: 'success',
           title: 'Update Successfully!',
+          showConfirmButton: false,
+          timer: 1500,
         });
         dispatch(changeFlag(1));
         setDetail(<h5>Choose wallet to see details</h5>);
@@ -246,8 +282,12 @@ export default function WalletPage() {
           />
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleClose} color="error" >Cancel</Button>
-          <Button  variant="outlined" color="success" onClick={() => handleSaveEdit(walletEdit._id)}>Submit</Button>
+          <Button variant="outlined" onClick={handleClose} color="error">
+            Cancel
+          </Button>
+          <Button variant="outlined" color="success" onClick={() => handleSaveEdit(walletEdit._id)}>
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
       {/* Detail Wallet */}
@@ -260,8 +300,10 @@ export default function WalletPage() {
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
                 <Typography sx={{ width: '80%', flexShrink: 0, display: 'flex' }}>
                   <Avatar src={item.icon} sx={{ mr: 0 }} />
-                  <ListItemText primary={item.name} sx={{pr : 22, ml : 2, display: 'block !important' , 
-                  alignItems: 'center', marginTop: 1 }} />
+                  <ListItemText
+                    primary={item.name}
+                    sx={{ pr: 22, ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}
+                  />
                 </Typography>
 
                 <Typography sx={{ color: 'text.secondary' }}>Wallet {index + 1}</Typography>
@@ -285,7 +327,7 @@ export default function WalletPage() {
                           </TableCell>
                           <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
                           <TableCell align="right">
-                            <Button variant="outlined" color="primary" onClick={() => handleClickOpen(item._id)}>
+                            <Button variant="outlined" color="success" onClick={() => handleClickOpen(item._id)}>
                               Edit
                             </Button>
                             <Button variant="outlined" color="error" onClick={() => handleDeleteWallet(item._id)}>
@@ -377,7 +419,7 @@ export default function WalletPage() {
           <Button variant="outlined" color="error" onClick={handleCloseCreate}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCreate}>
+          <Button variant="outlined" color="success" onClick={handleSubmitCreate}>
             Submit
           </Button>
         </DialogActions>
