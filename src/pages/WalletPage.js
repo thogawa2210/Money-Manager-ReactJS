@@ -258,9 +258,10 @@ export default function WalletPage() {
           {wallets.map((item, index) => (
             <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
-                <Typography sx={{ width: '80%', flexShrink: 0 }}>
+                <Typography sx={{ width: '80%', flexShrink: 0, display: 'flex' }}>
                   <Avatar src={item.icon} sx={{ mr: 0 }} />
-                  <ListItemText primary={item.name} sx={{ pr: 22 }} />
+                  <ListItemText primary={item.name} sx={{pr : 22, ml : 2, display: 'block !important' , 
+                  alignItems: 'center', marginTop: 1 }} />
                 </Typography>
 
                 <Typography sx={{ color: 'text.secondary' }}>Wallet {index + 1}</Typography>
