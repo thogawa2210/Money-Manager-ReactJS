@@ -235,10 +235,10 @@ export default function WalletPage() {
       </Helmet>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" gutterBottom sx={{ml: '20px'}}>
           Wallet Manager
         </Typography>
-        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenCreate}>
+        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenCreate} sx={{mr: '20px'}}>
           New Wallet
         </Button>
       </Stack>
