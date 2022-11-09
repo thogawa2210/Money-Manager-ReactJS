@@ -41,6 +41,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import mockExpense from 'src/_mock/categoryExpense';
+import mockIncome from 'src/_mock/categoryIncome';
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -100,6 +102,8 @@ export default function ProductsPage() {
     setValue(newValue);
   };
   // Done
+
+
   const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
@@ -135,6 +139,7 @@ export default function ProductsPage() {
       user_id: idUser,
     };
 
+
     if (category.name === '') {
       setOpenCreateCategory(false);
       Swal.fire({
@@ -160,6 +165,7 @@ export default function ProductsPage() {
             ...category,
             name: '',
           }),
+          setType(''),
           setIcon('')
         );
       } else {
@@ -196,6 +202,7 @@ export default function ProductsPage() {
       .catch((error) => console.log(error.message));
   }, [flag]);
 
+  // Delete Category
   const handleDeleteCategory = (id) => {
     Swal.fire({
       title: 'Are you sure to delete?',
@@ -250,7 +257,7 @@ export default function ProductsPage() {
     type: typeEdit,
     user_id: idUser,
   };
-  console.log(data);
+
   // Xử lý hàm trả về thông tin update
 
   const handleCloseEdit = () => {
@@ -358,7 +365,7 @@ export default function ProductsPage() {
                           <TableBody>
 
                             {categories.map((item, index) => {
-                              if (item.type == "income")
+                              if (item.type === "income")
                                 return (
                                   <TableRow key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -373,8 +380,6 @@ export default function ProductsPage() {
                                   </TableRow>
                                 )
                             })}
-
-
                           </TableBody>
                         </Table>
                       </TabPanel>
@@ -389,8 +394,6 @@ export default function ProductsPage() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-
-
                             {categories.map((item, index) => {
                               if (item.type == "expense")
                                 return (
@@ -407,66 +410,10 @@ export default function ProductsPage() {
                                   </TableRow>
                                 )
                             })}
-
-
-
-
                           </TableBody>
                         </Table>
                       </TabPanel>
                     </Box>
-
-                    {/* <Table sx={{ minWidth: 'auto' }} size="small" aria-label="a dense table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell align="center">Icon</TableCell>
-                          <TableCell align="center">Name Category</TableCell>
-                          <TableCell align="center">Type&nbsp;</TableCell>
-                          <TableCell align="center">Action</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <ListSubheader  >Expense</ListSubheader>
-
-                        {categories.map((item, index) => {
-                          if (item.type == "expense")
-                            return (
-                              <TableRow key={index}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                              >
-                                <TableCell align="center"><Avatar src={item.icon} ></Avatar></TableCell>
-                                <TableCell align="center"><strong>{item.name}</strong></TableCell>
-                                <TableCell align="center">{item.type}</TableCell>
-                                <TableCell align="center">
-                                  <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
-                                  <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
-                                </TableCell>
-                              </TableRow>
-                            )
-                        })}
-
-                        <ListSubheader>InCome</ListSubheader>
-
-                        {categories.map((item, index) => {
-                          if (item.type == "income")
-                            return (
-                              <TableRow key={index}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                              >
-                                <TableCell align="center"><Avatar src={item.icon} ></Avatar></TableCell>
-                                <TableCell align="center"><strong>{item.name}</strong></TableCell>
-                                <TableCell align="center">{item.type}</TableCell>
-                                <TableCell align="center">
-                                  <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
-                                  <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
-                                </TableCell>
-                              </TableRow>
-                            )
-                        })}
-
-
-                      </TableBody>
-                    </Table> */}
                     {/* Done Table */}
                   </CardContent>
                 </Card>
@@ -477,7 +424,7 @@ export default function ProductsPage() {
         <Grid item xs />
       </Grid>
 
-      {/* Dialog create wallet/>*/}
+      {/* Dialog create category/>*/}
       <Dialog
         TransitionComponent={Transition}
         fullWidth={true}
@@ -503,7 +450,24 @@ export default function ProductsPage() {
                     onChange={(event) => handleChangeIcon(event)}
                     sx={{ height: 55 }}
                   >
-                    <MenuItem value={`/assets/icons/category/car.svg`}>
+               {type === "expense"? mockExpense.map((item)=> {
+      
+                return(
+                  <MenuItem value={item.icon }>
+                  <Avatar src={item.icon } sx={{ mr: 0 }} />
+                </MenuItem>
+                )
+               }
+               
+               ) : mockIncome.map((item)=> {
+                return (
+                  <MenuItem value={item.icon}>
+                  <Avatar src={item.icon} sx={{ mr: 0 }} />
+                </MenuItem>
+                )
+               
+               }) } 
+                    {/* <MenuItem value={`/assets/icons/category/car.svg`}>
                       <Avatar src={`/assets/icons/category/car.svg`} sx={{ mr: 0 }} />
                     </MenuItem>
                     <MenuItem value={`/assets/icons/category/food.svg`}>
@@ -514,7 +478,7 @@ export default function ProductsPage() {
                     </MenuItem>
                     <MenuItem value={`/assets/icons/category/salary.svg`}>
                       <Avatar src={`/assets/icons/category/salary.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
+                    </MenuItem> */}
                   </Select>
                 </FormControl>
               </Box>
@@ -582,18 +546,23 @@ export default function ProductsPage() {
                     sx={{ height: 55 }}
                     value={editForm.icon + ''}
                   >
-                    <MenuItem value={`/assets/icons/category/car.svg`}>
-                      <Avatar src={`/assets/icons/category/car.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
-                    <MenuItem value={`/assets/icons/category/food.svg`}>
-                      <Avatar src={`/assets/icons/category/food.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
-                    <MenuItem value={`/assets/icons/category/house.svg`}>
-                      <Avatar src={`/assets/icons/category/house.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
-                    <MenuItem value={`/assets/icons/category/salary.svg`}>
-                      <Avatar src={`/assets/icons/category/salary.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
+                   {type === "expense"? mockExpense.map((item)=> {
+               
+                return(
+                  <MenuItem value={item.icon }>
+                  <Avatar src={item.icon } sx={{ mr: 0 }} />
+                </MenuItem>
+                )
+               }
+               
+               ) : mockIncome.map((item)=> {
+                return (
+                  <MenuItem value={item.icon}>
+                  <Avatar src={item.icon} sx={{ mr: 0 }} />
+                </MenuItem>
+                )
+               
+               }) } 
                   </Select>
                 </FormControl>
               </Box>
@@ -610,22 +579,7 @@ export default function ProductsPage() {
             <Grid item xs={2}>
               <Box sx={{ minWidth: 120 }}>
                 <FormControl sx={{ width: 300 }}>
-                  {/* <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="type"
-                    name="type"
-                    onChange={(event) => handleChangeTypeEdit(event)}
-                    sx={{ height: 55 }}
-                    value={editForm.type + ''}
-                  >
-                    <MenuItem value={`expense`}>
-                      Expense
-                    </MenuItem>
-                    <MenuItem value={`income`}>
-                      Income
-                    </MenuItem>
-                  </Select> */}
+                 
 
                   <TextField
                     id="outlined-select-currency"

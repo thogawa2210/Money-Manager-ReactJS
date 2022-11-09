@@ -369,9 +369,7 @@ export default function WalletPage() {
       </Grid>
 
       {/* Done */}
-
       {/* Dialog create wallet/>*/}
-
       <Dialog
         TransitionComponent={Transition}
         fullWidth
