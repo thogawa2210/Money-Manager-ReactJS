@@ -6,13 +6,6 @@ import Box from '@mui/material/Box';
 export default function ChartPage() {
     const theme = useTheme();
 
-    const category = [
-        {name: 'bus', amount : 1000},
-        {name: 'car', amount : 2000},
-        {name: 'phone', amount : 2000},
-        {name: 'elect', amount : 2000},]
-
-
     return (
         <>
             <Box sx={{mt:'10px'}}>
