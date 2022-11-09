@@ -291,7 +291,7 @@ export default function ProductsPage() {
                             <TableCell align="center"><strong>{item.name}</strong></TableCell>
                             <TableCell align="center">{item.type}</TableCell>
                             <TableCell align="center">
-                              <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
+                              <Button variant="outlined" color="primary" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
                               <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
                             </TableCell>
                           </TableRow>
@@ -396,8 +396,8 @@ export default function ProductsPage() {
 
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseCreate}>Cancel</Button>
-          <Button variant="contained" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCreate}>Save</Button>
+          <Button variant="outlined" color="error" onClick={handleCloseCreate}>Cancel</Button>
+          <Button variant="contained" color="success" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCreate}>Submit</Button>
         </DialogActions>
       </Dialog>
       {/* Update Category */}
@@ -489,8 +489,8 @@ export default function ProductsPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseEdit}>Cancel</Button>
-          <Button variant="contained" startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCateEdit}>Save</Button>
+          <Button variant="outlined" color="error" onClick={handleCloseEdit}>Cancel</Button>
+          <Button variant="contained"   color="success"startIcon={<Iconify icon="uis:check" />} onClick={handleSubmitCateEdit}>Submit</Button>
         </DialogActions>
       </Dialog>
 
