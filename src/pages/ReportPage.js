@@ -103,15 +103,15 @@ function ReportPage() {
   useEffect(() => {
     const userID = JSON.parse(localStorage.getItem('user')).user_id;
     getWalletsApi(userID)
-      .then((res) => {
-        if (res.data.type === 'success') {
-          setDefaultWallet('total');
-          setForm({ date: 'today', wallet_id: 'total' });
-          setDefaultDate('today');
-          setWallets(res.data.wallet);
-        } else console.log(res.data);
-      })
-      .catch((err) => console.log(err));
+        .then((res) => {
+          if (res.data.type === 'success') {
+            setDefaultWallet('total');
+            setForm({ date: 'today', wallet_id: 'total' });
+            setDefaultDate('today');
+            setWallets(res.data.wallet);
+          } else console.log(res.data);
+        })
+        .catch((err) => console.log(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -146,15 +146,15 @@ function ReportPage() {
       if (form.date === 'today') {
         if (form.wallet_id === 'total') {
           getTransCustomApi({ user_id: userID })
-            .then((res) => console.log(res.data.data))
-            .catch((err) => console.log(err));
+              .then((res) => console.log(res.data.data))
+              .catch((err) => console.log(err));
         } else {
           getTransCustomApi({
             user_id: userID,
             wallet_id: form.wallet_id,
           })
-            .then((res) => console.log(res.data.data))
-            .catch((err) => console.log(err));
+              .then((res) => console.log(res.data.data))
+              .catch((err) => console.log(err));
         }
       } else if (form.date === 'this month') {
         let day = new Date();
@@ -166,8 +166,8 @@ function ReportPage() {
             user_id: userID,
           };
           getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err));
         } else {
           let data = {
             start_date: start_date,
@@ -176,8 +176,8 @@ function ReportPage() {
             wallet_id: form.wallet_id,
           };
           getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err));
         }
       } else if (form.date === 'last month') {
         let day = new Date();
@@ -189,8 +189,8 @@ function ReportPage() {
             end_date: end_date,
           };
           getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err));
         } else {
           let data = {
             user_id: userID,
@@ -199,8 +199,8 @@ function ReportPage() {
             wallet_id: form.wallet_id,
           };
           getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err));
         }
       } else {
         if (form.wallet_id === 'total') {
@@ -210,8 +210,8 @@ function ReportPage() {
             end_date: pickDate.pick_end,
           };
           getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err));
         } else {
           let data = {
             user_id: userID,
@@ -220,8 +220,8 @@ function ReportPage() {
             wallet_id: form.wallet_id,
           };
           getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err));
         }
       }
     }
@@ -262,146 +262,146 @@ function ReportPage() {
   };
 
   return (
-    <>
-      <Helmet>
-        <title> Report | Money Manager Master </title>
-      </Helmet>
+      <>
+        <Helmet>
+          <title> Report | Money Manager Master </title>
+        </Helmet>
 
-      <AppBar position="static" color="inherit">
-        <Toolbar sx={{ height: '40px' }}>
-          <Grid container spacing={1}>
-            <Grid item xs={4}>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1, pt: '6px' }}>
-                Expense report
-              </Typography>
-            </Grid>
-            <Grid item xs>
-              <Grid container>
-                <Grid item xs={5}>
-                  <FormControl size="small" fullWidth sx={{ mr: '2px' }}>
-                    <InputLabel> Date </InputLabel>
-                    <Select value={defaultDate} name="date" onChange={handleChangeMenu} label=" Date ">
-                      <MenuItem value={'today'}>Today</MenuItem>
-                      <MenuItem value={'this month'}>This month</MenuItem>
-                      <MenuItem value={'last month'}>Last month </MenuItem>
-                      <MenuItem value={'custom'}>Custom</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={5}>
-                  <FormControl size="small" fullWidth sx={{ pl: '4px' }}>
-                    <InputLabel> Wallet </InputLabel>
-                    <Grid container>
-                      <Select
-                        value={defaultWallet}
-                        onChange={handleChangeMenu}
-                        name="wallet_id"
-                        sx={{ pl: 0, height: '40px' }}
-                        label=" Wallet "
-                        fullWidth
-                      >
-                        <MenuItem key={'0'} value={'total'} sx={{ width: '100%', height: '40px' }}>
-                          <Grid item xs={2}>
-                            <Avatar src="/assets/icons/wallets/total.svg" sx={{ width: '28px', height: '28px' }} />
-                          </Grid>
-                          <Grid item xs sx={{ textAlign: 'center' }}>
-                            {' '}
-                            <ListItemText primary="Total" />
-                          </Grid>
-                        </MenuItem>
-                        {wallets.map((wallet, index) => (
-                          <MenuItem key={wallet._id} value={wallet._id} sx={{ width: '100%', height: '40px' }}>
+        <AppBar position="static" color="inherit">
+          <Toolbar sx={{ height: '40px' }}>
+            <Grid container spacing={1}>
+              <Grid item xs={4}>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1, pt: '6px' }}>
+                  Expense report
+                </Typography>
+              </Grid>
+              <Grid item xs>
+                <Grid container>
+                  <Grid item xs={5}>
+                    <FormControl size="small" fullWidth sx={{ mr: '2px' }}>
+                      <InputLabel> Date </InputLabel>
+                      <Select value={defaultDate} name="date" onChange={handleChangeMenu} label=" Date ">
+                        <MenuItem value={'today'}>Today</MenuItem>
+                        <MenuItem value={'this month'}>This month</MenuItem>
+                        <MenuItem value={'last month'}>Last month </MenuItem>
+                        <MenuItem value={'custom'}>Custom</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={5}>
+                    <FormControl size="small" fullWidth sx={{ pl: '4px' }}>
+                      <InputLabel> Wallet </InputLabel>
+                      <Grid container>
+                        <Select
+                            value={defaultWallet}
+                            onChange={handleChangeMenu}
+                            name="wallet_id"
+                            sx={{ pl: 0, height: '40px' }}
+                            label=" Wallet "
+                            fullWidth
+                        >
+                          <MenuItem key={'0'} value={'total'} sx={{ width: '100%', height: '40px' }}>
                             <Grid item xs={2}>
-                              <Avatar src={wallet.icon} sx={{ width: '28px', height: '28px' }} />
+                              <Avatar src="/assets/icons/wallets/total.svg" sx={{ width: '28px', height: '28px' }} />
                             </Grid>
                             <Grid item xs sx={{ textAlign: 'center' }}>
                               {' '}
-                              <ListItemText primary={wallet.name} />
+                              <ListItemText primary="Total" />
                             </Grid>
                           </MenuItem>
-                        ))}
-                      </Select>
-                    </Grid>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                  <Button
-                    color="success"
-                    type="submit"
-                    variant="outlined"
-                    sx={{ padding: '7px' }}
-                    onClick={handleFilter}
-                  >
-                    Filter
-                  </Button>
+                          {wallets.map((wallet, index) => (
+                              <MenuItem key={wallet._id} value={wallet._id} sx={{ width: '100%', height: '40px' }}>
+                                <Grid item xs={2}>
+                                  <Avatar src={wallet.icon} sx={{ width: '28px', height: '28px' }} />
+                                </Grid>
+                                <Grid item xs sx={{ textAlign: 'center' }}>
+                                  {' '}
+                                  <ListItemText primary={wallet.name} />
+                                </Grid>
+                              </MenuItem>
+                          ))}
+                        </Select>
+                      </Grid>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                    <Button
+                        color="success"
+                        type="submit"
+                        variant="outlined"
+                        sx={{ padding: '7px' }}
+                        onClick={handleFilter}
+                    >
+                      Filter
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
+          </Toolbar>
+        </AppBar>
 
-      <Box sx={{ mt: '10px' }}>
-        <Grid item xs={12} md={6} lg={8}>
-          <AppWebsiteVisits
-            title="This month Reports"
-            subheader="(+43%) than last year"
-            chartLabels={chartLabels}
-            chartData={chartData}
-          />
-        </Grid>
-      </Box>
-
-      <Dialog
-        open={openChooseDay}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={() => setOpenChooseDay(false)}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <Typography variant="h5" padding={3} pb={0}>
-          Choose <span style={{ color: 'red' }}>Start Date</span> And <span style={{ color: 'green' }}>End Date</span>{' '}
-        </Typography>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  inputFormat="MM/DD/YYYY"
-                  disableFuture={true}
-                  label="Start Date"
-                  value={pickDate.pick_start}
-                  onChange={(newValue) =>
-                    setPickDate({ ...pickDate, pick_start: dayjs(newValue).format('MM/DD/YYYY') })
-                  }
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  disableFuture={true}
-                  label="End Date"
-                  inputFormat="MM/DD/YYYY"
-                  value={pickDate.pick_end}
-                  onChange={(newValue) => handleChangePickDate(newValue)}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </LocalizationProvider>
-            </Grid>
+        <Box sx={{ mt: '10px' }}>
+          <Grid item xs={12} md={6} lg={8}>
+            <AppWebsiteVisits
+                title="This month Reports"
+                subheader="(+43%) than last year"
+                chartLabels={chartLabels}
+                chartData={chartData}
+            />
           </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialogChooseDate} variant="outlined" color="error">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmitPickDate} variant="outlined" color="success">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+        </Box>
+
+        <Dialog
+            open={openChooseDay}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={() => setOpenChooseDay(false)}
+            aria-describedby="alert-dialog-slide-description"
+        >
+          <Typography variant="h5" padding={3} pb={0}>
+            Choose <span style={{ color: 'red' }}>Start Date</span> And <span style={{ color: 'green' }}>End Date</span>{' '}
+          </Typography>
+          <DialogContent>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                      inputFormat="MM/DD/YYYY"
+                      disableFuture={true}
+                      label="Start Date"
+                      value={pickDate.pick_start}
+                      onChange={(newValue) =>
+                          setPickDate({ ...pickDate, pick_start: dayjs(newValue).format('MM/DD/YYYY') })
+                      }
+                      renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                      disableFuture={true}
+                      label="End Date"
+                      inputFormat="MM/DD/YYYY"
+                      value={pickDate.pick_end}
+                      onChange={(newValue) => handleChangePickDate(newValue)}
+                      renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialogChooseDate} variant="outlined" color="error">
+              Cancel
+            </Button>
+            <Button onClick={handleSubmitPickDate} variant="outlined" color="success">
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
   );
 }
 

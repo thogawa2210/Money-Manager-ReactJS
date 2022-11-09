@@ -214,121 +214,121 @@ export default function TransactionPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-  const handleDeleteTrans = (id) => {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Delete This Transaction',
-      text: 'Are you sure?',
-      showCancelButton: true,
-      confirmButtonColor: '#54D62C',
-      cancelButtonColor: '#FF4842',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteTransApi(id)
-          .then((res) => {
-            dispatch(changeFlag(1));
-            setExpanded(false);
-            Swal.fire({
-              icon: 'success',
-              title: 'Delete Success!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          })
-          .catch((err) =>
-            Swal.fire({
-              icon: 'warning',
-              title: 'Something Wrong!',
-              text: 'Try again!',
-              showConfirmButton: false,
-              timer: 1500,
-            })
-          );
-      }
-    });
-  };
+    const handleDeleteTrans = (id) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Delete This Transaction',
+            text: 'Are you sure?',
+            showCancelButton: true,
+            confirmButtonColor: '#54D62C',
+            cancelButtonColor: '#FF4842',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteTransApi(id)
+                    .then((res) => {
+                        dispatch(changeFlag(1));
+                        setExpanded(false);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Delete Success!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    })
+                    .catch((err) =>
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Something Wrong!',
+                            text: 'Try again!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        })
+                    );
+            }
+        });
+    };
 
-  const handleSubmit = async () => {
-    if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
-      setOpenAddForm(false);
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please fill all the required fields',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    } else {
-      await axios
-        .post('http://localhost:3001/transaction/add-transaction', transaction)
-        .then((res) => {
-          if (res.status === 200) {
+    const handleSubmit = async () => {
+        if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
+            setOpenAddForm(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill all the required fields',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } else {
+            await axios
+                .post('http://localhost:3001/transaction/add-transaction', transaction)
+                .then((res) => {
+                    if (res.status === 200) {
+                        dispatch(changeFlag(1));
+                        setTransaction({
+                            ...transaction,
+                            category_id: '',
+                            amount: 0,
+                            note: '',
+                            date: dayjs(value).format('MM/DD/YYYY'),
+                        });
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Add transaction successfully!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    }
+                })
+                .catch((err) => console.log(err));
+            setOpenAddForm(false);
             dispatch(changeFlag(1));
-            setTransaction({
-              ...transaction,
-              category_id: '',
-              amount: 0,
-              note: '',
-              date: dayjs(value).format('MM/DD/YYYY'),
-            });
-            Swal.fire({
-              icon: 'success',
-              title: 'Add transaction successfully!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Something went wrong!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          }
-        })
-        .catch((err) => console.log(err));
-      setOpenAddForm(false);
-      dispatch(changeFlag(1));
-    }
-  };
+        }
+    };
 
-  const handleEdit = async () => {
-    if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
-      setOpenEditForm(false);
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please fill all the required fields',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    } else {
-      await axios
-        .put(`http://localhost:3001/transaction/update-transaction/${editTransaction._id}`, editTransaction)
-        .then((res) => {
-          setOpenEditForm(false);
-          if (res.status === 200) {
+    const handleEdit = async () => {
+        if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
+            setOpenEditForm(false);
             Swal.fire({
-              icon: 'success',
-              title: 'Edit transaction successfully!',
-              showConfirmButton: false,
-              timer: 1500,
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill all the required fields',
+                showConfirmButton: false,
+                timer: 1500,
             });
-            dispatch(changeFlag(1));
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Something went wrong!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          }
-        })
-        .catch((err) => console.log(err));
-    }
-  };
+        } else {
+            await axios
+                .put(`http://localhost:3001/transaction/update-transaction/${editTransaction._id}`, editTransaction)
+                .then((res) => {
+                    setOpenEditForm(false);
+                    if (res.status === 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Edit transaction successfully!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        dispatch(changeFlag(1));
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    }
+                })
+                .catch((err) => console.log(err));
+        }
+    };
 
     return (
         <>
@@ -336,56 +336,56 @@ export default function TransactionPage() {
                 <title> Transaction | Money Manager Master </title>
             </Helmet>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-            <Typography variant="h3">Transaction</Typography>
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
-              New Transaction
-            </Button>
-          </Stack>
-        </Grid>
-        <Grid item xs />
-        <Grid item xs={8} sx={{ padding: 0 }}>
-          <Stack>
-            <Grid>
-              <Card>
-                <CardContent>
-                  <Typography sx={{ padding: 0, margin: 0 }} variant="h4">
-                    Transaction Info
-                  </Typography>
-                  <hr />
-                  <Grid container>
-                    <Grid xs item>
-                      Inflow
-                    </Grid>
-                    <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
-                      + {numberWithCommas(moneyFlow.inflow)}{' '}
-                      <Typography component="span" sx={{ textDecoration: 'underline' }}>
-                        đ
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid container>
-                    <Grid item xs={6}>
-                      Outflow
-                    </Grid>
-                    <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
-                      - {numberWithCommas(moneyFlow.outflow)}{' '}
-                      <Typography component="span" sx={{ textDecoration: 'underline' }}>
-                        đ
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <hr />
-                  <Typography sx={{ textAlign: 'right', mt: '16px' }}>
-                    {moneyFlow.inflow - moneyFlow.outflow > 0 ? '+' : '-'}{' '}
-                    {numberWithCommas(moneyFlow.inflow - moneyFlow.outflow)}{' '}
-                    <Typography component="span" sx={{ textDecoration: 'underline' }}>
-                      đ
-                    </Typography>
-                  </Typography>
-                </CardContent>
+            <Grid container spacing={3}>
+                <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+                        <Typography variant="h3">Transaction</Typography>
+                        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
+                            New Transaction
+                        </Button>
+                    </Stack>
+                </Grid>
+                <Grid item xs />
+                <Grid item xs={8} sx={{ padding: 0 }}>
+                    <Stack>
+                        <Grid>
+                            <Card>
+                                <CardContent>
+                                    <Typography sx={{ padding: 0, margin: 0 }} variant="h4">
+                                        Transaction Info
+                                    </Typography>
+                                    <hr />
+                                    <Grid container>
+                                        <Grid xs item>
+                                            Inflow
+                                        </Grid>
+                                        <Grid xs item sx={{ textAlign: 'right', color: '#039BE5' }}>
+                                            + {numberWithCommas(moneyFlow.inflow)}{' '}
+                                            <Typography component="span" sx={{ textDecoration: 'underline' }}>
+                                                đ
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={6}>
+                                            Outflow
+                                        </Grid>
+                                        <Grid item xs={6} sx={{ textAlign: 'right', color: '#E51C23' }}>
+                                            - {numberWithCommas(moneyFlow.outflow)}{' '}
+                                            <Typography component="span" sx={{ textDecoration: 'underline' }}>
+                                                đ
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <hr />
+                                    <Typography sx={{ textAlign: 'right', mt: '16px' }}>
+                                        {moneyFlow.inflow - moneyFlow.outflow > 0 ? '+' : '-'}{' '}
+                                        {numberWithCommas(moneyFlow.inflow - moneyFlow.outflow)}{' '}
+                                        <Typography component="span" sx={{ textDecoration: 'underline' }}>
+                                            đ
+                                        </Typography>
+                                    </Typography>
+                                </CardContent>
 
                                 <Box
                                     component="main"
@@ -549,256 +549,256 @@ export default function TransactionPage() {
                 <Grid item xs />
             </Grid>
 
-      <Dialog
-        open={openAddForm}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleCloseAddForm}
-        fullWidth={true}
-        maxWidth="md"
-      >
-        <DialogTitle>{'Add Transaction'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Remember to Record Your Transactions Today.</DialogContentText>
-          <hr />
-          <Grid container spacing={4}>
-            <Grid item xs={4}>
-              <FormControl fullWidth margin="dense">
-                <InputLabel>Wallet</InputLabel>
-                <Select
-                  onChange={handleChange}
-                  label="Wallet"
-                  name="wallet_id"
-                  value={defaultWallet}
-                  sx={{ height: '56px' }}
-                >
-                  {listWallet.map((wallet) => (
-                    <MenuItem key={wallet._id} value={wallet._id}>
-                      <Avatar src={wallet.icon} />
-                      <ListItemText primary={wallet.name} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-              <FormControl fullWidth margin="dense">
-                <InputLabel>Categories</InputLabel>
-                <Select
-                  onChange={handleChange}
-                  label="Categories"
-                  name="category_id"
-                  value={transaction.category_id}
-                  sx={{ height: '56px' }}
-                  inputProps={{ readOnly: true }}
-                  onClick={handleClickOpenCategory}
-                >
-                  {listCategory.map((category) => (
-                        <MenuItem key={category.name} value={category._id}>
-                          <Avatar src={category.icon} />
-                          <ListItemText primary={category.name} />
-                        </MenuItem>
-                      ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                sx={{ height: '73' }}
-                name="amount"
-                onChange={handleChange}
+            <Dialog
+                open={openAddForm}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleCloseAddForm}
                 fullWidth={true}
-                label="Amount"
-                variant="outlined"
-                type="number"
-                margin="dense"
-                value={transaction.amount}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">VNĐ</InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker
-                  label="Date desktop"
-                  inputFormat="MM/DD/YYYY"
-                  value={value}
-                  name="date"
-                  disableFuture={true}
-                  onChange={handleChange}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={8}>
-              <TextField
-                name="note"
-                onChange={handleChange}
-                fullWidth={true}
-                label="Note"
-                variant="outlined"
-                type="text"
-                value={transaction.note}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleCloseAddForm} color="error">
-            Cancel
-          </Button>
-          <Button variant="outlined" color="success" onClick={handleSubmit}>
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
+                maxWidth="md"
+            >
+                <DialogTitle>{'Add Transaction'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Remember to Record Your Transactions Today.</DialogContentText>
+                    <hr />
+                    <Grid container spacing={4}>
+                        <Grid item xs={4}>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>Wallet</InputLabel>
+                                <Select
+                                    onChange={handleChange}
+                                    label="Wallet"
+                                    name="wallet_id"
+                                    value={defaultWallet}
+                                    sx={{ height: '56px' }}
+                                >
+                                    {listWallet.map((wallet) => (
+                                        <MenuItem key={wallet._id} value={wallet._id}>
+                                            <Avatar src={wallet.icon} />
+                                            <ListItemText primary={wallet.name} />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>Categories</InputLabel>
+                                <Select
+                                    onChange={handleChange}
+                                    label="Categories"
+                                    name="category_id"
+                                    value={transaction.category_id}
+                                    sx={{ height: '56px' }}
+                                    inputProps={{ readOnly: true }}
+                                    onClick={handleClickOpenCategory}
+                                >
+                                    {listCategory.map((category) => (
+                                        <MenuItem key={category.name} value={category._id}>
+                                            <Avatar src={category.icon} />
+                                            <ListItemText primary={category.name} />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <TextField
+                                sx={{ height: '73' }}
+                                name="amount"
+                                onChange={handleChange}
+                                fullWidth={true}
+                                label="Amount"
+                                variant="outlined"
+                                type="number"
+                                margin="dense"
+                                value={transaction.amount}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">VNĐ</InputAdornment>,
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DesktopDatePicker
+                                    label="Date desktop"
+                                    inputFormat="MM/DD/YYYY"
+                                    value={value}
+                                    name="date"
+                                    disableFuture={true}
+                                    onChange={handleChange}
+                                    renderInput={(params) => <TextField {...params} fullWidth />}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <TextField
+                                name="note"
+                                onChange={handleChange}
+                                fullWidth={true}
+                                label="Note"
+                                variant="outlined"
+                                type="text"
+                                value={transaction.note}
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" onClick={handleCloseAddForm} color="error">
+                        Cancel
+                    </Button>
+                    <Button variant="outlined" color="success" onClick={handleSubmit}>
+                        Submit
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
-      <Dialog
-        open={openEditForm}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleCloseEditForm}
-        fullWidth={true}
-        maxWidth="md"
-      >
-        <DialogTitle>{'Edit Transaction'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Remember to Record Your Transactions Today.</DialogContentText>
-          <hr />
-          <Grid container spacing={4}>
-            <Grid item xs={4}>
-              <FormControl fullWidth margin="dense">
-                <InputLabel>Wallet</InputLabel>
-                <Select
-                  onChange={handleChangeEdit}
-                  label="Wallet"
-                  name="wallet_id"
-                  value={editTransaction.wallet_id}
-                  sx={{ height: '56px' }}
-                >
-                  {listWallet.map((wallet) => (
-                    <MenuItem key={wallet._id} value={wallet._id}>
-                      <Avatar src={wallet.icon} />
-                      <ListItemText primary={wallet.name} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-              <FormControl fullWidth margin="dense">
-                <InputLabel>Categories</InputLabel>
-                <Select
-                  onChange={handleChangeEdit}
-                  label="Categories"
-                  name="category_id"
-                  value={editTransaction.category_id}
-                  sx={{ height: '56px' }}
-                  inputProps={{ readOnly: true }}
-                  onClick={handleClickOpenCategory}
-                >
-                    {listCategory.map((category) => (
-                        <MenuItem key={category.name} value={category._id}>
-                            <Avatar src={category.icon} />
-                            <ListItemText primary={category.name} />
-                        </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                name="amount"
-                onChange={handleChangeEdit}
+            <Dialog
+                open={openEditForm}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleCloseEditForm}
                 fullWidth={true}
-                label="Amount"
-                variant="outlined"
-                type="number"
-                margin="dense"
-                sx={{ height: '73' }}
-                value={editTransaction.amount}
-                InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker
-                  label="Date desktop"
-                  inputFormat="DD/MM/YYYY"
-                  value={value}
-                  name="date"
-                  disableFuture={true}
-                  onChange={handleChangeEdit}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={8}>
-              <TextField
-                name="note"
-                onChange={handleChangeEdit}
-                fullWidth={true}
-                label="Note"
-                variant="outlined"
-                type="text"
-                value={editTransaction.note}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleCloseEditForm}>
-            Cancel
-          </Button>
-          <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleEdit}>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+                maxWidth="md"
+            >
+                <DialogTitle>{'Edit Transaction'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Remember to Record Your Transactions Today.</DialogContentText>
+                    <hr />
+                    <Grid container spacing={4}>
+                        <Grid item xs={4}>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>Wallet</InputLabel>
+                                <Select
+                                    onChange={handleChangeEdit}
+                                    label="Wallet"
+                                    name="wallet_id"
+                                    value={editTransaction.wallet_id}
+                                    sx={{ height: '56px' }}
+                                >
+                                    {listWallet.map((wallet) => (
+                                        <MenuItem key={wallet._id} value={wallet._id}>
+                                            <Avatar src={wallet.icon} />
+                                            <ListItemText primary={wallet.name} />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>Categories</InputLabel>
+                                <Select
+                                    onChange={handleChangeEdit}
+                                    label="Categories"
+                                    name="category_id"
+                                    value={editTransaction.category_id}
+                                    sx={{ height: '56px' }}
+                                    inputProps={{ readOnly: true }}
+                                    onClick={handleClickOpenCategory}
+                                >
+                                    {listCategory.map((category) => (
+                                        <MenuItem key={category.name} value={category._id}>
+                                            <Avatar src={category.icon} />
+                                            <ListItemText primary={category.name} />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <TextField
+                                name="amount"
+                                onChange={handleChangeEdit}
+                                fullWidth={true}
+                                label="Amount"
+                                variant="outlined"
+                                type="number"
+                                margin="dense"
+                                sx={{ height: '73' }}
+                                value={editTransaction.amount}
+                                InputProps={{ startAdornment: <InputAdornment position="start">VNĐ</InputAdornment> }}
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DesktopDatePicker
+                                    label="Date desktop"
+                                    inputFormat="DD/MM/YYYY"
+                                    value={value}
+                                    name="date"
+                                    disableFuture={true}
+                                    onChange={handleChangeEdit}
+                                    renderInput={(params) => <TextField {...params} fullWidth />}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <TextField
+                                name="note"
+                                onChange={handleChangeEdit}
+                                fullWidth={true}
+                                label="Note"
+                                variant="outlined"
+                                type="text"
+                                value={editTransaction.note}
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" onClick={handleCloseEditForm}>
+                        Cancel
+                    </Button>
+                    <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleEdit}>
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
-      <Dialog open={openCategory} onClose={closeCategory}>
-        <DialogTitle>Choose Category</DialogTitle>
-        <DialogContent>
-            <Box sx={{ width: '300px', typography: 'body1' , height: '300px'}}>
-                <TabContext value={category} >
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={handleChangeCategory} centered>
-                            <Tab label="Income" value="income" />
-                            <Tab label="Expense" value="expense" />
-                        </TabList>
+            <Dialog open={openCategory} onClose={closeCategory}>
+                <DialogTitle>Choose Category</DialogTitle>
+                <DialogContent>
+                    <Box sx={{ width: '300px', typography: 'body1' , height: '300px'}}>
+                        <TabContext value={category} >
+                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                <TabList onChange={handleChangeCategory} centered>
+                                    <Tab label="Income" value="income" />
+                                    <Tab label="Expense" value="expense" />
+                                </TabList>
+                            </Box>
+                            <TabPanel value="income" centered>
+                                {listCategory.map((category) => {
+                                    if (category.type === 'income')
+                                        return (
+                                            <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
+                                                <Avatar src={category.icon} />
+                                                <ListItemText primary={category.name} />
+                                            </MenuItem>
+                                        );
+                                })}
+                            </TabPanel>
+                            <TabPanel value="expense">
+                                {listCategory.map((category) => {
+                                    if (category.type === 'expense')
+                                        return (
+                                            <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
+                                                <Avatar src={category.icon} />
+                                                <ListItemText primary={category.name} />
+                                            </MenuItem>
+                                        );
+                                })}
+                            </TabPanel>
+                        </TabContext>
                     </Box>
-                    <TabPanel value="income" centered>
-                        {listCategory.map((category) => {
-                            if (category.type === 'income')
-                                return (
-                                    <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
-                                        <Avatar src={category.icon} />
-                                        <ListItemText primary={category.name} />
-                                    </MenuItem>
-                                );
-                        })}
-                    </TabPanel>
-                    <TabPanel value="expense">
-                        {listCategory.map((category) => {
-                            if (category.type === 'expense')
-                                return (
-                                    <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
-                                        <Avatar src={category.icon} />
-                                        <ListItemText primary={category.name} />
-                                    </MenuItem>
-                                );
-                        })}
-                    </TabPanel>
-                </TabContext>
-            </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeCategory} variant="outlined" color="error">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeCategory} variant="outlined" color="error">
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
 }
