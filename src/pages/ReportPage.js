@@ -23,6 +23,8 @@ import {
   DialogActions,
   Slide,
   TextField,
+  Stack,
+  Alert,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
@@ -80,6 +82,14 @@ function ReportPage() {
     pick_start: null,
     pick_end: null,
   });
+  const [dataApi, setDataApi] = useState({
+    start_date: '',
+    end_date: '',
+    wallet_id: '',
+    user_id: '',
+  });
+  const [error, setError] = useState(false);
+  const [error1, setError1] = useState(false);
 
   useEffect(() => {
     const data = getDataBarChart();
@@ -92,6 +102,11 @@ function ReportPage() {
       pick_start: null,
       pick_end: null,
     });
+    setOpenChooseDay(false);
+    setDefaultDate('today');
+  };
+
+  const closeChooseDay = () => {
     setOpenChooseDay(false);
     setDefaultDate('today');
   };
@@ -136,94 +151,67 @@ function ReportPage() {
     }
   };
 
+  console.log(pickDate, form);
+
   const getTransCustomApi = async (data) => {
     return await axios.post('http://localhost:3001/transaction/get-transaction-custom', data);
   };
 
   const handleFilter = (e) => {
     const userID = JSON.parse(localStorage.getItem('user')).user_id;
+    setDataApi({ ...dataApi, user_id: userID });
+    let day = new Date();
+    let { start_date, end_date } = getStartEndDate(day);
+    let { last_start, last_end } = getLastStartEndDate(day);
+
     if (form && form.date && form.wallet_id) {
-      if (form.date === 'today') {
-        if (form.wallet_id === 'total') {
-          getTransCustomApi({ user_id: userID })
-            .then((res) => console.log(res.data.data))
-            .catch((err) => console.log(err));
-        } else {
-          getTransCustomApi({
-            user_id: userID,
-            wallet_id: form.wallet_id,
-          })
-            .then((res) => console.log(res.data.data))
-            .catch((err) => console.log(err));
-        }
-      } else if (form.date === 'this month') {
-        let day = new Date();
-        let { start_date, end_date } = getStartEndDate(day);
-        if (form.wallet_id === 'total') {
-          let data = {
-            start_date: start_date,
-            end_date: end_date,
-            user_id: userID,
-          };
-          getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
-        } else {
-          let data = {
-            start_date: start_date,
-            end_date: end_date,
-            user_id: userID,
-            wallet_id: form.wallet_id,
-          };
-          getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
-        }
-      } else if (form.date === 'last month') {
-        let day = new Date();
-        let { start_date, end_date } = getLastStartEndDate(day);
-        if (form.wallet_id === 'total') {
-          let data = {
-            user_id: userID,
-            start_date: start_date,
-            end_date: end_date,
-          };
-          getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
-        } else {
-          let data = {
-            user_id: userID,
-            start_date: start_date,
-            end_date: end_date,
-            wallet_id: form.wallet_id,
-          };
-          getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
-        }
-      } else {
-        if (form.wallet_id === 'total') {
-          let data = {
-            user_id: userID,
-            start_date: pickDate.pick_start,
-            end_date: pickDate.pick_end,
-          };
-          getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
-        } else {
-          let data = {
-            user_id: userID,
-            start_date: pickDate.pick_start,
-            end_date: pickDate.pick_end,
-            wallet_id: form.wallet_id,
-          };
-          getTransCustomApi(data)
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err));
-        }
+      switch (form.date) {
+        case 'today':
+          if (form.wallet_id === 'total') {
+            setDataApi({ ...dataApi });
+          } else {
+            setDataApi({ ...dataApi, wallet_id: form.wallet_id });
+          }
+          break;
+        case 'this month':
+          if (form.wallet_id === 'total') {
+            setDataApi({ ...dataApi, start_date: start_date, end_date: end_date });
+          } else {
+            setDataApi({ ...dataApi, start_date: start_date, end_date: end_date, wallet_id: form.wallet_id });
+          }
+          break;
+        case 'last month':
+          if (form.wallet_id === 'total') {
+            setDataApi({ ...dataApi, start_date: last_start, end_date: last_end });
+          } else {
+            setDataApi({ ...dataApi, start_date: last_start, end_date: last_end, wallet_id: form.wallet_id });
+          }
+          break;
+        case 'custom':
+          if (form.wallet_id === 'total') {
+            setDataApi({ ...dataApi, start_date: pickDate.pick_start, end_date: pickDate.pick_end });
+          } else {
+            setDataApi({
+              ...dataApi,
+              start_date: pickDate.pick_start,
+              end_date: pickDate.pick_end,
+              wallet_id: form.wallet_id,
+            });
+          }
+          break;
+        default:
       }
+
+      getTransCustomApi(dataApi)
+        .then((res) => {
+          setDefaultDate('today');
+          setPickDate({
+            pick_start: null,
+            pick_end: null,
+          });
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
     }
   };
 
@@ -231,33 +219,23 @@ function ReportPage() {
     let date_end = dayjs(value).format('MM/DD/YYYY');
     let result = new Date(date_end) - new Date(pickDate.pick_start);
     if (date_end === pickDate.pick_start || result < 0) {
-      setOpenChooseDay(false);
-      setDefaultDate('today');
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'You cannot choose an end date before a start date! Please try again!',
-        showConfirmButton: false,
-        timer: 2000,
-      });
+      setError(true);
+      setTimeout(() => {
+        setError(false);
+      }, 2500);
     } else {
       setPickDate({ ...pickDate, pick_end: date_end });
     }
   };
 
   const handleSubmitPickDate = () => {
-    if (pickDate.pick_start === '' || pickDate.pick_end === '') {
-      setOpenChooseDay(false);
-      setDefaultDate('today');
-      Swal.fire({
-        icon: 'error',
-        title: 'Warning!',
-        text: 'Some fields are empty!',
-        showConfirmButton: false,
-        timer: 1500,
-      });
+    if (pickDate.pick_start === null || pickDate.pick_end === null) {
+      setError1(true);
+      setTimeout(() => {
+        setError1(false);
+      }, 2500);
     } else {
-      setOpenChooseDay(false)
+      setOpenChooseDay(false);
     }
   };
 
@@ -356,12 +334,26 @@ function ReportPage() {
         open={openChooseDay}
         TransitionComponent={Transition}
         keepMounted
-        onClose={() => setOpenChooseDay(false)}
+        onClose={closeChooseDay}
         aria-describedby="alert-dialog-slide-description"
       >
         <Typography variant="h5" padding={3} pb={0}>
           Choose <span style={{ color: 'red' }}>Start Date</span> And <span style={{ color: 'green' }}>End Date</span>{' '}
         </Typography>
+        {error ? (
+          <Stack spacing={2} sx={{ padding: 2 }}>
+            <Alert severity="error">You cannot choose an end date before a start date! Please try again!</Alert>
+          </Stack>
+        ) : (
+          ''
+        )}
+        {error1 ? (
+          <Stack spacing={2} sx={{ padding: 2 }}>
+            <Alert severity="error">Some fields are empty! Try again!</Alert>
+          </Stack>
+        ) : (
+          ''
+        )}
         <DialogContent>
           <Grid container spacing={2}>
             <Grid item xs={6}>
