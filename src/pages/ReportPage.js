@@ -349,8 +349,8 @@ function ReportPage() {
       <Box sx={{ mt: '10px' }}>
         <Grid item xs={12} md={6} lg={8}>
           <AppWebsiteVisits
-            title="This month Reports"
-            subheader="(+43%) than last year"
+            title="Income & Expense Reports"
+            subheader="The best report in the world!"
             chartLabels={chartLabels}
             chartData={chartData}
           />
