@@ -100,6 +100,8 @@ export default function ProductsPage() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill all the required fields',
+        showConfirmButton : false,
+        timer : 1500
       });
     } else {
       const result = await axios.post('http://localhost:3001/category/add-category', data);
@@ -107,6 +109,9 @@ export default function ProductsPage() {
         Swal.fire({
           icon: 'success',
           title: 'Create Category Successfully!',
+          showConfirmButton : false,
+          timer : 1500
+         
         }).then(
           setOpenCreateCategory(false),
           dispatch(changeFlag(1)),
@@ -120,8 +125,10 @@ export default function ProductsPage() {
         Swal.fire({
           icon: 'warning',
           title: 'Your name of category already exist',
-        });
-        setOpenCreateCategory(false);
+          showConfirmButton : false,
+          timer : 1500
+        })
+        setOpenCreateCategory(false)
         setCategory({
           name: '',
           type: '',
@@ -154,9 +161,8 @@ export default function ProductsPage() {
       text: "You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#54D62C',
+      cancelButtonColor: '#FF4842’',
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
@@ -164,8 +170,15 @@ export default function ProductsPage() {
           .then((res) => {
             dispatch(changeFlag(1));
           })
-          .catch((err) => console.log(err));
-        Swal.fire('Deleted!', 'Category has been deleted.', 'success');
+          .catch(err => console.log(err))
+        Swal.fire({
+          icon : 'success',
+          text : 'Deleted!',
+          title : 'Category has been deleted.',
+          showConfirmButton : false,
+          timer : 1500
+        })
+     
       }
     });
   };
@@ -217,6 +230,8 @@ export default function ProductsPage() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill all the required fields',
+        showConfirmButton : false,
+        timer : 1500
       });
     } else {
       Swal.fire({
@@ -224,9 +239,8 @@ export default function ProductsPage() {
         text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, edit it!',
+        confirmButtonColor: '#54D62C',
+        cancelButtonColor: '#FF4842',
       }).then(async (result) => {
         if (result.isConfirmed) {
           await axios
@@ -234,8 +248,14 @@ export default function ProductsPage() {
             .then((res) => {
               dispatch(changeFlag(1));
             })
-            .catch((err) => console.log(err));
-          Swal.fire('Edited!', 'Category has been edited.', 'success');
+            .catch(err => console.log(err))
+          Swal.fire({
+            icon : 'success',
+            title : 'Edited!',
+            text : 'Category has been edited.',
+            showConfirmButton : false,
+            timer : 1500
+        })
         }
       });
     }
@@ -313,38 +333,10 @@ export default function ProductsPage() {
 
                         <ListSubheader>InCome</ListSubheader>
 
-                        {categories.map((item, index) => {
-                          if (item.type == 'income')
-                            return (
-                              <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell align="center">
-                                  <Avatar src={item.icon}></Avatar>
-                                </TableCell>
-                                <TableCell align="center">
-                                  <strong>{item.name}</strong>
-                                </TableCell>
-                                <TableCell align="center">{item.type}</TableCell>
-                                <TableCell align="center">
-                                  <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={() => handleClickOpenCategory(item._id)}
-                                  >
-                                    Edit
-                                  </Button>
-                                  <Button
-                                    variant="outlined"
-                                    color="error"
-                                    onClick={() => handleDeleteCategory(item._id)}
-                                  >
-                                    Delete
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            );
-                        })}
-                        {/* {categories.map((item, index) => (
-                          <TableRow key={index}
+                         {categories.map((item,index)=> {
+                          if (item.type == "income") 
+                          return (
+                            <TableRow key={index}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                           >
                             <TableCell align="center"><Avatar src={item.icon} ></Avatar></TableCell>
@@ -355,7 +347,10 @@ export default function ProductsPage() {
                               <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
                             </TableCell>
                           </TableRow>
-                        ))} */}
+                          )  
+                        })}
+         
+                    
                       </TableBody>
                     </Table>
                     {/* Done Table */}
@@ -442,17 +437,8 @@ export default function ProductsPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" color="error" onClick={handleCloseCreate}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={<Iconify icon="uis:check" />}
-            onClick={handleSubmitCreate}
-          >
-            Submit
-          </Button>
+          <Button variant="outlined" color="error" onClick={handleCloseCreate}>Cancel</Button>
+          <Button variant="outlined" color="success" onClick={handleSubmitCreate}>Submit</Button>
         </DialogActions>
       </Dialog>
       {/* Update Category */}
@@ -480,7 +466,7 @@ export default function ProductsPage() {
                     name="icon"
                     onChange={(event) => handleChangeIconEdit(event)}
                     sx={{ height: 55 }}
-                    placeholder={editForm.icon + ''}
+                    value={editForm.icon + ''}
                   >
                     <MenuItem value={`/assets/icons/category/car.svg`}>
                       <Avatar src={`/assets/icons/category/car.svg`} sx={{ mr: 0 }} />
@@ -534,6 +520,7 @@ export default function ProductsPage() {
                     onChange={(event) => handleChangeTypeEdit(event)}
                     placeholder={editForm.type + ''}
                     helperText="Please select your currency"
+         
                   >
                     {currencies.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
@@ -547,17 +534,8 @@ export default function ProductsPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" color="error" onClick={handleCloseEdit}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={<Iconify icon="uis:check" />}
-            onClick={handleSubmitCateEdit}
-          >
-            Submit
-          </Button>
+          <Button variant="outlined" color="error" onClick={handleCloseEdit}>Cancel</Button>
+          <Button variant="outlined"  color="success" onClick={handleSubmitCateEdit}>Submit</Button>
         </DialogActions>
       </Dialog>
     </>

@@ -2,7 +2,7 @@ const mockExpense = [
   { name: 'Food', icon: '/assets/icons/category/food.svg' },
   { name: 'Transportation', icon: '/assets/icons/category/car.svg' },
   { name: 'Rentals', icon: '/assets/icons/category/cabin-svgrepo-com' },
-  { name: 'Water Bill', icon: '/assets/icons/category/hzouse.svg' },
+  { name: 'Water Bill', icon: '/assets/icons/category/water-svgrepo-com' },
   { name: 'Phone Bill', icon: '/assets/icons/category/hzouse.svg' },
   { name: 'Electricity Bill', icon: '/assets/icons/category/hzouse.svg' },
   { name: 'Gas Bill', icon: '/assets/icons/category/hzouse.svg' },

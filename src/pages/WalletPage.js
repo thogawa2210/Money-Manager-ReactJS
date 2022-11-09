@@ -298,7 +298,7 @@ export default function WalletPage() {
                   />
                 </Typography>
 
-                <Typography sx={{ color: 'text.secondary' }}>Wallet {index + 1}</Typography>
+                <Typography  sx={{ ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}>Wallet {index + 1}</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
