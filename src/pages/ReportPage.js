@@ -4,6 +4,7 @@ import { AppWebsiteVisits } from '../sections/@dashboard/app';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 import {
   AppBar,
@@ -19,8 +20,6 @@ import {
   ListItemText,
   Dialog,
   DialogContent,
-  DialogTitle,
-  DialogContentText,
   DialogActions,
   Slide,
   TextField,
@@ -29,8 +28,8 @@ import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
 import axios from 'axios';
 import getFormatDate from './../getDateFormat';
-import transaction from "../_mock/transaction";
-import {Box} from "@mui/system";
+import { Box } from '@mui/system';
+import Swal from 'sweetalert2';
 
 const getStartEndDate = (date) => {
   let day = getFormatDate(date);
@@ -77,14 +76,25 @@ function ReportPage() {
   const [wallets, setWallets] = useState([]);
   const [defaultWallet, setDefaultWallet] = useState('');
   const [defaultDate, setDefaultDate] = useState('today');
-  const [pickStartDate, setPickStartDate] = useState('');
-  const [pickEndDate, setPickEndDate] = useState('');
+  const [pickDate, setPickDate] = useState({
+    pick_start: null,
+    pick_end: null,
+  });
 
   useEffect(() => {
     const data = getDataBarChart();
     setChartLabels(data.chartLabels);
     setChartData(data.chartData);
   }, []);
+
+  const handleCloseDialogChooseDate = () => {
+    setPickDate({
+      pick_start: null,
+      pick_end: null,
+    });
+    setOpenChooseDay(false);
+    setDefaultDate('today');
+  };
 
   const getWalletsApi = async (id) => {
     return axios.get(`http://localhost:3001/wallet/get-all-wallet/${id}`);
@@ -114,6 +124,10 @@ function ReportPage() {
       case 'date':
         if (e.target.value === 'custom') {
           setOpenChooseDay(true);
+          setPickDate({
+            pick_start: null,
+            pick_end: null,
+          });
         }
         setDefaultDate(e.target.value);
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -189,7 +203,61 @@ function ReportPage() {
             .catch((err) => console.log(err));
         }
       } else {
+        if (form.wallet_id === 'total') {
+          let data = {
+            user_id: userID,
+            start_date: pickDate.pick_start,
+            end_date: pickDate.pick_end,
+          };
+          getTransCustomApi(data)
+            .then((res) => console.log(res.data))
+            .catch((err) => console.log(err));
+        } else {
+          let data = {
+            user_id: userID,
+            start_date: pickDate.pick_start,
+            end_date: pickDate.pick_end,
+            wallet_id: form.wallet_id,
+          };
+          getTransCustomApi(data)
+            .then((res) => console.log(res.data))
+            .catch((err) => console.log(err));
+        }
       }
+    }
+  };
+
+  const handleChangePickDate = (value) => {
+    let date_end = dayjs(value).format('MM/DD/YYYY');
+    let result = new Date(date_end) - new Date(pickDate.pick_start);
+    if (date_end === pickDate.pick_start || result < 0) {
+      setOpenChooseDay(false);
+      setDefaultDate('today');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'You cannot choose an end date before a start date! Please try again!',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      setPickDate({ ...pickDate, pick_end: date_end });
+    }
+  };
+
+  const handleSubmitPickDate = () => {
+    if (pickDate.pick_start === '' || pickDate.pick_end === '') {
+      setOpenChooseDay(false);
+      setDefaultDate('today');
+      Swal.fire({
+        icon: 'error',
+        title: 'Warning!',
+        text: 'Some fields are empty!',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      setOpenChooseDay(false)
     }
   };
 
@@ -273,13 +341,13 @@ function ReportPage() {
         </Toolbar>
       </AppBar>
 
-      <Box sx={{mt: "10px"}}>
+      <Box sx={{ mt: '10px' }}>
         <Grid item xs={12} md={6} lg={8}>
           <AppWebsiteVisits
-              title="This month Reports"
-              subheader="(+43%) than last year"
-              chartLabels={chartLabels}
-              chartData={chartData}
+            title="This month Reports"
+            subheader="(+43%) than last year"
+            chartLabels={chartLabels}
+            chartData={chartData}
           />
         </Grid>
       </Box>
@@ -291,27 +359,46 @@ function ReportPage() {
         onClose={() => setOpenChooseDay(false)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        <Typography variant="h5" padding={3} pb={0}>
+          Choose <span style={{ color: 'red' }}>Start Date</span> And <span style={{ color: 'green' }}>End Date</span>{' '}
+        </Typography>
         <DialogContent>
-          <Grid container spacing={3}>
-            <Grid item xs></Grid>
-            <Grid item xs></Grid>
-            <Grid item xs></Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  inputFormat="MM/DD/YYYY"
+                  disableFuture={true}
+                  label="Start Date"
+                  value={pickDate.pick_start}
+                  onChange={(newValue) =>
+                    setPickDate({ ...pickDate, pick_start: dayjs(newValue).format('MM/DD/YYYY') })
+                  }
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  disableFuture={true}
+                  label="End Date"
+                  inputFormat="MM/DD/YYYY"
+                  value={pickDate.pick_end}
+                  onChange={(newValue) => handleChangePickDate(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
           </Grid>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Basic example"
-              value={pickStartDate}
-              onChange={(newValue) => {
-                setPickStartDate(newValue);
-              }}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenChooseDay(false)} variant='outlined' color='error' >Cancel</Button>
-          <Button onClick={() => setOpenChooseDay(false)} variant='outlined' color='success'>Submit</Button>
+          <Button onClick={handleCloseDialogChooseDate} variant="outlined" color="error">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmitPickDate} variant="outlined" color="success">
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
     </>
