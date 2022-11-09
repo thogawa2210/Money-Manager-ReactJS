@@ -25,7 +25,7 @@ import {
     AccordionDetails,
     AccordionSummary,
     Box,
-    ListSubheader,
+    ListSubheader, Tab,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -38,6 +38,7 @@ import { changeFlag } from '../features/flagSlice';
 import { useDispatch, useSelector } from 'react-redux';
 //css
 import '../css/transaction.css';
+import {TabContext, TabList, TabPanel} from "@mui/lab";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -82,6 +83,17 @@ export default function TransactionPage() {
         inflow: 0,
         outflow: 0,
     });
+    const [category, setCategory] = useState('expense');
+
+    const handleChangeCategory = (e, category) => {
+        setCategory(category)
+    }
+
+    const handleChooseCategory = (id) => {
+        setTransaction({...transaction, category_id: id});
+        setEditTransaction({...transaction, category_id: id});
+        setOpenCategory(false);
+    }
 
     //redux
     const dispatch = useDispatch();
@@ -581,26 +593,12 @@ export default function TransactionPage() {
                   inputProps={{ readOnly: true }}
                   onClick={handleClickOpenCategory}
                 >
-                  <ListSubheader>Expense</ListSubheader>
-                  {listCategory.map((category) => {
-                    if (category.type === 'expense')
-                      return (
-                        <MenuItem key={category.name} value={category._id}>
-                          <Avatar src={category.icon} sx={{ height: '56px' }} />
-                          <ListItemText primary={category.name} />
-                        </MenuItem>
-                      );
-                  })}
-                  <ListSubheader>Income</ListSubheader>
-                  {listCategory.map((category) => {
-                    if (category.type === 'income')
-                      return (
+                  {listCategory.map((category) => (
                         <MenuItem key={category.name} value={category._id}>
                           <Avatar src={category.icon} />
                           <ListItemText primary={category.name} />
                         </MenuItem>
-                      );
-                  })}
+                      ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -697,27 +695,15 @@ export default function TransactionPage() {
                   name="category_id"
                   value={editTransaction.category_id}
                   sx={{ height: '56px' }}
+                  inputProps={{ readOnly: true }}
+                  onClick={handleClickOpenCategory}
                 >
-                  <ListSubheader>Expense</ListSubheader>
-                  {listCategory.map((category) => {
-                    if (category.type === 'expense')
-                      return (
+                    {listCategory.map((category) => (
                         <MenuItem key={category.name} value={category._id}>
-                          <Avatar src={category.icon} />
-                          <ListItemText primary={category.name} />
+                            <Avatar src={category.icon} />
+                            <ListItemText primary={category.name} />
                         </MenuItem>
-                      );
-                  })}
-                  <ListSubheader>Income</ListSubheader>
-                  {listCategory.map((category) => {
-                    if (category.type === 'income')
-                      return (
-                        <MenuItem key={category.name} value={category._id}>
-                          <Avatar src={category.icon} />
-                          <ListItemText primary={category.name} />
-                        </MenuItem>
-                      );
-                  })}
+                    ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -773,7 +759,40 @@ export default function TransactionPage() {
 
       <Dialog open={openCategory} onClose={closeCategory}>
         <DialogTitle>Choose Category</DialogTitle>
-        <DialogContent>Tab Categories here</DialogContent>
+        <DialogContent>
+            <Box sx={{ width: '300px', typography: 'body1' , height: '300px'}}>
+                <TabContext value={category} >
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <TabList onChange={handleChangeCategory} centered>
+                            <Tab label="Income" value="income" />
+                            <Tab label="Expense" value="expense" />
+                        </TabList>
+                    </Box>
+                    <TabPanel value="income" centered>
+                        {listCategory.map((category) => {
+                            if (category.type === 'income')
+                                return (
+                                    <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
+                                        <Avatar src={category.icon} />
+                                        <ListItemText primary={category.name} />
+                                    </MenuItem>
+                                );
+                        })}
+                    </TabPanel>
+                    <TabPanel value="expense">
+                        {listCategory.map((category) => {
+                            if (category.type === 'expense')
+                                return (
+                                    <MenuItem key={category.name} onClick={()=>handleChooseCategory(category._id)}>
+                                        <Avatar src={category.icon} />
+                                        <ListItemText primary={category.name} />
+                                    </MenuItem>
+                                );
+                        })}
+                    </TabPanel>
+                </TabContext>
+            </Box>
+        </DialogContent>
         <DialogActions>
           <Button onClick={closeCategory} variant="outlined" color="error">
             Cancel
