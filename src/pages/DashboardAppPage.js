@@ -17,7 +17,7 @@ import {
   AppCurrentSubject,
   AppConversionRates,
 } from '../sections/@dashboard/app';
-import ChartPage from "./ChartPage";
+
 
 // ----------------------------------------------------------------------
 
