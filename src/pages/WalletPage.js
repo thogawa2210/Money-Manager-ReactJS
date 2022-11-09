@@ -9,6 +9,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  InputAdornment,
   Avatar,
   Button,
   Dialog,
@@ -49,7 +50,9 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 export default function WalletPage() {
   const [wallets, setWallets] = useState([]);
-  const [walletEdit, setWalletEdit] = useState({});
+  const [walletEdit, setWalletEdit] = useState({
+    icon: '',
+  });
   const [open, setOpen] = useState(false);
   // Create Wallet
   const [openCreate, setOpenCreate] = React.useState(false);
@@ -148,8 +151,8 @@ export default function WalletPage() {
 
   const handleOpenEdit = (id) => {
     const walletEdit = wallets.filter((wallet) => wallet._id === id);
-    setOpen(true);
     setWalletEdit(walletEdit[0]);
+    setOpen(true);
   };
 
   const getAllWallet = async () => {
@@ -204,8 +207,14 @@ export default function WalletPage() {
   };
 
   const handleSaveEdit = async (id) => {
+    console.log(id);
+    let data = {
+      icon: walletEdit.icon,
+      name: walletEdit.name,
+      amount: walletEdit.amount,
+    };
     await axios
-      .put(`http://localhost:3001/wallet/update/${id}`, walletEdit)
+      .put(`http://localhost:3001/wallet/update/${id}`, data)
       .then((res) => {
         setOpen(false);
         Swal.fire({
@@ -218,8 +227,6 @@ export default function WalletPage() {
       })
       .catch((err) => console.log(err));
   };
-
-  console.log(walletEdit);
 
   return (
     <>
@@ -254,7 +261,7 @@ export default function WalletPage() {
               <Box sx={{ minWidth: 120 }}>
                 <FormControl sx={{ width: 100 }}>
                   <InputLabel>Icon</InputLabel>
-                  <Select label="icon" name="icon" onChange={onChangeEdit} sx={{ height: 55 }} value={walletEdit.icon}>
+                  <Select name="icon" onChange={onChangeEdit} sx={{ height: 55 }} value={walletEdit.icon}>
                     {mockWallet.map((item) => (
                       <MenuItem value={item.icon} key={item.icon}>
                         <Avatar src={item.icon} sx={{ mr: 0 }} />
@@ -266,23 +273,29 @@ export default function WalletPage() {
             </Grid>
             <Grid item xs={5}>
               <TextField
-                label="Name Wallet"
+                required
                 name="name"
                 onChange={onChangeEdit}
                 fullWidth
                 variant="outlined"
                 value={walletEdit.name}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">Name</InputAdornment>,
+                }}
               />
             </Grid>
             <Grid item xs={5}>
               <TextField
-                label="Amount"
+                required
                 name="amount"
                 onChange={onChangeEdit}
                 fullWidth
                 variant="outlined"
                 type="number"
                 value={walletEdit.amount}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">Amount</InputAdornment>,
+                }}
               />
             </Grid>
           </Grid>
@@ -291,7 +304,7 @@ export default function WalletPage() {
           <Button variant="outlined" color="error" onClick={onCancelEdit}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={() => handleSaveEdit()}>
+          <Button variant="outlined" color="success" onClick={() => handleSaveEdit(walletEdit._id)}>
             Submit
           </Button>
         </DialogActions>
