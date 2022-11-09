@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { changeFlag } from '../features/flagSlice';
 import * as React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import mockWallet from '../_mock/wallet';
 
 import {
   Accordion,
@@ -55,6 +56,7 @@ export default function WalletPage() {
   const [openCreate, setOpenCreate] = React.useState(false);
   const [icon, setIcon] = useState('');
   const [wallet, setWallet] = useState({
+    icon: '',
     name: '',
     amount: '',
   });
@@ -76,7 +78,7 @@ export default function WalletPage() {
     setOpenAddForm(false);
 
     let data = {
-      icon: icon,
+      icon: wallet.icon,
       name: wallet.name,
       amount: wallet.amount,
       user_id: idUser,
@@ -139,9 +141,6 @@ export default function WalletPage() {
     }
   };
 
-  const handleChangeIcon = (event) => {
-    setIcon(event.target.value);
-  };
   // Detail wallet
   const [expanded, setExpanded] = React.useState(false);
 
@@ -171,6 +170,8 @@ export default function WalletPage() {
     const userId = JSON.parse(localStorage.getItem('user'));
     return await axios.get(`http://localhost:3001/wallet/total/${userId.user_id}`);
   };
+
+  console.log(wallet)
 
   useEffect(() => {
     getAllWallet()
@@ -298,7 +299,9 @@ export default function WalletPage() {
                   />
                 </Typography>
 
-                <Typography  sx={{ ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}>Wallet {index + 1}</Typography>
+                <Typography sx={{ ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}>
+                  Wallet {index + 1}
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
@@ -365,21 +368,14 @@ export default function WalletPage() {
                     id="demo-simple-select"
                     label="icon"
                     name="icon"
-                    onChange={handleChangeIcon}
+                    onChange={handleChangeCreate}
                     sx={{ height: 55 }}
                   >
-                    <MenuItem value={`/assets/icons/wallets/cash.svg`}>
-                      <Avatar src={`/assets/icons/wallets/cash.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
-                    <MenuItem value={`/assets/icons/wallets/card.svg`}>
-                      <Avatar src={`/assets/icons/wallets/card.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
-                    <MenuItem value={`/assets/icons/wallets/credit-card.svg`}>
-                      <Avatar src={`/assets/icons/wallets/credit-card.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
-                    <MenuItem value={`/assets/icons/wallets/saving.svg`}>
-                      <Avatar src={`/assets/icons/wallets/saving.svg`} sx={{ mr: 0 }} />
-                    </MenuItem>
+                    {mockWallet.map((item, index) => (
+                      <MenuItem value={item.icon} key={index}>
+                        <Avatar src={item.icon} sx={{ mr: 0 }} />
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>
