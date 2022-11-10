@@ -226,18 +226,16 @@ export default function ProductsPage() {
   //  Update Category
   //  Xu li lay form du lieu
   const [openEditCategory, setOpenEditCategory] = useState(false);
-  const [categoryEdit, setCategorytEdit] = useState({
-    icon: '',
-  });
+
   const [editForm, setEditForm] = useState([]);
 
   const handleChangeEdit = async (e) => {
-    setCategorytEdit({
-      ...categoryEdit,
+    setEditForm({
+      ...editForm,
       [e.target.name] : e.target.value
     })
   }
-console.log(categoryEdit);
+
 
 
   // Xử lý hàm trả về thông tin update
@@ -252,9 +250,9 @@ console.log(categoryEdit);
   };
 
   const data = {
-    icon: categoryEdit.icon,
-    name: categoryEdit.name,
-    type: categoryEdit.type,
+    icon: editForm.icon,
+    name: editForm.name,
+    type: editForm.type,
   };
 
   const handleSubmitCateEdit = async () => {
@@ -289,7 +287,12 @@ console.log(categoryEdit);
                 showConfirmButton: false,
                 timer: 1500
               })
-    
+              setEditForm({
+                ...editForm,
+                icon : '',
+                name : '',
+                type : ''
+              })
             })
             .catch(err => console.log(err))
    
@@ -515,10 +518,11 @@ console.log(categoryEdit);
             <Box sx={{ minWidth: 120 }}>
               <FormControl sx={{ width: 100 }}>
                 <InputLabel>Icon</InputLabel>
-                <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}  value={editForm.icon} >
-                {categoryEdit.type  === "expense"? mockExpense.map((item,index)=> {
+                <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}  
+                value={editForm.icon + ''}>
+                {editForm.type  === "expense"? mockExpense.map((item,index)=> {
                   return(
-                    <MenuItem value={item.icon} key={item.icon}>
+                    <MenuItem value={item.icon} key={index}>
                     <Avatar src={item.icon } sx={{ mr: 0 }} />
                   </MenuItem>
                   )
@@ -536,9 +540,9 @@ console.log(categoryEdit);
           </Grid>
           <Grid item xs={5}>
             <TextField
-              required
+           
               name="name"
-              label="Name"
+              InputProps={{ startAdornment: <InputAdornment position="start">Name</InputAdornment> }}
               onChange={handleChangeEdit}
               fullWidth
               variant="outlined"
@@ -554,7 +558,7 @@ console.log(categoryEdit);
           label="Type"
           onChange={handleChangeEdit}
           helperText="Please select your currency"
-          value={editForm.type}
+          value={editForm.type + ''}
         >
           {currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
