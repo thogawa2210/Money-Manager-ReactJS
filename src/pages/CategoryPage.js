@@ -415,7 +415,7 @@ console.log(categoryEdit);
 
       {/* Dialog create category/>*/}
       <Dialog
-        TransitionComponent={TransitionEdit}
+        TransitionComponent={Transition}
         fullWidth={true}
         maxWidth="md"
         keepMounted
