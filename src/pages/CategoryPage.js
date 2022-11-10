@@ -13,17 +13,13 @@ import {
   DialogTitle,
   FormControl,
   Grid,
-  IconButton,
   InputAdornment,
   InputLabel,
-  ListSubheader,
   MenuItem,
   Select,
   Slide,
   Stack,
   Tab,
-  TableFooter,
-  TablePagination,
   Tabs,
   TextField,
   Typography,
@@ -33,17 +29,14 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import { changeFlag } from 'src/features/flagSlice';
 import { useDispatch, useSelector } from 'react-redux';
-
 import PropTypes from 'prop-types';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import mockExpense from 'src/_mock/categoryExpense';
-import mockIncome from 'src/_mock/categoryIncome';
+import { TabContext, TabList } from '@mui/lab';
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -89,22 +82,44 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
 function a11yProps(index) {
   return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
   };
 }
 
+function TabPanelDetail(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 export default function ProductsPage() {
   // Tab detail 
-  const [value, setValue] = useState(0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+
   // Done
 
-
+  const [openCategory, setOpenCategory] = useState(false);
   const idUser = JSON.parse(localStorage.getItem('user')).user_id;
   const flag = useSelector((state) => state.flag);
   const dispatch = useDispatch();
@@ -113,7 +128,8 @@ export default function ProductsPage() {
   const [category, setCategory] = useState({
     name: '',
     type: '',
-    icon: ''
+    icon: '',
+    note: ''
   });
   const [openAddForm, setOpenAddForm] = useState(false);
   // Create
@@ -136,9 +152,11 @@ export default function ProductsPage() {
       icon: category.icon,
       name: category.name,
       type: category.type,
+      note: category.note,
       user_id: idUser,
     };
-    if (category.name === '' || category.type === '') {
+    console.log(data);
+    if (category.name === '' || category.type === '' || category.icon === '') {
       setOpenCreateCategory(false);
       Swal.fire({
         icon: 'error',
@@ -160,7 +178,8 @@ export default function ProductsPage() {
             ...category,
             icon: null,
             name: '',
-            type: null
+            type: null,
+            note: null
           }),
           setOpenCreateCategory(false),
           dispatch(changeFlag(1)),
@@ -178,18 +197,47 @@ export default function ProductsPage() {
           icon: '',
           name: '',
           type: '',
+          note: ''
         });
       }
     }
   };
 
+
+
+  const closeCategory = () => {
+    setOpenCategory(false);
+  };
+
+  const handleChooseCategory = (icon) => {
+    setEditForm({ ...editForm, icon: icon })
+    setCategory({ ...category, icon: icon });
+    setOpenCategory(false);
+  };
+
+  const handleClickOpenTabCategory = () => {
+    setOpenCategory(true);
+  };
   // Table detail category
+
+  const [value, setValue] = useState(0);
+
+  const handleChangeDetail = (event, newValue) => {
+    setValue(newValue);
+  };
+
   const getWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
     return await axios.get(` http://localhost:3001/category/get-category-byuser/${userId.user_id}`, idUser);
   };
-
   useEffect(() => {
+    setCategory({
+      ...category,
+      icon: '',
+      name: '',
+      type: null,
+      note: ''
+    });
     getWallet()
       .then((res) => setCategories(res.data.categoryOfUser))
       .catch((error) => console.log(error.message));
@@ -253,6 +301,7 @@ export default function ProductsPage() {
     icon: editForm.icon,
     name: editForm.name,
     type: editForm.type,
+    note: editForm.note,
   };
 
   const handleSubmitCateEdit = async () => {
@@ -291,7 +340,8 @@ export default function ProductsPage() {
                 ...editForm,
                 icon: '',
                 name: '',
-                type: ''
+                type: '',
+                note: ''
               })
             })
             .catch(err => console.log(err))
@@ -328,29 +378,25 @@ export default function ProductsPage() {
               <Grid>
                 <Card>
                   <CardContent sx={{ pb: 0 }}>
-                    {/* Table */}
-                    <Box
-                      sx={{ flexGrow: 10, bgcolor: 'background.paper', display: 'flex', height: 400 }}
-                    >
-                      <Tabs
-                        orientation="vertical"
-                        variant="scrollable"
-                        value={value}
-                        onChange={handleChange}
-                        aria-label="Vertical tabs example"
-                        sx={{ borderRight: 1, borderColor: 'divider' }}
-                      >
-                        <Tab label="InCome" {...a11yProps(0)} />
-                        <Tab label="Expense" {...a11yProps(1)} />
 
-                      </Tabs>
+
+
+                    {/* Table */}
+                    <Box sx={{ width: '100%' }}>
+                      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs value={value} onChange={handleChangeDetail} aria-label="basic tabs example">
+                          <Tab label="In Come" {...a11yProps(0)} />
+                          <Tab label="Expense" {...a11yProps(1)} />
+
+                        </Tabs>
+                      </Box>
                       <TabPanel value={value} index={0}>
                         <Table sx={{ minWidth: 200 }} size="small" aria-label="a dense table">
                           <TableHead>
                             <TableRow>
                               <TableCell align="center">Icon</TableCell>
                               <TableCell align="center">Name Category</TableCell>
-                              <TableCell align="center">Type&nbsp;</TableCell>
+                              <TableCell align="center">Note&nbsp;</TableCell>
                               <TableCell align="center">Action</TableCell>
                             </TableRow>
                           </TableHead>
@@ -364,7 +410,7 @@ export default function ProductsPage() {
                                   >
                                     <TableCell align="center"><Avatar src={item.icon} ></Avatar></TableCell>
                                     <TableCell align="center"><strong>{item.name}</strong></TableCell>
-                                    <TableCell align="center">{item.type}</TableCell>
+                                    <TableCell align="center">{item.note}</TableCell>
                                     <TableCell align="center">
                                       <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
                                       <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
@@ -381,7 +427,8 @@ export default function ProductsPage() {
                             <TableRow>
                               <TableCell align="center">Icon</TableCell>
                               <TableCell align="center">Name Category</TableCell>
-                              <TableCell align="center">Type&nbsp;</TableCell>
+
+                              <TableCell align="center">Note&nbsp;</TableCell>
                               <TableCell align="center">Action</TableCell>
                             </TableRow>
                           </TableHead>
@@ -394,7 +441,7 @@ export default function ProductsPage() {
                                   >
                                     <TableCell align="center"><Avatar src={item.icon} ></Avatar></TableCell>
                                     <TableCell align="center"><strong>{item.name}</strong></TableCell>
-                                    <TableCell align="center">{item.type}</TableCell>
+                                    <TableCell align="center">{item.note}</TableCell>
                                     <TableCell align="center">
                                       <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
                                       <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
@@ -405,8 +452,9 @@ export default function ProductsPage() {
                           </TableBody>
                         </Table>
                       </TabPanel>
+
                     </Box>
-                    {/* Done Table */}
+
                   </CardContent>
                 </Card>
               </Grid>
@@ -441,6 +489,7 @@ export default function ProductsPage() {
                     name="type"
                     onChange={handleChangeCreate}
                     sx={{ height: 55 }}
+                    value={category.type}
                   >
                     <MenuItem value={`expense`}>Expense</MenuItem>
                     <MenuItem value={`income`}>Income</MenuItem>
@@ -458,7 +507,16 @@ export default function ProductsPage() {
                 value={category.name}
               />
             </Grid>
-
+            <Grid item xs={5}>
+              <TextField
+                name="note"
+                onChange={handleChangeCreate}
+                fullWidth={true}
+                label="Note"
+                variant="outlined"
+                value={category.note}
+              />
+            </Grid>
 
             {/* Select icon */}
             <Grid item xs={2}>
@@ -472,23 +530,16 @@ export default function ProductsPage() {
                     name="icon"
                     onChange={handleChangeCreate}
                     sx={{ height: 55 }}
+                    inputProps={{ readOnly: true }}
+                    onClick={handleClickOpenTabCategory}
+                    value={category.icon + ''}
                   >
-                    {category.type === "expense" ? mockExpense.map((item) => {
-                      return (
-                        <MenuItem value={item.icon}>
-                          <Avatar src={item.icon} sx={{ mr: 0 }} />
-                        </MenuItem>
-                      )
-                    }
-
-                    ) : mockIncome.map((item) => {
-                      return (
-                        <MenuItem value={item.icon}>
-                          <Avatar src={item.icon} sx={{ mr: 0 }} />
-                        </MenuItem>
-                      )
-
-                    })}
+                    {mockExpense.map((item) => (
+                      <MenuItem value={item.icon}>
+                        <Avatar src={item.icon} sx={{ mr: 0 }} />
+                      </MenuItem>
+                    )
+                    )}
 
                   </Select>
                 </FormControl>
@@ -510,6 +561,7 @@ export default function ProductsPage() {
         keepMounted
         open={openEditCategory}
         onClose={() => handleCloseEdit(false)}
+
       >
         <DialogTitle>{'Edit category'}</DialogTitle>
         <DialogContentText></DialogContentText>
@@ -553,22 +605,21 @@ export default function ProductsPage() {
               <Box sx={{ minWidth: 120 }}>
                 <FormControl sx={{ width: 100 }}>
                   <InputLabel>Icon</InputLabel>
-                  <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}
-                    value={editForm.icon + ''}>
-                    {editForm.type === "expense" ? mockExpense.map((item, index) => {
-                      return (
-                        <MenuItem value={item.icon} key={index}>
-                          <Avatar src={item.icon} sx={{ mr: 0 }} />
-                        </MenuItem>
-                      )
-                    }
-                    ) : mockIncome.map((item) => {
-                      return (
-                        <MenuItem value={item.icon} key={item.icon}>
-                          <Avatar src={item.icon} sx={{ mr: 0 }} />
-                        </MenuItem>
-                      )
-                    })}
+                  <Select name="icon"
+                    onChange={handleChangeEdit}
+                    sx={{ height: 55 }}
+                    inputProps={{ readOnly: true }}
+                    onClick={handleClickOpenTabCategory}
+                    value={editForm.icon + ''}
+                  >
+                    {mockExpense.map((item, index) => (
+                      <MenuItem value={item.icon} key={index}>
+                        <Avatar src={item.icon} sx={{ mr: 0 }} />
+                      </MenuItem>
+                    )
+                    )}
+
+
                   </Select>
                 </FormControl>
               </Box>
@@ -585,6 +636,28 @@ export default function ProductsPage() {
         </DialogActions>
       </Dialog>
 
+      {/* Dialog Icon */}
+      <Dialog open={openCategory} onClose={closeCategory}>
+        <DialogTitle>Choose Icon</DialogTitle>
+        <DialogContent>
+          <Box sx={{ width: '400px', typography: 'body1', height: '400px' }}>
+            <Grid container spacing={1}>
+              {mockExpense.map((item) => (
+                <Grid item xs={3}>
+                  <MenuItem onClick={() => handleChooseCategory(item.icon)}>
+                    <Avatar src={item.icon + ''} />
+                  </MenuItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeCategory} variant="outlined" color="error">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
