@@ -418,7 +418,7 @@ export default function ProductsPage() {
 
       {/* Dialog create category/>*/}
       <Dialog
-        TransitionComponent={TransitionEdit}
+        TransitionComponent={Transition}
         fullWidth={true}
         maxWidth="md"
         keepMounted
