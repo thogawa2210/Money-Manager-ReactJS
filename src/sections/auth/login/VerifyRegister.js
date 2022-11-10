@@ -8,8 +8,6 @@ function VerifyRegister() {
 
   const userId = useParams();
 
-  console.log(userId.id);
-
   const sendIdApi = async (userId) => {
     const results = await axios.request({
       url: `http://localhost:3001/auth/verify/${userId.id}`,
@@ -43,7 +41,13 @@ function VerifyRegister() {
   useEffect(() => {
     sendIdApi(userId)
       .then((res) => verifyApi(res.data))
-      .catch((err) => console.log(err.message));
+      .catch((err) =>  Swal.fire({
+        icon: 'error',
+        title: 'Something Wrong!',
+        text:' Something wrong! Please try again!',
+        showConfirmButton: false,
+        timer: 2000
+      }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
