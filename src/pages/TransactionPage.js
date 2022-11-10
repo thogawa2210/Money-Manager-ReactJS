@@ -91,8 +91,11 @@ export default function TransactionPage() {
   };
 
   const handleChooseCategory = (id) => {
-    setTransaction({ ...transaction, category_id: id });
-    setEditTransaction({ ...transaction, category_id: id });
+    if(openAddForm){
+      setTransaction({ ...transaction, category_id: id });
+    }else{
+      setEditTransaction({ ...editTransaction, category_id: id });
+    }
     setOpenCategory(false);
   };
 

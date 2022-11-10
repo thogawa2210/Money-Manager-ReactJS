@@ -529,8 +529,8 @@ export default function ProductsPage() {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* Update Category */}
 
+      {/* Update Category */}
       <Dialog
         TransitionComponent={TransitionEdit}
         fullWidth
