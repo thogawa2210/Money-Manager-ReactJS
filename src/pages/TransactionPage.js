@@ -340,8 +340,8 @@ export default function TransactionPage() {
       <Grid container spacing={3}>
         <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-            <Typography variant="h3">Transaction</Typography>
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
+            <Typography variant="h3" sx={{ml: '20px'}}>Transaction</Typography>
+            <Button  sx={{mr: '20px'}} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
               New Transaction
             </Button>
           </Stack>
