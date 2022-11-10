@@ -78,7 +78,13 @@ export default function LoginForm() {
     } else {
       callApi()
         .then((res) => handleApi(res.data))
-        .catch((err) => console.log(err.message));
+        .catch((err) =>  Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Somthing wrong! Please try again!',
+          showConfirmButton: false,
+          timer: 1500,
+        }));
     }
   };
 
