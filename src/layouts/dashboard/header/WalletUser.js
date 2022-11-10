@@ -4,6 +4,7 @@ import {Box, MenuItem, Stack, IconButton, Popover, Typography, Divider} from '@m
 import axios from "axios";
 import { useSelector, useDispatch} from "react-redux";
 import { addTotal } from '../../../features/totalSlice';
+import Swal from "sweetalert2";
 
 
 
@@ -51,9 +52,23 @@ export default function WalletUser() {
 
     useEffect(() =>{
         getAllWallet(userId).then(res => setState({wallets:res.data.wallet})
-        ).catch(error => console.log(error.message))
+        ).catch(error =>
+            Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text:' Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000
+    })
+    )
         toTalMoney(userId).then(res => setTotal(res.data.total))
-            .catch(error => console.log(error.message))
+            .catch(error =>  Swal.fire({
+                icon: 'error',
+                title: 'Something Wrong!',
+                text:' Something wrong! Please try again!',
+                showConfirmButton: false,
+                timer: 2000
+            }))
         dispatch(addTotal(total))
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[flag])
