@@ -203,7 +203,7 @@ export default function ProductsPage() {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#54D62C',
-      cancelButtonColor: '#FF4842’',
+      cancelButtonColor: '#FF4842'
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
