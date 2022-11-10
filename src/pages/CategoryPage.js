@@ -1,29 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { forwardRef, useEffect, useState } from 'react';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  FormControl,
-  Grid,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  Slide,
-  Stack,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from '@mui/material';
+import {Accordion,AccordionDetails,Avatar,AccordionSummary,Box,Button,Card,CardContent,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,FormControl,Grid,InputAdornment,InputLabel,ListItemText,MenuItem,Paper,Select,Slide,Stack,Tab,TableContainer,Tabs,TextField,Typography} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Iconify from 'src/components/iconify';
 import Swal from 'sweetalert2';
 import axios from 'axios';
@@ -36,15 +14,13 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import mockExpense from 'src/_mock/categoryExpense';
-import { TabContext, TabList } from '@mui/lab';
+
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
 const TransitionEdit = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
 const currencies = [
   {
     value: 'expense',
@@ -56,7 +32,6 @@ const currencies = [
   },
 ];
 // Tab Detail
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -75,19 +50,16 @@ function TabPanel(props) {
     </div>
   );
 }
-
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
-
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
-
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -95,30 +67,7 @@ function a11yProps(index) {
   };
 }
 
-function TabPanelDetail(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
 export default function ProductsPage() {
-  // Tab detail 
-
-  // Done
-
   const [openCategory, setOpenCategory] = useState(false);
   const idUser = JSON.parse(localStorage.getItem('user')).user_id;
   const flag = useSelector((state) => state.flag);
@@ -145,7 +94,6 @@ export default function ProductsPage() {
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmitCreate = async () => {
     setOpenAddForm(false);
     let data = {
@@ -174,17 +122,18 @@ export default function ProductsPage() {
           showConfirmButton: false,
           timer: 1500
         }).then(
-          setCategory({
-            ...category,
-            icon: null,
-            name: '',
-            type: null,
-            note: null
-          }),
           setOpenCreateCategory(false),
           dispatch(changeFlag(1)),
         )
-          .catch((error) => console.log(error.message));
+          .catch((error) => console.log(error.message),
+          Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text: 'Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000
+            })
+            );
       } else {
         Swal.fire({
           icon: 'warning',
@@ -193,55 +142,39 @@ export default function ProductsPage() {
           timer: 1500
         })
         setOpenCreateCategory(false)
-        setCategory({
-          icon: '',
-          name: '',
-          type: '',
-          note: ''
-        });
+
       }
     }
   };
-
-
-
+useEffect(()=> {
+  setCategory({
+    ...category,
+    icon: '',
+    name: '',
+    type: '',
+    note: ''
+  });
+},[flag])
   const closeCategory = () => {
     setOpenCategory(false);
   };
-
   const handleChooseCategory = (icon) => {
     setEditForm({ ...editForm, icon: icon })
     setCategory({ ...category, icon: icon });
     setOpenCategory(false);
   };
-
   const handleClickOpenTabCategory = () => {
     setOpenCategory(true);
   };
   // Table detail category
-
+  const [expanded, setExpanded] = useState(false);
+  const handleChangeDetailTable = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   const [value, setValue] = useState(0);
-
   const handleChangeDetail = (event, newValue) => {
     setValue(newValue);
   };
-
-  const getWallet = async () => {
-    const userId = JSON.parse(localStorage.getItem('user'));
-    return await axios.get(` http://localhost:3001/category/get-category-byuser/${userId.user_id}`, idUser);
-  };
-  useEffect(() => {
-    setCategory({
-      ...category,
-      icon: '',
-      name: '',
-      type: null,
-      note: ''
-    });
-    getWallet()
-      .then((res) => setCategories(res.data.categoryOfUser))
-      .catch((error) => console.log(error.message));
-  }, [flag]);
 
   // Delete Category
   const handleDeleteCategory = (id) => {
@@ -251,7 +184,7 @@ export default function ProductsPage() {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#54D62C',
-      cancelButtonColor: '#FF4842’',
+      cancelButtonColor: '#FF4842',
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
@@ -265,8 +198,16 @@ export default function ProductsPage() {
               showConfirmButton: false,
               timer: 1500
             })
+            setExpanded(false)
           })
-          .catch(err => console.log(err))
+          .catch(err => console.log(err),
+          Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text: 'Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000
+            }))
       }
     });
   };
@@ -274,18 +215,13 @@ export default function ProductsPage() {
   //  Update Category
   //  Xu li lay form du lieu
   const [openEditCategory, setOpenEditCategory] = useState(false);
-
   const [editForm, setEditForm] = useState([]);
-
   const handleChangeEdit = async (e) => {
     setEditForm({
       ...editForm,
       [e.target.name]: e.target.value
     })
   }
-
-
-
   // Xử lý hàm trả về thông tin update
 
   const handleCloseEdit = () => {
@@ -336,15 +272,16 @@ export default function ProductsPage() {
                 showConfirmButton: false,
                 timer: 1500
               })
-              setEditForm({
-                ...editForm,
-                icon: '',
-                name: '',
-                type: '',
-                note: ''
-              })
+         
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log(err),
+            Swal.fire({
+              icon: 'error',
+              title: 'Something Wrong!',
+              text: 'Something wrong! Please try again!',
+              showConfirmButton: false,
+              timer: 2000
+              }))
 
         }
       });
@@ -387,72 +324,130 @@ export default function ProductsPage() {
                         <Tabs value={value} onChange={handleChangeDetail} aria-label="basic tabs example">
                           <Tab label="In Come" {...a11yProps(0)} />
                           <Tab label="Expense" {...a11yProps(1)} />
-
                         </Tabs>
                       </Box>
                       <TabPanel value={value} index={0}>
-                        <Table sx={{ minWidth: 200 }} size="small" aria-label="a dense table">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell align="center">Icon</TableCell>
-                              <TableCell align="center">Name Category</TableCell>
-                              <TableCell align="center">Note&nbsp;</TableCell>
-                              <TableCell align="center">Action</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-
+                        <Grid container spacing={0}>
+                          <Grid item xs />
+                          <Grid item xs={8} sx={{ padding: 0 }}>
                             {categories.map((item, index) => {
-                              if (item.type === "income")
-                                return (
-                                  <TableRow key={index}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                  >
-                                    <TableCell align="center"><Avatar src={item.icon} ></Avatar></TableCell>
-                                    <TableCell align="center"><strong>{item.name}</strong></TableCell>
-                                    <TableCell align="center">{item.note}</TableCell>
-                                    <TableCell align="center">
-                                      <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
-                                      <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
-                                    </TableCell>
-                                  </TableRow>
-                                )
-                            })}
-                          </TableBody>
-                        </Table>
+                            if  (item.type === 'income' ) return (
+                              <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetailTable(`panel${index + 1}`)}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
+                                  <Typography sx={{ width: '100%', flexShrink: 0, display: 'flex' }}>
+                                    <Avatar src={item.icon} sx={{ mr: 0 }} />
+                                    <ListItemText
+                                      primary={item.name}
+                                      sx={{ pr: '100%', ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}
+                                    />
+                                  </Typography>
+
+                                  <Typography sx={{ ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}>
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Typography>
+                                    <TableContainer component={Paper} >
+                                    <Table  size="small" aria-label="a dense table" sx={{ width: '100%' }}>
+                                      <TableHead>
+                                        <TableRow>
+                                          <TableCell>Name Category</TableCell>
+                                          <TableCell align="center">Note</TableCell>
+                                          <TableCell align="center">Action</TableCell>
+                                        </TableRow>
+                                      </TableHead>
+                                      <TableBody key={index}>
+                                        <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                          <TableCell component="th" scope="row" >
+                                         <strong>{item.name}</strong>   
+                                          </TableCell>
+                                          <TableCell component="th" scope="row" align="center">
+                                          <strong>{item.note}</strong>   
+                                           </TableCell>
+                                
+                                          <TableCell align="center">
+                                            <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>
+                                              Edit
+                                            </Button>
+                                            <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>
+                                              Delete
+                                            </Button>
+                                          </TableCell>
+                                        </TableRow>
+                                      </TableBody>
+                                    </Table>
+                                  </TableContainer>
+                                    {/* done Table */}
+                                  </Typography>
+                                </AccordionDetails>
+                              </Accordion>
+                              ) })}
+                          </Grid>
+                          <Grid item xs />
+                        </Grid>
+                        
+
                       </TabPanel>
                       <TabPanel value={value} index={1}>
-                        <Table sx={{ minWidth: 'auto' }} size="small" aria-label="a dense table">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell align="center">Icon</TableCell>
-                              <TableCell align="center">Name Category</TableCell>
+                      <Grid container spacing={3}>
+                      <Grid item xs />
+                      <Grid item xs={8} sx={{ padding: 0 }}>
+                        {categories.map((item, index) => {
+                        if  (item.type === 'expense' ) return (
+                          <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetailTable(`panel${index + 1}`)}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
+                              <Typography sx={{ width: '80%', flexShrink: 0, display: 'flex' }}>
+                                <Avatar src={item.icon} sx={{ mr: 0 }} />
+                                <ListItemText
+                                  primary={item.name}
+                                  sx={{ pr: 22, ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}
+                                />
+                              </Typography>
 
-                              <TableCell align="center">Note&nbsp;</TableCell>
-                              <TableCell align="center">Action</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {categories.map((item, index) => {
-                              if (item.type === "expense")
-                                return (
-                                  <TableRow key={index}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                  >
-                                    <TableCell align="center"><Avatar src={item.icon} ></Avatar></TableCell>
-                                    <TableCell align="center"><strong>{item.name}</strong></TableCell>
-                                    <TableCell align="center">{item.note}</TableCell>
-                                    <TableCell align="center">
-                                      <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
-                                      <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
-                                    </TableCell>
-                                  </TableRow>
-                                )
-                            })}
-                          </TableBody>
-                        </Table>
+                              <Typography sx={{ ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}>
+                              </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <Typography>
+                                <TableContainer component={Paper}>
+                                <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell>Name Category</TableCell>
+                                      <TableCell align="center">Note</TableCell>
+                                      <TableCell align="center">Action</TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody key={index}>
+                                    <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                      <TableCell component="th" scope="row">
+                                     <strong>{item.name}</strong>   
+                                      </TableCell>
+                                      <TableCell component="td" scope="row"  align="center">
+                                      {item.note}  
+                                       </TableCell>
+                                      <TableCell align="center">
+                                        <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>
+                                          Edit
+                                        </Button>
+                                        <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>
+                                          Delete
+                                        </Button>
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                                {/* done Table */}
+                              </Typography>
+                            </AccordionDetails>
+                          </Accordion>
+                          ) })}
+                      </Grid>
+                      <Grid item xs />
+                    </Grid>
+                      
                       </TabPanel>
-
                     </Box>
 
                   </CardContent>
@@ -521,7 +516,7 @@ export default function ProductsPage() {
             {/* Select icon */}
             <Grid item xs={2}>
               <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 100 }}>
+                <FormControl sx={{ width: 341}}>
                   <InputLabel id="demo-simple-select-label">Icon</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
@@ -591,7 +586,6 @@ export default function ProductsPage() {
 
             <Grid item xs={5}>
               <TextField
-
                 name="name"
                 InputProps={{ startAdornment: <InputAdornment position="start">Name</InputAdornment> }}
                 onChange={handleChangeEdit}
@@ -600,10 +594,22 @@ export default function ProductsPage() {
                 value={editForm.name}
               />
             </Grid>
+
+            <Grid item xs={5}>
+            <TextField
+              name="note"
+              InputProps={{ startAdornment: <InputAdornment position="start">Note</InputAdornment> }}
+              onChange={handleChangeEdit}
+              fullWidth
+              variant="outlined"
+              value={editForm.note}
+            />
+          </Grid>
+
             <Grid item xs={2}>
               {/* Select icon */}
               <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 100 }}>
+                <FormControl sx={{ width: 341 }}>
                   <InputLabel>Icon</InputLabel>
                   <Select name="icon"
                     onChange={handleChangeEdit}

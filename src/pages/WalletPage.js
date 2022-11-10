@@ -299,7 +299,7 @@ export default function WalletPage() {
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
+        <DialogActions>p
           <Button variant="outlined" color="error" onClick={onCancelEdit}>
             Cancel
           </Button>
