@@ -187,9 +187,20 @@ export default function TransactionPage() {
 
   const handleClickEditForm = (id) => {
     const editTransaction = listTransaction.filter((transaction) => transaction._id === id);
-    setValue(dayjs(editTransaction[0].date));
-    setEditTransaction(editTransaction[0]);
-    setOpenEditForm(true);
+
+    if (editTransaction[0].category_name === 'Add Wallet') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You can not edit Add Wallet Transaction!',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+    } else {
+      setOpenEditForm(true);
+      setValue(dayjs(editTransaction[0].date));
+      setEditTransaction(editTransaction[0]);
+    }
   };
 
   const handleCloseEditForm = () => {
@@ -270,7 +281,7 @@ export default function TransactionPage() {
               category_id: '',
               amount: 0,
               note: '',
-              date: dayjs(value).format('MM/DD/YYYY'),
+              date: dayjs().format('MM/DD/YYYY'),
             });
             Swal.fire({
               icon: 'success',
@@ -295,39 +306,49 @@ export default function TransactionPage() {
   };
 
   const handleEdit = async () => {
-    if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
-      setOpenEditForm(false);
+    if(editTransaction.category_name === 'Add Wallet') {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Please fill all the required fields',
+        text: 'You can not edit Add Wallet Transaction!',
         showConfirmButton: false,
-        timer: 1500,
-      });
-    } else {
-      await axios
-        .put(`http://localhost:3001/transaction/update-transaction/${editTransaction._id}`, editTransaction)
-        .then((res) => {
-          setOpenEditForm(false);
-          if (res.status === 200) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Edit transaction successfully!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            dispatch(changeFlag(1));
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Something went wrong!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          }
-        })
-        .catch((err) => console.log(err));
+        timer: 2000,
+      })
+    }else{
+      if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
+        setOpenEditForm(false);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Please fill all the required fields',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        await axios
+            .put(`http://localhost:3001/transaction/update-transaction/${editTransaction._id}`, editTransaction)
+            .then((res) => {
+              setOpenEditForm(false);
+              if (res.status === 200) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Edit transaction successfully!',
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+                dispatch(changeFlag(1));
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
+      }
     }
   };
 

@@ -138,7 +138,7 @@ export default function ProductsPage() {
       type: category.type,
       user_id: idUser,
     };
-    if (category.name === '' || category.type === '' ) {
+    if (category.name === '' || category.type === '') {
       setOpenCreateCategory(false);
       Swal.fire({
         icon: 'error',
@@ -158,14 +158,14 @@ export default function ProductsPage() {
         }).then(
           setCategory({
             ...category,
-            icon : null,
+            icon: null,
             name: '',
-            type : null
+            type: null
           }),
           setOpenCreateCategory(false),
           dispatch(changeFlag(1)),
         )
-        .catch((error) => console.log(error.message));
+          .catch((error) => console.log(error.message));
       } else {
         Swal.fire({
           icon: 'warning',
@@ -203,7 +203,7 @@ export default function ProductsPage() {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#54D62C',
-      cancelButtonColor: '#FF4842',
+      cancelButtonColor: '#FF4842'
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
@@ -226,18 +226,16 @@ export default function ProductsPage() {
   //  Update Category
   //  Xu li lay form du lieu
   const [openEditCategory, setOpenEditCategory] = useState(false);
-  const [categoryEdit, setCategorytEdit] = useState({
-    icon: '',
-  });
+
   const [editForm, setEditForm] = useState([]);
 
   const handleChangeEdit = async (e) => {
-    setCategorytEdit({
-      ...categoryEdit,
-      [e.target.name] : e.target.value
+    setEditForm({
+      ...editForm,
+      [e.target.name]: e.target.value
     })
   }
-console.log(categoryEdit);
+
 
 
   // Xử lý hàm trả về thông tin update
@@ -246,15 +244,15 @@ console.log(categoryEdit);
     setOpenEditCategory(false);
   };
   const handleClickOpenCategory = async (id) => {
-    const categoryEditForm = categories.filter((cate) => cate._id === id );
+    const categoryEditForm = categories.filter((cate) => cate._id === id);
     setEditForm(categoryEditForm[0]);
-      setOpenEditCategory(true);
+    setOpenEditCategory(true);
   };
 
   const data = {
-    icon: categoryEdit.icon,
-    name: categoryEdit.name,
-    type: categoryEdit.type,
+    icon: editForm.icon,
+    name: editForm.name,
+    type: editForm.type,
   };
 
   const handleSubmitCateEdit = async () => {
@@ -289,16 +287,21 @@ console.log(categoryEdit);
                 showConfirmButton: false,
                 timer: 1500
               })
-    
+              setEditForm({
+                ...editForm,
+                icon: '',
+                name: '',
+                type: ''
+              })
             })
             .catch(err => console.log(err))
-   
+
         }
       });
     }
   };
 
- 
+
   return (
     <>
       <Helmet>
@@ -439,7 +442,7 @@ console.log(categoryEdit);
 
       {/* Dialog create category/>*/}
       <Dialog
-        TransitionComponent={TransitionEdit}
+        TransitionComponent={Transition}
         fullWidth={true}
         maxWidth="md"
         keepMounted
@@ -450,36 +453,21 @@ console.log(categoryEdit);
         <DialogContentText></DialogContentText>
         <DialogContent>
           <Grid container spacing={3}>
-            {/* Select icon */}
-            <Grid item xs={2}>
+            {/*  */}
+            <Grid item xs={5}>
               <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 100 }}>
-                  <InputLabel id="demo-simple-select-label">Icon</InputLabel>
+                <FormControl sx={{ width: 340 }}>
+                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="icon"
-                    name="icon"
+                    label="type"
+                    name="type"
                     onChange={handleChangeCreate}
                     sx={{ height: 55 }}
                   >
-               {category.type === "expense"? mockExpense.map((item)=> {
-                return(
-                  <MenuItem value={item.icon }>
-                  <Avatar src={item.icon } sx={{ mr: 0 }} />
-                </MenuItem>
-                )
-               }
-               
-               ) : mockIncome.map((item)=> {
-                return (
-                  <MenuItem value={item.icon}>
-                  <Avatar src={item.icon} sx={{ mr: 0 }} />
-                </MenuItem>
-                )
-               
-               }) } 
-               
+                    <MenuItem value={`expense`}>Expense</MenuItem>
+                    <MenuItem value={`income`}>Income</MenuItem>
                   </Select>
                 </FormControl>
               </Box>
@@ -494,21 +482,38 @@ console.log(categoryEdit);
                 value={category.name}
               />
             </Grid>
-            {/*  */}
+
+
+            {/* Select icon */}
             <Grid item xs={2}>
               <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 300 }}>
-                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                <FormControl sx={{ width: 100 }}>
+                  <InputLabel id="demo-simple-select-label">Icon</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="type"
-                    name="type"
+                    label="icon"
+                    name="icon"
                     onChange={handleChangeCreate}
                     sx={{ height: 55 }}
                   >
-                    <MenuItem value={`expense`}>Expense</MenuItem>
-                    <MenuItem value={`income`}>Income</MenuItem>
+                    {category.type === "expense" ? mockExpense.map((item) => {
+                      return (
+                        <MenuItem value={item.icon}>
+                          <Avatar src={item.icon} sx={{ mr: 0 }} />
+                        </MenuItem>
+                      )
+                    }
+
+                    ) : mockIncome.map((item) => {
+                      return (
+                        <MenuItem value={item.icon}>
+                          <Avatar src={item.icon} sx={{ mr: 0 }} />
+                        </MenuItem>
+                      )
+
+                    })}
+
                   </Select>
                 </FormControl>
               </Box>
@@ -525,84 +530,89 @@ console.log(categoryEdit);
         </DialogActions>
       </Dialog>
       {/* Update Category */}
-      
+
       <Dialog
-      TransitionComponent={TransitionEdit}
-      fullWidth
-      maxWidth="md"
-      keepMounted
-      open={openEditCategory}
-      onClose={() => handleCloseEdit(false)}
-    >
-      <DialogTitle>{'Edit category'}</DialogTitle>
-      <DialogContentText></DialogContentText>
-      <DialogContent>
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            {/* Select icon */}
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl sx={{ width: 100 }}>
-                <InputLabel>Icon</InputLabel>
-                <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}  value={editForm.icon} >
-                {categoryEdit.type  === "expense"? mockExpense.map((item,index)=> {
-                  return(
-                    <MenuItem value={item.icon} key={item.icon}>
-                    <Avatar src={item.icon } sx={{ mr: 0 }} />
+        TransitionComponent={TransitionEdit}
+        fullWidth
+        maxWidth="md"
+        keepMounted
+        open={openEditCategory}
+        onClose={() => handleCloseEdit(false)}
+      >
+        <DialogTitle>{'Edit category'}</DialogTitle>
+        <DialogContentText></DialogContentText>
+        <DialogContent>
+          <Grid container spacing={2}>
+
+            <Grid item xs={5} >
+
+              <TextField
+                sx={{ minWidth: 340 }}
+                id="outlined-select-currency"
+                select
+                name='type'
+                label="Type"
+                onChange={handleChangeEdit}
+                helperText="Please select your currency"
+                value={editForm.type + ''}
+              >
+                {currencies.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
                   </MenuItem>
-                  )
-                 }
-                 ) : mockIncome.map((item)=> {
-                  return (
-                    <MenuItem value={item.icon} key={item.icon}>
-                    <Avatar src={item.icon} sx={{ mr: 0 }} />
-                  </MenuItem>
-                  )
-                 }) } 
-                </Select>
-              </FormControl>
-            </Box>
+                ))}
+              </TextField>
+            </Grid>
+
+
+            <Grid item xs={5}>
+              <TextField
+
+                name="name"
+                InputProps={{ startAdornment: <InputAdornment position="start">Name</InputAdornment> }}
+                onChange={handleChangeEdit}
+                fullWidth
+                variant="outlined"
+                value={editForm.name}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              {/* Select icon */}
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl sx={{ width: 100 }}>
+                  <InputLabel>Icon</InputLabel>
+                  <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}
+                    value={editForm.icon + ''}>
+                    {editForm.type === "expense" ? mockExpense.map((item, index) => {
+                      return (
+                        <MenuItem value={item.icon} key={index}>
+                          <Avatar src={item.icon} sx={{ mr: 0 }} />
+                        </MenuItem>
+                      )
+                    }
+                    ) : mockIncome.map((item) => {
+                      return (
+                        <MenuItem value={item.icon} key={item.icon}>
+                          <Avatar src={item.icon} sx={{ mr: 0 }} />
+                        </MenuItem>
+                      )
+                    })}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
           </Grid>
-          <Grid item xs={5}>
-            <TextField
-              required
-              name="name"
-              label="Name"
-              onChange={handleChangeEdit}
-              fullWidth
-              variant="outlined"
-              value={editForm.name}
-            />
-          </Grid>
-          <Grid item xs={5}>
-    
-          <TextField
-          id="outlined-select-currency"
-          select
-          name='type'
-          label="Type"
-          onChange={handleChangeEdit}
-          helperText="Please select your currency"
-          value={editForm.type}
-        >
-          {currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-          </Grid>
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Button variant="outlined" color="error" onClick={handleCloseEdit}>
-          Cancel
-        </Button>
-        <Button variant="outlined" color="success" onClick={() => handleSubmitCateEdit(editForm._id)}>
-          Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
-      
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" color="error" onClick={handleCloseEdit}>
+            Cancel
+          </Button>
+          <Button variant="outlined" color="success" onClick={() => handleSubmitCateEdit(editForm._id)}>
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </>
   );
 }
