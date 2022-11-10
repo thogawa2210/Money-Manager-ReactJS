@@ -281,7 +281,7 @@ export default function TransactionPage() {
               category_id: '',
               amount: 0,
               note: '',
-              date: dayjs(value).format('MM/DD/YYYY'),
+              date: dayjs().format('MM/DD/YYYY'),
             });
             Swal.fire({
               icon: 'success',
