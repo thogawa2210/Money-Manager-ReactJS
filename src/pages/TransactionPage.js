@@ -91,8 +91,11 @@ export default function TransactionPage() {
   };
 
   const handleChooseCategory = (id) => {
-    setTransaction({ ...transaction, category_id: id });
-    setEditTransaction({ ...transaction, category_id: id });
+    if(openAddForm){
+      setTransaction({ ...transaction, category_id: id });
+    }else{
+      setEditTransaction({ ...editTransaction, category_id: id });
+    }
     setOpenCategory(false);
   };
 
@@ -117,7 +120,12 @@ export default function TransactionPage() {
     await axios
       .get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
       .then((res) => setListWallet(res.data.wallet))
-      .catch((err) => console.log(err));
+      .catch((err) => Swal.fire({
+        icon: 'error',
+        title: 'Something Wrong!',
+        text: 'Something wrong! Please try again!',
+        showConfirmButton: false,
+        timer: 2000}));
   };
 
   useEffect(() => {
@@ -133,7 +141,12 @@ export default function TransactionPage() {
           outflow: res.data.data.outflow,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => Swal.fire({
+        icon: 'error',
+        title: 'Something Wrong!',
+        text: 'Something wrong! Please try again!',
+        showConfirmButton: false,
+        timer: 2000}));
   }, [flag]);
 
   useEffect(() => {
@@ -299,7 +312,12 @@ export default function TransactionPage() {
             });
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          showConfirmButton: false,
+          timer: 2000}));
       setOpenAddForm(false);
       dispatch(changeFlag(1));
     }
@@ -347,7 +365,12 @@ export default function TransactionPage() {
                 });
               }
             })
-            .catch((err) => console.log(err));
+            .catch((err) => Swal.fire({
+              icon: 'error',
+              title: 'Something Wrong!',
+              text: 'Something wrong! Please try again!',
+              showConfirmButton: false,
+              timer: 2000}));
       }
     }
   };
@@ -361,8 +384,8 @@ export default function TransactionPage() {
       <Grid container spacing={3}>
         <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-            <Typography variant="h3">Transaction</Typography>
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
+            <Typography variant="h3" sx={{ml: '20px'}}>Transaction</Typography>
+            <Button  sx={{mr: '20px'}} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
               New Transaction
             </Button>
           </Stack>

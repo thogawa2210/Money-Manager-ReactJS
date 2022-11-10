@@ -97,7 +97,7 @@ function a11yProps(index) {
 }
 
 export default function ProductsPage() {
-  // Tab detail 
+  // Tab detail
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -145,7 +145,7 @@ export default function ProductsPage() {
         title: 'Oops...',
         text: 'Please fill all the required fields',
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
     } else {
       const result = await axios.post('http://localhost:3001/category/add-category', data);
@@ -171,9 +171,9 @@ export default function ProductsPage() {
           icon: 'warning',
           title: 'Your name of category already exist',
           showConfirmButton: false,
-          timer: 1500
-        })
-        setOpenCreateCategory(false)
+          timer: 1500,
+        });
+        setOpenCreateCategory(false);
         setCategory({
           icon: '',
           name: '',
@@ -184,13 +184,13 @@ export default function ProductsPage() {
   };
 
   // Table detail category
-  const getWallet = async () => {
+  const getCategories = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
     return await axios.get(` http://localhost:3001/category/get-category-byuser/${userId.user_id}`, idUser);
   };
 
   useEffect(() => {
-    getWallet()
+    getCategories()
       .then((res) => setCategories(res.data.categoryOfUser))
       .catch((error) => console.log(error.message));
   }, [flag]);
@@ -264,7 +264,7 @@ export default function ProductsPage() {
         title: 'Oops...',
         text: 'Please fill all the required fields',
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
     } else {
       Swal.fire({
@@ -329,9 +329,7 @@ export default function ProductsPage() {
                 <Card>
                   <CardContent sx={{ pb: 0 }}>
                     {/* Table */}
-                    <Box
-                      sx={{ flexGrow: 10, bgcolor: 'background.paper', display: 'flex', height: 400 }}
-                    >
+                    <Box sx={{ flexGrow: 10, bgcolor: 'background.paper', display: 'flex', height: 400 }}>
                       <Tabs
                         orientation="vertical"
                         variant="scrollable"
@@ -342,7 +340,6 @@ export default function ProductsPage() {
                       >
                         <Tab label="InCome" {...a11yProps(0)} />
                         <Tab label="Expense" {...a11yProps(1)} />
-
                       </Tabs>
                       <TabPanel value={value} index={0}>
                         <Table sx={{ minWidth: 200 }} size="small" aria-label="a dense table">
@@ -355,22 +352,35 @@ export default function ProductsPage() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-
                             {categories.map((item, index) => {
-                              if (item.type === "income")
+                              if (item.type === 'income')
                                 return (
-                                  <TableRow key={index}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                  >
-                                    <TableCell align="center"><Avatar src={item.icon} ></Avatar></TableCell>
-                                    <TableCell align="center"><strong>{item.name}</strong></TableCell>
+                                  <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                    <TableCell align="center">
+                                      <Avatar src={item.icon}></Avatar>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      <strong>{item.name}</strong>
+                                    </TableCell>
                                     <TableCell align="center">{item.type}</TableCell>
                                     <TableCell align="center">
-                                      <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
-                                      <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
+                                      <Button
+                                        variant="outlined"
+                                        color="success"
+                                        onClick={() => handleClickOpenCategory(item._id)}
+                                      >
+                                        Edit
+                                      </Button>
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        onClick={() => handleDeleteCategory(item._id)}
+                                      >
+                                        Delete
+                                      </Button>
                                     </TableCell>
                                   </TableRow>
-                                )
+                                );
                             })}
                           </TableBody>
                         </Table>
@@ -389,18 +399,32 @@ export default function ProductsPage() {
                             {categories.map((item, index) => {
                               if (item.type === "expense")
                                 return (
-                                  <TableRow key={index}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                  >
-                                    <TableCell align="center"><Avatar src={item.icon} ></Avatar></TableCell>
-                                    <TableCell align="center"><strong>{item.name}</strong></TableCell>
+                                  <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                    <TableCell align="center">
+                                      <Avatar src={item.icon}></Avatar>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      <strong>{item.name}</strong>
+                                    </TableCell>
                                     <TableCell align="center">{item.type}</TableCell>
                                     <TableCell align="center">
-                                      <Button variant="outlined" color="success" onClick={() => handleClickOpenCategory(item._id)}>Edit</Button>
-                                      <Button variant="outlined" color="error" onClick={() => handleDeleteCategory(item._id)}>Delete</Button>
+                                      <Button
+                                        variant="outlined"
+                                        color="success"
+                                        onClick={() => handleClickOpenCategory(item._id)}
+                                      >
+                                        Edit
+                                      </Button>
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        onClick={() => handleDeleteCategory(item._id)}
+                                      >
+                                        Delete
+                                      </Button>
                                     </TableCell>
                                   </TableRow>
-                                )
+                                );
                             })}
                           </TableBody>
                         </Table>
@@ -497,12 +521,16 @@ export default function ProductsPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" color="error" onClick={handleCloseCreate}>Cancel</Button>
-          <Button variant="outlined" color="success" onClick={handleSubmitCreate}>Submit</Button>
+          <Button variant="outlined" color="error" onClick={handleCloseCreate}>
+            Cancel
+          </Button>
+          <Button variant="outlined" color="success" onClick={handleSubmitCreate}>
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
-      {/* Update Category */}
 
+      {/* Update Category */}
       <Dialog
         TransitionComponent={TransitionEdit}
         fullWidth
