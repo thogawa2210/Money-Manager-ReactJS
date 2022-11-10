@@ -429,6 +429,37 @@ export default function ProductsPage() {
         <DialogContentText></DialogContentText>
         <DialogContent>
           <Grid container spacing={3}>
+            {/*  */}
+            <Grid item xs={5}>
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl sx={{ width: 340 }}>
+                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="type"
+                    name="type"
+                    onChange={handleChangeCreate}
+                    sx={{ height: 55 }}
+                  >
+                    <MenuItem value={`expense`}>Expense</MenuItem>
+                    <MenuItem value={`income`}>Income</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+            <Grid item xs={5}>
+              <TextField
+                name="name"
+                onChange={handleChangeCreate}
+                fullWidth={true}
+                label="Name Category"
+                variant="outlined"
+                value={category.name}
+              />
+            </Grid>
+
+
             {/* Select icon */}
             <Grid item xs={2}>
               <Box sx={{ minWidth: 120 }}>
@@ -463,35 +494,6 @@ export default function ProductsPage() {
                 </FormControl>
               </Box>
             </Grid>
-            <Grid item xs={5}>
-              <TextField
-                name="name"
-                onChange={handleChangeCreate}
-                fullWidth={true}
-                label="Name Category"
-                variant="outlined"
-                value={category.name}
-              />
-            </Grid>
-            {/*  */}
-            <Grid item xs={2}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 300 }}>
-                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="type"
-                    name="type"
-                    onChange={handleChangeCreate}
-                    sx={{ height: 55 }}
-                  >
-                    <MenuItem value={`expense`}>Expense</MenuItem>
-                    <MenuItem value={`income`}>Income</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -517,7 +519,7 @@ export default function ProductsPage() {
             <Grid item xs={5} >
 
               <TextField
-               sx={{ minWidth: 340 }}
+                sx={{ minWidth: 340 }}
                 id="outlined-select-currency"
                 select
                 name='type'
