@@ -287,7 +287,12 @@ export default function ProductsPage() {
                 showConfirmButton: false,
                 timer: 1500
               })
-    
+              setEditForm({
+                ...editForm,
+                icon : '',
+                name : '',
+                type : ''
+              })
             })
             .catch(err => console.log(err))
    
@@ -513,10 +518,11 @@ export default function ProductsPage() {
             <Box sx={{ minWidth: 120 }}>
               <FormControl sx={{ width: 100 }}>
                 <InputLabel>Icon</InputLabel>
-                <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}  value={editForm.icon} >
+                <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}  
+                value={editForm.icon + ''}>
                 {editForm.type  === "expense"? mockExpense.map((item,index)=> {
                   return(
-                    <MenuItem value={item.icon} key={item.icon}>
+                    <MenuItem value={item.icon} key={index}>
                     <Avatar src={item.icon } sx={{ mr: 0 }} />
                   </MenuItem>
                   )
@@ -534,9 +540,9 @@ export default function ProductsPage() {
           </Grid>
           <Grid item xs={5}>
             <TextField
-              required
+           
               name="name"
-              label="Name"
+              InputProps={{ startAdornment: <InputAdornment position="start">Name</InputAdornment> }}
               onChange={handleChangeEdit}
               fullWidth
               variant="outlined"
@@ -552,7 +558,7 @@ export default function ProductsPage() {
           label="Type"
           onChange={handleChangeEdit}
           helperText="Please select your currency"
-          value={editForm.type}
+          value={editForm.type + ''}
         >
           {currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
