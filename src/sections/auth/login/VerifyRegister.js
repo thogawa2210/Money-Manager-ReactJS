@@ -8,8 +8,6 @@ function VerifyRegister() {
 
   const userId = useParams();
 
-  console.log(userId.id);
-
   const sendIdApi = async (userId) => {
     const results = await axios.request({
       url: `http://localhost:3001/auth/verify/${userId.id}`,
@@ -27,23 +25,29 @@ function VerifyRegister() {
         icon: 'success',
         title: 'Verify Successfuly!',
         showConfirmButton: false,
-        timer: 2000,
+        timer: 1500,
       });
       navigate('/login');
     } else {
       Swal.fire({
-        icon: 'info',
+        icon: 'error',
         title: 'Oops...',
         text: 'Verify Error',
-        footer: '<a href="/login">Go to Login</a>',
       });
+      navigate('/signup');
     }
   };
 
   useEffect(() => {
     sendIdApi(userId)
       .then((res) => verifyApi(res.data))
-      .catch((err) => console.log(err.message));
+      .catch((err) =>  Swal.fire({
+        icon: 'error',
+        title: 'Something Wrong!',
+        text:' Something wrong! Please try again!',
+        showConfirmButton: false,
+        timer: 2000
+      }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

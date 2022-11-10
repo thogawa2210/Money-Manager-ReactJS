@@ -14,6 +14,10 @@ AppWebsiteVisits.propTypes = {
   chartLabels: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 export default function AppWebsiteVisits({ title, subheader, chartLabels, chartData, ...other }) {
   const chartOptions = useChart({
     plotOptions: { bar: { columnWidth: '16%' } },
@@ -26,7 +30,7 @@ export default function AppWebsiteVisits({ title, subheader, chartLabels, chartD
       y: {
         formatter: (y) => {
           if (typeof y !== 'undefined') {
-            return `${y.toFixed(0)} visits`;
+            return `${numberWithCommas(y.toFixed(0))} VNĐ`;
           }
           return y;
         },

@@ -11,9 +11,8 @@ const LogoutPage = () => {
       title: 'You are going to logout...',
       text: 'Are you sure?',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, I am sure!',
+      confirmButtonColor: '#54D62C',
+      cancelButtonColor: '#FF4842',
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.clear('user');

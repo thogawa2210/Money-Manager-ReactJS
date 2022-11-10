@@ -33,6 +33,7 @@ function SingupForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+
   const handleValidate = (e) => {
     switch (e.target.name) {
       case 'username':
@@ -51,13 +52,17 @@ function SingupForm() {
         break;
       case 'password':
         if (!REGEX.password.test(e.target.value)) {
-          setError({
-            ...error,
-            password:
-              'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',
-          });
-        } else {
-          setError({ ...error, password: '' });
+          setError({ ...error,password:
+                'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',passwordConfirm: 'Password is not the same'});
+        }else {
+          if (e.target.value === form.passwordConfirm) {
+            setError({ ...error,password: '', passwordConfirm: '' });
+          }else if (e.target.value !== form.passwordConfirm) {
+            setError({
+              ...error,
+              password: '',passwordConfirm: 'Password is not the same'
+            });
+          }
         }
         break;
       case 'passwordConfirm':
@@ -71,6 +76,8 @@ function SingupForm() {
         break;
     }
   };
+
+
 
   const sendUser = async () => {
     const data = {
@@ -97,14 +104,15 @@ function SingupForm() {
         text: 'Please Check Your Email To Verify',
         icon: 'success',
         showConfirmButton: false,
-        timer: 3000,
+        timer: 1500,
       });
     } else {
       Swal.fire({
-        icon: 'info',
+        icon: 'error',
         title: 'Oops...',
         text: 'Account already exists!',
-        footer: '<a href="/login">Go to Login</a>',
+        showConfirmButton: false,
+        timer: 1500,
       });
     }
   };
@@ -115,11 +123,19 @@ function SingupForm() {
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill out all the required fields',
+        showConfirmButton: false,
+        timer: 1500,
       });
     } else {
       sendUser()
         .then((res) => handleApi(res.data))
-        .catch((err) => console.log(err.message));
+        .catch((err) =>  Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text:' Something wrong! Please try again!',
+          showConfirmButton: false,
+          timer: 2000
+        }));
     }
   };
 
@@ -127,7 +143,7 @@ function SingupForm() {
     <>
       <Stack spacing={3}>
         {!error.username ? (
-          <TextField required name="username" label="Username" onChange={(e) => handleOnchange(e)} />
+          <TextField required name="username" label="Username" onChange={(e) => handleOnchange(e)}  />
         ) : (
           <TextField
             required
@@ -248,7 +264,7 @@ function SingupForm() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <hr />
       </Stack>
-      {!error.email && !error.username && !error.password && !error.passwordConfirm ? (
+      {!error.email && !error.username && !error.password && !error.passwordConfirm && form.username && form.password && form.email && form.passwordConfirm ? (
         <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
           Sign up
         </LoadingButton>

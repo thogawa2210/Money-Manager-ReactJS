@@ -1,9 +1,10 @@
 import {useEffect, useState} from 'react';
 // @mui
 import {Box, MenuItem, Stack, IconButton, Popover, Typography, Divider} from '@mui/material';
-import wallets from '../../../_mock/wallet'
 import axios from "axios";
-import { useSelector} from "react-redux";
+import { useSelector, useDispatch} from "react-redux";
+import { addTotal } from '../../../features/totalSlice';
+import Swal from "sweetalert2";
 
 
 
@@ -16,7 +17,7 @@ import { useSelector} from "react-redux";
 // ----------------------------------------------------------------------
 
 function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 
@@ -26,12 +27,11 @@ export default function WalletUser() {
         wallets:[]
     })
     const [total, setTotal] = useState(0)
+    const dispatch = useDispatch()
 
     const {flag} = useSelector(state => state.flag)
 
 
-
-    const totalMoney = state.wallets.reduce((a,v) =>  a = a + v.amount , 0 )
 
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
@@ -52,11 +52,26 @@ export default function WalletUser() {
 
     useEffect(() =>{
         getAllWallet(userId).then(res => setState({wallets:res.data.wallet})
-        ).catch(error => console.log(error.message))
+        ).catch(error =>
+            Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text:' Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000
+    })
+    )
         toTalMoney(userId).then(res => setTotal(res.data.total))
-            .catch(error => console.log(error.message))
+            .catch(error =>  Swal.fire({
+                icon: 'error',
+                title: 'Something Wrong!',
+                text:' Something wrong! Please try again!',
+                showConfirmButton: false,
+                timer: 2000
+            }))
+        dispatch(addTotal(total))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[flag])
-
 
 
 
@@ -99,7 +114,7 @@ export default function WalletUser() {
                         fontSize: 14,
                         paddingLeft: 12,
                         fontWeight: 700
-                    }}>{numberWithCommas(total)}</Typography>
+                    }}>{numberWithCommas(total)} VNĐ</Typography>
                 </Box>
             </Box>
 
@@ -136,7 +151,7 @@ export default function WalletUser() {
                         <MenuItem sx={{display:'flex'}} key={index}
                                   onClick={() => handleClose(index)}>
                             <Box component="img" src={item.icon} sx={{width: 28, mr: 2}}/>
-                            {item.name} {numberWithCommas(item.amount)}
+                            {item.name} {numberWithCommas(item.amount)} VNĐ
                         </MenuItem>
                     ))}
                 </Stack>

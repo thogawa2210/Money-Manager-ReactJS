@@ -3,17 +3,17 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
-import BlogPage from './pages/BlogPage';
 import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
-import ProductsPage from './pages/ProductsPage';
+import CategoryPage from './pages/CategoryPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import SignupPage from './pages/SignupPage';
 import VerifyRegister from './sections/auth/login/VerifyRegister';
 import WalletPage from './pages/WalletPage';
 import TransactionPage from './pages/TransactionPage';
 import LogoutPage from './pages/LogoutPage';
+import ReportPage from './pages/ReportPage';
 
 // ----------------------------------------------------------------------
 
@@ -23,17 +23,16 @@ export default function Router() {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
+        { element: <Navigate to="/dashboard/transaction" />, index: true },
+        { path: 'transaction', element: <TransactionPage /> },
+        { path: 'report', element: <ReportPage /> },
         { path: 'profile', element: <UserPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { path: 'category', element: <CategoryPage /> },
         { path: 'wallet', element: <WalletPage /> },
         {
           path: 'logout',
           element: <LogoutPage />,
         },
-        { path: 'transaction', element: <TransactionPage /> },
       ],
     },
     {
@@ -53,7 +52,7 @@ export default function Router() {
     {
       element: <SimpleLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        { element: <Navigate to="/dashboard/transaction" />, index: true },
         { path: '404', element: <Page404 /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],

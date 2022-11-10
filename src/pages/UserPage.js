@@ -20,7 +20,10 @@ import {
   Divider,
   InputAdornment,
   IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -37,6 +40,8 @@ import Iconify from '../components/iconify';
 // ----------------------------------------------------------------------
 
 const REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/;
+
+const ITEM_HEIGHT = 48;
 
 export default function UserPage() {
   const [openName, setOpenName] = useState(false);
@@ -55,6 +60,15 @@ export default function UserPage() {
     google_id: '',
     img: '',
   });
+  const options = ['Change Username', 'Change Password'];
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const [showPassword, setShowPassword] = useState(false);
   const [profile, setProfile] = useState({
     wallets: 0,
@@ -64,16 +78,30 @@ export default function UserPage() {
   const flag = useSelector((state) => state.flag.flag);
   const dispatch = useDispatch();
 
-  const handleClickOpenName = () => {
-    setOpenName(true);
+  const handleClickOpen = (option) => {
+    if (option === 'Change Username') {
+      setFormName({ username: form.username });
+      setAnchorEl(null);
+      setOpenName(true);
+    } else {
+      if (form.password) {
+        setAnchorEl(null);
+        setOpenPass(true);
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Warning!',
+          text: 'Your account is login by Google! Can change password!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setAnchorEl(null);
+      }
+    }
   };
 
   const handleCloseName = () => {
     setOpenName(false);
-  };
-
-  const handleClickOpenPass = () => {
-    setOpenPass(true);
   };
 
   const handleClosePass = () => {
@@ -111,6 +139,7 @@ export default function UserPage() {
             icon: 'success',
             title: `${res.data.message}`,
             showConfirmButton: true,
+            confirmButtonColor: '#54D62C',
           }).then((result) => {
             if (result.isConfirmed) {
               dispatch(changeFlag(1));
@@ -121,20 +150,37 @@ export default function UserPage() {
           Swal.fire({
             icon: 'error',
             title: `${res.data.message}`,
-            timer: 1000,
+            timer: 1500,
             showConfirmButton: false,
+          });
+        } else if (res.data.type === 'warning') {
+          setOpenPass(false);
+          Swal.fire({
+            title: 'Warning',
+            icon: 'warning',
+            text: 'Your old password and your new password are the same',
+            showConfirmButton: false,
+            timer: 1500,
           });
         } else {
           setOpenPass(false);
           Swal.fire({
             icon: 'warning',
             title: `Something wrong! Try again!`,
-            timer: 1000,
+            timer: 1500,
             showConfirmButton: false,
           });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      );
   };
 
   const userApi = async (id) => {
@@ -155,6 +201,7 @@ export default function UserPage() {
             icon: 'success',
             title: 'Change your name success!',
             showConfirmButton: true,
+            confirmButtonColor: '#54D62C',
           }).then((result) => {
             if (result.isConfirmed) {
               dispatch(changeFlag(1));
@@ -162,7 +209,15 @@ export default function UserPage() {
           });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      );
   };
 
   useEffect(() => {
@@ -176,7 +231,15 @@ export default function UserPage() {
           console.log(res.data.message);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      );
   }, [flag]);
 
   const profileApi = async (id) => {
@@ -187,7 +250,15 @@ export default function UserPage() {
     const userID = JSON.parse(localStorage.getItem('user')).user_id;
     profileApi(userID)
       .then((res) => setProfile(res.data.data))
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      );
   }, []);
 
   return (
@@ -233,47 +304,73 @@ export default function UserPage() {
                     </Typography>
                     <Typography color="textSecondary" variant="body2">
                       {form.google_id ? (
-                        <p style={{ color: 'red', fontSize: '12px', margin: 0 }}> Google Account <Iconify icon='/assets/icons/google-svgrepo-com.svg' /></p>
+                        <p style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                          {' '}
+                          Google Account <Iconify icon="/assets/icons/google-svgrepo-com.svg" />
+                        </p>
                       ) : (
-                        <p style={{ color: 'green', fontSize: '12px', margin: 0 }}> Basic Account <Iconify icon='/assets/icons/account-svgrepo-com.svg' /></p>
+                        <p style={{ color: 'green', fontSize: '12px', margin: 0 }}>
+                          {' '}
+                          Basic Account <Iconify icon="/assets/icons/account-svgrepo-com.svg" />
+                        </p>
                       )}
                     </Typography>
                   </Box>
                 </CardContent>
                 <Divider />
                 <CardActions>
-                  <Button color="success" fullWidth variant="outlined">
+                  <Button color="primary" fullWidth variant="outlined">
                     Upload picture
                   </Button>
                 </CardActions>
-                <CardActions>
-                  <Button color="success" fullWidth variant="outlined" onClick={handleClickOpenName}>
-                    Change Username
-                  </Button>
-                </CardActions>
-                {form.google_id ? (
-                  <CardActions>
-                    <Button color="success" fullWidth variant="outlined" disabled>
-                      Change Password
-                    </Button>
-                  </CardActions>
-                ) : (
-                  <CardActions>
-                    <Button color="success" fullWidth variant="outlined" onClick={handleClickOpenPass}>
-                      Change Password
-                    </Button>
-                  </CardActions>
-                )}
               </Card>
             </Grid>
             <Grid item lg={8} md={6} xs={12}>
               <Card>
-                <CardHeader subheader="Thank you for using our app" title="Profile" />
+                <Grid container>
+                  <Grid item xs={10}>
+                    <CardHeader subheader="Thank you for using out app!" title="Profile" />
+                  </Grid>
+                  <Grid item xs sx={{}}>
+                    <IconButton
+                      aria-label="more"
+                      id="long-button"
+                      aria-controls={open ? 'long-menu' : undefined}
+                      aria-expanded={open ? 'true' : undefined}
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                      sx={{ padding: 0, margin: '26px' }}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      id="long-menu"
+                      MenuListProps={{
+                        'aria-labelledby': 'long-button',
+                      }}
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      PaperProps={{
+                        style: {
+                          maxHeight: ITEM_HEIGHT * 4.5,
+                          width: '20ch',
+                        },
+                      }}
+                    >
+                      {options.map((option) => (
+                        <MenuItem key={option} onClick={() => handleClickOpen(option)}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </Grid>
+                </Grid>
                 <Divider />
                 <CardContent sx={{ padding: 2, ml: 1 }}>
-                  <p>Number of wallet: {profile.wallets} </p>
-                  <p>Number of transaction: {profile.transactions}</p>
-                  <p>Number of category: {profile.categorys}</p>
+                  <p style={{ fontWeight: 'lighter' }}>Number of wallet: {profile.wallets} </p>
+                  <p style={{ fontWeight: 'lighter' }}>Number of transaction: {profile.transactions}</p>
+                  <p style={{ fontWeight: 'lighter' }}>Number of category: {profile.categorys}</p>
                 </CardContent>
                 <Divider />
               </Card>
@@ -296,6 +393,7 @@ export default function UserPage() {
               fullWidth
               variant="outlined"
               required
+              value={formName.username}
               onChange={(e) => setFormName({ username: e.target.value })}
             />
           </DialogContent>

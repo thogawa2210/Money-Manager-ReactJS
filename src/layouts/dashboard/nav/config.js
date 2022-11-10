@@ -7,8 +7,13 @@ const icon = (name) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ 
 
 const navConfig = [
   {
-    title: 'dashboard',
-    path: '/dashboard/app',
+    title: 'transaction',
+    path: '/dashboard/transaction',
+    icon: icon('transaction'),
+  },
+  {
+    title: 'report',
+    path: '/dashboard/report',
     icon: icon('ic_analytics'),
   },
   {
@@ -16,25 +21,16 @@ const navConfig = [
     path: '/dashboard/wallet',
     icon: icon('wallet-svgrepo-com'),
   },
-  {
-    title: 'transaction',
-    path: '/dashboard/transaction',
-    icon: icon('transaction'),
-  },
+ 
   {
     title: 'profile',
     path: '/dashboard/profile',
     icon: icon('ic_user'),
   },
   {
-    title: 'product',
-    path: '/dashboard/products',
+    title: 'my category',
+    path: '/dashboard/category',
     icon: icon('ic_cart'),
-  },
-  {
-    title: 'about',
-    path: '/dashboard/blog',
-    icon: icon('ic_blog'),
   },
   {
     title: 'logout',
