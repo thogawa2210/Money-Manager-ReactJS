@@ -80,6 +80,7 @@ function ReportPage() {
   const [chartLabels, setChartLabels] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [openChooseDay, setOpenChooseDay] = useState(false);
+  const [displayDate, setDisplayDate] = useState('Today')
   const [form, setForm] = useState({
     date: '',
     wallet_id: '',
@@ -134,7 +135,12 @@ function ReportPage() {
           setWallets(res.data.wallet);
         } else console.log(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => Swal.fire({
+        icon: 'error',
+        title: 'Something Wrong!',
+        text: 'Something wrong! Please try again!',
+        showConfirmButton: false,
+        timer: 2000}));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -214,12 +220,19 @@ function ReportPage() {
       .then((res) => {
         const data = getDataBarChart(res.data.data);
         const circleData = getCircleData(res.data.data)
+        setDisplayDate(`Period: From ${res.data.data.startDate} To ${res.data.data.endDate}`)
         setIcomeData(circleData.income);
         setExpensData(circleData.expense);
         setChartLabels(data.chartLabels);
         setChartData(data.chartData);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => Swal.fire({
+        icon: 'error',
+        title: 'Something Wrong!',
+        text: 'Something wrong! Please try again!',
+        showConfirmButton: false,
+        timer: 2000})
+      )
   };
 
   const handleChangePickDate = (value) => {
@@ -256,14 +269,19 @@ function ReportPage() {
     }
     getTransCustomApi(data)
         .then((res) => {
-          const data = getDataBarChart(res.data.data);
+          const dataBarChart = getDataBarChart(res.data.data);
           const circleData = getCircleData(res.data.data)
           setIcomeData(circleData.income);
           setExpensData(circleData.expense);
-          setChartLabels(data.chartLabels);
-          setChartData(data.chartData);
+          setChartLabels(dataBarChart.chartLabels);
+          setChartData(dataBarChart.chartData);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          showConfirmButton: false,
+          timer: 2000}));
   }, []);
 
   return (
@@ -350,7 +368,7 @@ function ReportPage() {
         <Grid item xs={12} md={6} lg={8}>
           <AppWebsiteVisits
             title="Income & Expense Reports"
-            subheader="The best report in the world!"
+            subheader={displayDate}
             chartLabels={chartLabels}
             chartData={chartData}
           />
@@ -361,6 +379,7 @@ function ReportPage() {
           <Grid item xs={6} md={6}>
             <AppCurrentVisits
                 title="Income"
+                subheader={displayDate}
                 chartData={incomeData}
                 chartColors={[
                   theme.palette.primary.main,
@@ -373,6 +392,7 @@ function ReportPage() {
           <Grid item xs={6} md={6}>
             <AppCurrentVisits
                 title="Expense"
+                subheader={displayDate}
                 chartData={expenseData}
                 chartColors={[
                   theme.palette.primary.main,
