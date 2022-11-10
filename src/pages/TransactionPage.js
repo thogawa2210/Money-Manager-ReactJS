@@ -120,7 +120,12 @@ export default function TransactionPage() {
     await axios
       .get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
       .then((res) => setListWallet(res.data.wallet))
-      .catch((err) => console.log(err));
+      .catch((err) => Swal.fire({
+        icon: 'error',
+        title: 'Something Wrong!',
+        text: 'Something wrong! Please try again!',
+        showConfirmButton: false,
+        timer: 2000}));
   };
 
   useEffect(() => {
@@ -136,7 +141,12 @@ export default function TransactionPage() {
           outflow: res.data.data.outflow,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => Swal.fire({
+        icon: 'error',
+        title: 'Something Wrong!',
+        text: 'Something wrong! Please try again!',
+        showConfirmButton: false,
+        timer: 2000}));
   }, [flag]);
 
   useEffect(() => {
@@ -302,7 +312,12 @@ export default function TransactionPage() {
             });
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          showConfirmButton: false,
+          timer: 2000}));
       setOpenAddForm(false);
       dispatch(changeFlag(1));
     }
@@ -350,7 +365,12 @@ export default function TransactionPage() {
                 });
               }
             })
-            .catch((err) => console.log(err));
+            .catch((err) => Swal.fire({
+              icon: 'error',
+              title: 'Something Wrong!',
+              text: 'Something wrong! Please try again!',
+              showConfirmButton: false,
+              timer: 2000}));
       }
     }
   };
