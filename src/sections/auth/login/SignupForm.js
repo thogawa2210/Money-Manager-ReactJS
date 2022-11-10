@@ -56,10 +56,8 @@ function SingupForm() {
                 'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter and 1 number ',passwordConfirm: 'Password is not the same'});
         }else {
           if (e.target.value === form.passwordConfirm) {
-            console.log(111)
             setError({ ...error,password: '', passwordConfirm: '' });
           }else if (e.target.value !== form.passwordConfirm) {
-            console.log(22)
             setError({
               ...error,
               password: '',passwordConfirm: 'Password is not the same'
@@ -79,7 +77,7 @@ function SingupForm() {
     }
   };
 
-  console.log(error)
+
 
   const sendUser = async () => {
     const data = {
@@ -131,7 +129,13 @@ function SingupForm() {
     } else {
       sendUser()
         .then((res) => handleApi(res.data))
-        .catch((err) => console.log(err.message));
+        .catch((err) =>  Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text:' Something wrong! Please try again!',
+          showConfirmButton: false,
+          timer: 2000
+        }));
     }
   };
 

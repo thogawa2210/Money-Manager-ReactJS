@@ -1,6 +1,35 @@
 import { Helmet } from 'react-helmet-async';
 import { forwardRef, useEffect, useState } from 'react';
-import {Accordion,AccordionDetails,Avatar,AccordionSummary,Box,Button,Card,CardContent,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,FormControl,Grid,InputAdornment,InputLabel,ListItemText,MenuItem,Paper,Select,Slide,Stack,Tab,TableContainer,Tabs,TextField,Typography} from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  Paper,
+  Select,
+  Slide,
+  Stack,
+  Tab,
+  TableContainer,
+  Tabs,
+  TextField,
+  Typography,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Iconify from 'src/components/iconify';
 import Swal from 'sweetalert2';
@@ -18,9 +47,11 @@ import mockExpense from 'src/_mock/categoryExpense';
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
 const TransitionEdit = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
 const currencies = [
   {
     value: 'expense',
@@ -32,6 +63,7 @@ const currencies = [
   },
 ];
 // Tab Detail
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -66,8 +98,9 @@ function a11yProps(index) {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
-
 export default function ProductsPage() {
+  // Tab detail 
+  // Done
   const [openCategory, setOpenCategory] = useState(false);
   const idUser = JSON.parse(localStorage.getItem('user')).user_id;
   const flag = useSelector((state) => state.flag);
@@ -94,6 +127,7 @@ export default function ProductsPage() {
       [e.target.name]: e.target.value,
     });
   };
+
   const handleSubmitCreate = async () => {
     setOpenAddForm(false);
     let data = {
@@ -115,25 +149,25 @@ export default function ProductsPage() {
       });
     } else {
       const result = await axios.post('http://localhost:3001/category/add-category', data);
-      if (result.data.type === 'success') {
+      console.log(result)
+      if (result) {
         Swal.fire({
           icon: 'success',
           title: 'Create Category Successfully!',
           showConfirmButton: false,
           timer: 1500
         }).then(
+          setCategory({
+            ...category,
+            icon: null,
+            name: '',
+            type: null,
+            note: null
+          }),
           setOpenCreateCategory(false),
           dispatch(changeFlag(1)),
         )
-          .catch((error) => console.log(error.message),
-          Swal.fire({
-            icon: 'error',
-            title: 'Something Wrong!',
-            text: 'Something wrong! Please try again!',
-            showConfirmButton: false,
-            timer: 2000
-            })
-            );
+          .catch((error) => console.log(error.message));
       } else {
         Swal.fire({
           icon: 'warning',
@@ -146,6 +180,7 @@ export default function ProductsPage() {
       }
     }
   };
+
 useEffect(()=> {
   setCategory({
     ...category,
@@ -155,26 +190,42 @@ useEffect(()=> {
     note: ''
   });
 },[flag])
+
   const closeCategory = () => {
     setOpenCategory(false);
   };
+
   const handleChooseCategory = (icon) => {
     setEditForm({ ...editForm, icon: icon })
     setCategory({ ...category, icon: icon });
     setOpenCategory(false);
   };
+
   const handleClickOpenTabCategory = () => {
     setOpenCategory(true);
   };
   // Table detail category
   const [expanded, setExpanded] = useState(false);
+
   const handleChangeDetailTable = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
   const [value, setValue] = useState(0);
+
   const handleChangeDetail = (event, newValue) => {
     setValue(newValue);
   };
+
+  const getWallet = async () => {
+    const userId = JSON.parse(localStorage.getItem('user'));
+    return await axios.get(` http://localhost:3001/category/get-category-byuser/${userId.user_id}`, idUser);
+  };
+  useEffect(() => {
+    getWallet()
+      .then((res) => setCategories(res.data.categoryOfUser))
+      .catch((error) => console.log(error.message));
+  }, [flag]);
 
   // Delete Category
   const handleDeleteCategory = (id) => {
@@ -207,7 +258,8 @@ useEffect(()=> {
             text: 'Something wrong! Please try again!',
             showConfirmButton: false,
             timer: 2000
-            }))
+            })
+          )
       }
     });
   };
@@ -215,13 +267,18 @@ useEffect(()=> {
   //  Update Category
   //  Xu li lay form du lieu
   const [openEditCategory, setOpenEditCategory] = useState(false);
+
   const [editForm, setEditForm] = useState([]);
+
   const handleChangeEdit = async (e) => {
     setEditForm({
       ...editForm,
       [e.target.name]: e.target.value
     })
   }
+
+
+
   // Xử lý hàm trả về thông tin update
 
   const handleCloseEdit = () => {
@@ -281,7 +338,8 @@ useEffect(()=> {
               text: 'Something wrong! Please try again!',
               showConfirmButton: false,
               timer: 2000
-              }))
+              })
+            )
 
         }
       });

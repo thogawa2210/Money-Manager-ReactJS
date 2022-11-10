@@ -101,7 +101,7 @@ export default function LoginPage() {
                   icon: 'error',
                   title: 'Something Wrong! Try again!',
                   showConfirmButton: false,
-                  timer: 1500
+                  timer: 1500,
                 });
                 break;
               default:
@@ -110,13 +110,20 @@ export default function LoginPage() {
           .catch(() =>
             Swal.fire({
               icon: 'error',
-              title: 'Something wrong! Please try again',
+              title: 'Something Wrong!',
+              text: 'Something rong! Please try again!',
               showConfirmButton: false,
-              timer: 1500
+              timer: 1500,
             })
           );
       } catch (err) {
-        console.log(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something rong! Please try again!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     },
   });

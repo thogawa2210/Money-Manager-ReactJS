@@ -79,8 +79,8 @@ export default function UserPage() {
   const dispatch = useDispatch();
 
   const handleClickOpen = (option) => {
-    console.log(1);
     if (option === 'Change Username') {
+      setFormName({ username: form.username });
       setAnchorEl(null);
       setOpenName(true);
     } else {
@@ -139,7 +139,7 @@ export default function UserPage() {
             icon: 'success',
             title: `${res.data.message}`,
             showConfirmButton: true,
-            confirmButtonColor: '#54D62C'
+            confirmButtonColor: '#54D62C',
           }).then((result) => {
             if (result.isConfirmed) {
               dispatch(changeFlag(1));
@@ -160,7 +160,7 @@ export default function UserPage() {
             icon: 'warning',
             text: 'Your old password and your new password are the same',
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
         } else {
           setOpenPass(false);
@@ -172,7 +172,15 @@ export default function UserPage() {
           });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      );
   };
 
   const userApi = async (id) => {
@@ -193,7 +201,7 @@ export default function UserPage() {
             icon: 'success',
             title: 'Change your name success!',
             showConfirmButton: true,
-            confirmButtonColor: '#54D62C'
+            confirmButtonColor: '#54D62C',
           }).then((result) => {
             if (result.isConfirmed) {
               dispatch(changeFlag(1));
@@ -201,7 +209,15 @@ export default function UserPage() {
           });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      );
   };
 
   useEffect(() => {
@@ -215,7 +231,15 @@ export default function UserPage() {
           console.log(res.data.message);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      );
   }, [flag]);
 
   const profileApi = async (id) => {
@@ -226,7 +250,15 @@ export default function UserPage() {
     const userID = JSON.parse(localStorage.getItem('user')).user_id;
     profileApi(userID)
       .then((res) => setProfile(res.data.data))
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      );
   }, []);
 
   return (
@@ -307,7 +339,7 @@ export default function UserPage() {
                       aria-expanded={open ? 'true' : undefined}
                       aria-haspopup="true"
                       onClick={handleClick}
-                      sx={{padding: 0, margin: '26px'}}
+                      sx={{ padding: 0, margin: '26px' }}
                     >
                       <MoreVertIcon />
                     </IconButton>
@@ -361,6 +393,7 @@ export default function UserPage() {
               fullWidth
               variant="outlined"
               required
+              value={formName.username}
               onChange={(e) => setFormName({ username: e.target.value })}
             />
           </DialogContent>
