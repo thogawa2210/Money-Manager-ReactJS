@@ -138,7 +138,7 @@ export default function ProductsPage() {
       type: category.type,
       user_id: idUser,
     };
-    if (category.name === '' || category.type === '' ) {
+    if (category.name === '' || category.type === '') {
       setOpenCreateCategory(false);
       Swal.fire({
         icon: 'error',
@@ -158,14 +158,14 @@ export default function ProductsPage() {
         }).then(
           setCategory({
             ...category,
-            icon : null,
+            icon: null,
             name: '',
-            type : null
+            type: null
           }),
           setOpenCreateCategory(false),
           dispatch(changeFlag(1)),
         )
-        .catch((error) => console.log(error.message));
+          .catch((error) => console.log(error.message));
       } else {
         Swal.fire({
           icon: 'warning',
@@ -232,7 +232,7 @@ export default function ProductsPage() {
   const handleChangeEdit = async (e) => {
     setEditForm({
       ...editForm,
-      [e.target.name] : e.target.value
+      [e.target.name]: e.target.value
     })
   }
 
@@ -244,9 +244,9 @@ export default function ProductsPage() {
     setOpenEditCategory(false);
   };
   const handleClickOpenCategory = async (id) => {
-    const categoryEditForm = categories.filter((cate) => cate._id === id );
+    const categoryEditForm = categories.filter((cate) => cate._id === id);
     setEditForm(categoryEditForm[0]);
-      setOpenEditCategory(true);
+    setOpenEditCategory(true);
   };
 
   const data = {
@@ -289,19 +289,19 @@ export default function ProductsPage() {
               })
               setEditForm({
                 ...editForm,
-                icon : '',
-                name : '',
-                type : ''
+                icon: '',
+                name: '',
+                type: ''
               })
             })
             .catch(err => console.log(err))
-   
+
         }
       });
     }
   };
 
- 
+
   return (
     <>
       <Helmet>
@@ -442,23 +442,23 @@ export default function ProductsPage() {
                     onChange={handleChangeCreate}
                     sx={{ height: 55 }}
                   >
-               {category.type === "expense"? mockExpense.map((item)=> {
-                return(
-                  <MenuItem value={item.icon }>
-                  <Avatar src={item.icon } sx={{ mr: 0 }} />
-                </MenuItem>
-                )
-               }
-               
-               ) : mockIncome.map((item)=> {
-                return (
-                  <MenuItem value={item.icon}>
-                  <Avatar src={item.icon} sx={{ mr: 0 }} />
-                </MenuItem>
-                )
-               
-               }) } 
-               
+                    {category.type === "expense" ? mockExpense.map((item) => {
+                      return (
+                        <MenuItem value={item.icon}>
+                          <Avatar src={item.icon} sx={{ mr: 0 }} />
+                        </MenuItem>
+                      )
+                    }
+
+                    ) : mockIncome.map((item) => {
+                      return (
+                        <MenuItem value={item.icon}>
+                          <Avatar src={item.icon} sx={{ mr: 0 }} />
+                        </MenuItem>
+                      )
+
+                    })}
+
                   </Select>
                 </FormControl>
               </Box>
@@ -500,85 +500,89 @@ export default function ProductsPage() {
         </DialogActions>
       </Dialog>
       {/* Update Category */}
-      
+
       <Dialog
-      TransitionComponent={TransitionEdit}
-      fullWidth
-      maxWidth="md"
-      keepMounted
-      open={openEditCategory}
-      onClose={() => handleCloseEdit(false)}
-    >
-      <DialogTitle>{'Edit category'}</DialogTitle>
-      <DialogContentText></DialogContentText>
-      <DialogContent>
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            {/* Select icon */}
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl sx={{ width: 100 }}>
-                <InputLabel>Icon</InputLabel>
-                <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}  
-                value={editForm.icon + ''}>
-                {editForm.type  === "expense"? mockExpense.map((item,index)=> {
-                  return(
-                    <MenuItem value={item.icon} key={index}>
-                    <Avatar src={item.icon } sx={{ mr: 0 }} />
+        TransitionComponent={TransitionEdit}
+        fullWidth
+        maxWidth="md"
+        keepMounted
+        open={openEditCategory}
+        onClose={() => handleCloseEdit(false)}
+      >
+        <DialogTitle>{'Edit category'}</DialogTitle>
+        <DialogContentText></DialogContentText>
+        <DialogContent>
+          <Grid container spacing={2}>
+
+            <Grid item xs={5} >
+
+              <TextField
+               sx={{ minWidth: 340 }}
+                id="outlined-select-currency"
+                select
+                name='type'
+                label="Type"
+                onChange={handleChangeEdit}
+                helperText="Please select your currency"
+                value={editForm.type + ''}
+              >
+                {currencies.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
                   </MenuItem>
-                  )
-                 }
-                 ) : mockIncome.map((item)=> {
-                  return (
-                    <MenuItem value={item.icon} key={item.icon}>
-                    <Avatar src={item.icon} sx={{ mr: 0 }} />
-                  </MenuItem>
-                  )
-                 }) } 
-                </Select>
-              </FormControl>
-            </Box>
+                ))}
+              </TextField>
+            </Grid>
+
+
+            <Grid item xs={5}>
+              <TextField
+
+                name="name"
+                InputProps={{ startAdornment: <InputAdornment position="start">Name</InputAdornment> }}
+                onChange={handleChangeEdit}
+                fullWidth
+                variant="outlined"
+                value={editForm.name}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              {/* Select icon */}
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl sx={{ width: 100 }}>
+                  <InputLabel>Icon</InputLabel>
+                  <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}
+                    value={editForm.icon + ''}>
+                    {editForm.type === "expense" ? mockExpense.map((item, index) => {
+                      return (
+                        <MenuItem value={item.icon} key={index}>
+                          <Avatar src={item.icon} sx={{ mr: 0 }} />
+                        </MenuItem>
+                      )
+                    }
+                    ) : mockIncome.map((item) => {
+                      return (
+                        <MenuItem value={item.icon} key={item.icon}>
+                          <Avatar src={item.icon} sx={{ mr: 0 }} />
+                        </MenuItem>
+                      )
+                    })}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
           </Grid>
-          <Grid item xs={5}>
-            <TextField
-           
-              name="name"
-              InputProps={{ startAdornment: <InputAdornment position="start">Name</InputAdornment> }}
-              onChange={handleChangeEdit}
-              fullWidth
-              variant="outlined"
-              value={editForm.name}
-            />
-          </Grid>
-          <Grid item xs={5}>
-    
-          <TextField
-          id="outlined-select-currency"
-          select
-          name='type'
-          label="Type"
-          onChange={handleChangeEdit}
-          helperText="Please select your currency"
-          value={editForm.type + ''}
-        >
-          {currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-          </Grid>
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Button variant="outlined" color="error" onClick={handleCloseEdit}>
-          Cancel
-        </Button>
-        <Button variant="outlined" color="success" onClick={() => handleSubmitCateEdit(editForm._id)}>
-          Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
-      
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" color="error" onClick={handleCloseEdit}>
+            Cancel
+          </Button>
+          <Button variant="outlined" color="success" onClick={() => handleSubmitCateEdit(editForm._id)}>
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </>
   );
 }
