@@ -501,8 +501,8 @@ export default function ProductsPage() {
           <Button variant="outlined" color="success" onClick={handleSubmitCreate}>Submit</Button>
         </DialogActions>
       </Dialog>
-      {/* Update Category */}
 
+      {/* Update Category */}
       <Dialog
         TransitionComponent={TransitionEdit}
         fullWidth
