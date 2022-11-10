@@ -226,18 +226,16 @@ export default function ProductsPage() {
   //  Update Category
   //  Xu li lay form du lieu
   const [openEditCategory, setOpenEditCategory] = useState(false);
-  const [categoryEdit, setCategorytEdit] = useState({
-    icon: '',
-  });
+
   const [editForm, setEditForm] = useState([]);
 
   const handleChangeEdit = async (e) => {
-    setCategorytEdit({
-      ...categoryEdit,
+    setEditForm({
+      ...editForm,
       [e.target.name] : e.target.value
     })
   }
-console.log(categoryEdit);
+
 
 
   // Xử lý hàm trả về thông tin update
@@ -252,9 +250,9 @@ console.log(categoryEdit);
   };
 
   const data = {
-    icon: categoryEdit.icon,
-    name: categoryEdit.name,
-    type: categoryEdit.type,
+    icon: editForm.icon,
+    name: editForm.name,
+    type: editForm.type,
   };
 
   const handleSubmitCateEdit = async () => {
@@ -516,7 +514,7 @@ console.log(categoryEdit);
               <FormControl sx={{ width: 100 }}>
                 <InputLabel>Icon</InputLabel>
                 <Select name="icon" onChange={handleChangeEdit} sx={{ height: 55 }}  value={editForm.icon} >
-                {categoryEdit.type  === "expense"? mockExpense.map((item,index)=> {
+                {editForm.type  === "expense"? mockExpense.map((item,index)=> {
                   return(
                     <MenuItem value={item.icon} key={item.icon}>
                     <Avatar src={item.icon } sx={{ mr: 0 }} />
