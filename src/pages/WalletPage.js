@@ -314,7 +314,7 @@ export default function WalletPage() {
         <Grid item xs />
         <Grid item xs={9} sx={{ padding: 0 }}>
           {wallets.map((item, index) => (
-            <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)}>
+            <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)} key={index}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
                 <Typography sx={{ width: '80%', flexShrink: 0, display: 'flex' }}>
                   <Avatar src={item.icon} sx={{ mr: 0 }} />
