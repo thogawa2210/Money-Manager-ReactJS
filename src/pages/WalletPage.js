@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
 import { changeFlag } from '../features/flagSlice';
