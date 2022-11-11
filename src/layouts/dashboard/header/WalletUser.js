@@ -50,26 +50,29 @@ export default function WalletUser() {
         return await axios.get(`https://money-manager-master-be.herokuapp.com/wallet/total/${userId.user_id}`)
     }
 
-    useEffect(() =>{
-        getAllWallet(userId).then(res => setState({wallets:res.data.wallet})
-        ).catch(error =>
-            Swal.fire({
-            icon: 'error',
-            title: 'Something Wrong!',
-            text:' Something wrong! Please try again!',
-            showConfirmButton: false,
-            timer: 2000
-    })
-    )
-        toTalMoney(userId).then(res => setTotal(res.data.total))
-            .catch(error =>  Swal.fire({
+    useEffect(() => {
+        if (userId) {
+            getAllWallet(userId).then(res => setState({wallets:res.data.wallet})
+            ).catch(error =>
+                Swal.fire({
                 icon: 'error',
                 title: 'Something Wrong!',
                 text:' Something wrong! Please try again!',
                 showConfirmButton: false,
                 timer: 2000
-            }))
-        dispatch(addTotal(total))
+        })
+        )
+            toTalMoney(userId).then(res => setTotal(res.data.total))
+                .catch(error =>  Swal.fire({
+                    icon: 'error',
+                    title: 'Something Wrong!',
+                    text:' Something wrong! Please try again!',
+                    showConfirmButton: false,
+                    timer: 2000
+                }))
+            dispatch(addTotal(total))
+        }
+        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[flag])
 
