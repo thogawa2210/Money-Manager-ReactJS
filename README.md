@@ -20,7 +20,7 @@
 
 - [Dashboard](https://minimal-kit-react.vercel.app/dashboard/app)
 - [Users](https://minimal-kit-react.vercel.app/dashboard/user)
-- [Product](https://minimal-kit-react.vercel.app/dashboard/products)
+- [Product]
 - [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
 - [Login](https://minimal-kit-react.vercel.app/login)
 - [Not Found](https://minimal-kit-react.vercel.app/404)
