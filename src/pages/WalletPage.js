@@ -95,7 +95,7 @@ export default function WalletPage() {
       });
     } else {
       await axios
-        .post('http://localhost:3001/wallet/create', data)
+        .post('https://money-manager-master-be.herokuapp.com/wallet/create', data)
         .then((res) => {
           if (res.data.type === 'success') {
             setOpenCreate(false);
@@ -158,7 +158,7 @@ export default function WalletPage() {
 
   const getAllWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
-    return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`);
+    return await axios.get(` https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId.user_id}`);
   };
 
   useEffect(() => {
@@ -191,7 +191,7 @@ export default function WalletPage() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
-          .delete(`http://localhost:3001/wallet/delete/${id}`)
+          .delete(`https://money-manager-master-be.herokuapp.com/wallet/delete/${id}`)
           .then((res) => {
             dispatch(changeFlag(1));
             Swal.fire({
@@ -215,7 +215,7 @@ export default function WalletPage() {
       amount: walletEdit.amount,
     };
     await axios
-      .put(`http://localhost:3001/wallet/update/${id}`, data)
+      .put(`https://money-manager-master-be.herokuapp.com/wallet/update/${id}`, data)
       .then((res) => {
         setOpen(false);
         Swal.fire({
