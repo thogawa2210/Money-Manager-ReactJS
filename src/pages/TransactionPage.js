@@ -386,11 +386,10 @@ const [flash , setFlash] = useState(0);
    return  await axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
   }
 
-
-
   const changeFlash = () => {
     setFlash(flash+1)
   }
+
   useEffect(() => {
     getWalletUser().then((res) => {
       if (res.data.wallet.length === 0) {
@@ -398,9 +397,8 @@ const [flash , setFlash] = useState(0);
           icon: 'error',
           title: 'Wallet does not exist...',
           text: 'Please create a new wallet!',
-          showCancelButton: true,
-          confirmButtonColor: '#54D62C',
-          cancelButtonColor: '#FF4842',
+          showConfirmButton: false,
+          timer: 1500,
         }).then(navigate('/dashboard/wallet'))
       }
     }).catch((err) =>
