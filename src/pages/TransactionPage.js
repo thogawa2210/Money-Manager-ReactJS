@@ -112,25 +112,30 @@ const [flash , setFlash] = useState(0);
   };
 
   const getData = async () => {
-    const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    await axios
-      .get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
-      .then((res) => setListCategory(res.data.categoryUser))
-      .catch((err) => Swal.fire({
-        icon: 'error',
-        title: 'Something Wrong!',
-        text: 'Something wrong! Please try again!',
-        showConfirmButton: false,
-        timer: 2000}));
-    await axios
-      .get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
-      .then((res) => setListWallet(res.data.wallet))
-      .catch((err) => Swal.fire({
-        icon: 'error',
-        title: 'Something Wrong!',
-        text: 'Something wrong! Please try again!',
-        showConfirmButton: false,
-        timer: 2000}));
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(user) {
+      let userId = user.user_id;
+      await axios
+          .get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
+          .then((res) => setListCategory(res.data.categoryUser))
+          .catch((err) => Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text: 'Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000}));
+      await axios
+          .get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
+          .then((res) => setListWallet(res.data.wallet))
+          .catch((err) => Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text: 'Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000}));
+    }else {
+      navigate('/login');
+    }
   };
 
   useEffect(() => {
@@ -240,8 +245,14 @@ const [flash , setFlash] = useState(0);
   };
 
   useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    setTransaction({ ...transaction, user_id: userId });
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(user) {
+      let userId = user.user_id;
+      setTransaction({ ...transaction, user_id: userId });
+    }else {
+      navigate('/login');
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
