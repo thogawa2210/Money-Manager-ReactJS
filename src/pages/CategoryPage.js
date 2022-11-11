@@ -120,6 +120,13 @@ export default function ProductsPage() {
     setOpenCreateCategory(true);
   };
   const handleCloseCreate = () => {
+    setCategory({
+      ...category,
+      icon: null,
+      name: '',
+      type: null,
+      note: '',
+    })
     setOpenCreateCategory(false);
   };
   const handleChangeCreate = (e) => {
@@ -150,7 +157,6 @@ export default function ProductsPage() {
       });
     } else {
       const result = await axios.post('http://localhost:3001/category/add-category', data);
-      console.log(result);
       if (result) {
         Swal.fire({
           icon: 'success',
@@ -164,12 +170,20 @@ export default function ProductsPage() {
               icon: null,
               name: '',
               type: null,
-              note: null,
+              note: '',
             }),
             setOpenCreateCategory(false),
             dispatch(changeFlag(1))
           )
-          .catch((error) => console.log(error.message));
+          .catch((error) =>{
+            Swal.fire({
+              icon: 'error',
+              title: 'Something Wrong!',
+              text: 'Something wrong! Please try again!',
+              showConfirmButton: false,
+              timer: 2000,
+            })
+          });
       } else {
         Swal.fire({
           icon: 'warning',
@@ -225,7 +239,15 @@ export default function ProductsPage() {
   useEffect(() => {
     getWallet()
       .then((res) => setCategories(res.data.categoryOfUser))
-      .catch((error) => console.log(error.message));
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          showConfirmButton: false,
+          timer: 2000,
+        })
+      });
   }, [flag]);
 
   // Delete Category
@@ -332,14 +354,15 @@ export default function ProductsPage() {
               });
             })
             .catch(
-              (err) => console.log(err),
-              Swal.fire({
-                icon: 'error',
-                title: 'Something Wrong!',
-                text: 'Something wrong! Please try again!',
-                showConfirmButton: false,
-                timer: 2000,
-              })
+              (err) => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Something Wrong!',
+                  text: 'Something wrong! Please try again!',
+                  showConfirmButton: false,
+                  timer: 2000,
+                })
+              }
             );
         }
       });
@@ -627,7 +650,7 @@ export default function ProductsPage() {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="icon"
+                    label="Icon"
                     name="icon"
                     onChange={handleChangeCreate}
                     sx={{ height: 55 }}
