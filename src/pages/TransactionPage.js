@@ -25,7 +25,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  ListSubheader,
   Tab,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -89,11 +88,11 @@ export default function TransactionPage() {
   const handleChangeCategory = (e, category) => {
     setCategory(category);
   };
-const [flash , setFlash] = useState(0);
+
   const handleChooseCategory = (id) => {
-    if(openAddForm){
+    if (openAddForm) {
       setTransaction({ ...transaction, category_id: id });
-    }else{
+    } else {
       setEditTransaction({ ...editTransaction, category_id: id });
     }
     setOpenCategory(false);
@@ -106,57 +105,86 @@ const [flash , setFlash] = useState(0);
     setExpanded(isExpanded ? panel : false);
   };
 
-  const getDataApi = async () => {
-    const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/transaction/transaction-this-month/${userId}`);
+  const getDataApi = async (id) => {
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/transaction/transaction-this-month/${id}`);
   };
 
+  useEffect(() => {
+    if (!listTransaction) {
+      Swal.fire({
+        icon: 'warning',
+        title: "You don't have any wallet!",
+        text: 'Please create one to continue!',
+        confirmButtonColor: '#54D62C',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/dashboard/wallet');
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const getData = async () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if(user) {
-      let userId = user.user_id;
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userId = JSON.parse(user).user_id;
       await axios
-          .get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
-          .then((res) => setListCategory(res.data.categoryUser))
-          .catch((err) => Swal.fire({
-            icon: 'error',
-            title: 'Something Wrong!',
-            text: 'Something wrong! Please try again!',
+        .get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
+        .then((res) => setListCategory(res.data.categoryUser))
+        .catch((err) => {
+          Swal.fire({
+            icon: 'warning',
+            title: '1!',
+            text: 'Try again!',
             showConfirmButton: false,
-            timer: 2000}));
+            timer: 1500,
+          });
+        });
       await axios
-          .get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
-          .then((res) => setListWallet(res.data.wallet))
-          .catch((err) => Swal.fire({
-            icon: 'error',
-            title: 'Something Wrong!',
-            text: 'Something wrong! Please try again!',
+        .get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
+        .then((res) => setListWallet(res.data.wallet))
+        .catch((err) => {
+          Swal.fire({
+            icon: 'warning',
+            title: '2!',
+            text: 'Try again!',
             showConfirmButton: false,
-            timer: 2000}));
-    }else {
+            timer: 1500,
+          });
+        });
+    } else {
       navigate('/login');
     }
   };
 
   useEffect(() => {
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    getDataApi()
-      .then((res) => {
-        setListTransaction(res.data.data.list);
-        setMoneyFlow({
-          inflow: res.data.data.inflow,
-          outflow: res.data.data.outflow,
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userId = JSON.parse(user).user_id;
+      getDataApi(userId)
+        .then((res) => {
+          setListTransaction(res.data.data.list);
+          setMoneyFlow({
+            inflow: res.data.data.inflow,
+            outflow: res.data.data.outflow,
+          });
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Something Wrong!',
+            text: 'Try again!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
         });
-      })
-      .catch((err) => Swal.fire({
-        icon: 'error',
-        title: 'Something Wrong!',
-        text: 'Something wrong! Please try again!',
-        showConfirmButton: false,
-        timer: 2000}));
+    }
   }, [flag]);
 
   useEffect(() => {
@@ -166,7 +194,6 @@ const [flash , setFlash] = useState(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listWallet]);
-
 
   const handleChange = (e) => {
     if (e.target) {
@@ -219,7 +246,7 @@ const [flash , setFlash] = useState(0);
         text: 'You can not edit Add Wallet Transaction!',
         showConfirmButton: false,
         timer: 2000,
-      })
+      });
     } else {
       setOpenEditForm(true);
       setValue(dayjs(editTransaction[0].date));
@@ -245,11 +272,11 @@ const [flash , setFlash] = useState(0);
   };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if(user) {
-      let userId = user.user_id;
+    const user = localStorage.getItem('user');
+    if (user) {
+      let userId = JSON.parse(user).user_id;
       setTransaction({ ...transaction, user_id: userId });
-    }else {
+    } else {
       navigate('/login');
     }
 
@@ -275,7 +302,7 @@ const [flash , setFlash] = useState(0);
               title: 'Delete Success!',
               showConfirmButton: false,
               timer: 1500,
-            }).then(setTimeout(changeFlash,1000));
+            });
           })
           .catch((err) =>
             Swal.fire({
@@ -329,27 +356,30 @@ const [flash , setFlash] = useState(0);
             });
           }
         })
-        .catch((err) => Swal.fire({
-          icon: 'error',
-          title: 'Something Wrong!',
-          text: 'Something wrong! Please try again!',
-          showConfirmButton: false,
-          timer: 2000}));
+        .catch((err) =>
+          Swal.fire({
+            icon: 'error',
+            title: 'Something wrong!',
+            text: 'Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000,
+          })
+        );
       setOpenAddForm(false);
       dispatch(changeFlag(1));
     }
   };
 
   const handleEdit = async () => {
-    if(editTransaction.category_name === 'Add Wallet') {
+    if (editTransaction.category_name === 'Add Wallet') {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: 'You can not edit Add Wallet Transaction!',
         showConfirmButton: false,
         timer: 2000,
-      })
-    }else{
+      });
+    } else {
       if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
         setOpenEditForm(false);
         Swal.fire({
@@ -361,66 +391,42 @@ const [flash , setFlash] = useState(0);
         });
       } else {
         await axios
-            .put(`https://money-manager-master-be.herokuapp.com/transaction/update-transaction/${editTransaction._id}`, editTransaction)
-            .then((res) => {
-              setOpenEditForm(false);
-              if (res.status === 200) {
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Edit transaction successfully!',
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-                dispatch(changeFlag(1));
-              } else {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Something went wrong!',
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-              }
-            })
-            .catch((err) => Swal.fire({
+          .put(
+            `https://money-manager-master-be.herokuapp.com/transaction/update-transaction/${editTransaction._id}`,
+            editTransaction
+          )
+          .then((res) => {
+            setOpenEditForm(false);
+            if (res.status === 200) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Edit transaction successfully!',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              dispatch(changeFlag(1));
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          })
+          .catch((err) =>
+            Swal.fire({
               icon: 'error',
-              title: 'Something Wrong!',
+              title: 'Something wrong!',
               text: 'Something wrong! Please try again!',
               showConfirmButton: false,
-              timer: 2000}));
+              timer: 2000,
+            })
+          );
       }
     }
   };
-
-  const getWalletUser = async () => {
-    const userId = JSON.parse(localStorage.getItem('user')).user_id;
-   return  await axios.get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
-  }
-
-  const changeFlash = () => {
-    setFlash(flash+1)
-  }
-
-  useEffect(() => {
-    getWalletUser().then((res) => {
-      if (res.data.wallet.length === 0) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Wallet does not exist...',
-          text: 'Please create a new wallet!',
-          showCancelButton: true,
-          confirmButtonColor: '#54D62C',
-          cancelButtonColor: '#FF4842',
-        }).then(navigate('/dashboard/wallet'))
-      }
-    }).catch((err) =>
-        Swal.fire({
-      icon: 'error',
-      title: 'Something Wrong!',
-      text: 'Something wrong! Please try again!',
-      showConfirmButton: false,
-      timer: 2000}))
-  },[flash])
 
   return (
     <>
@@ -431,8 +437,15 @@ const [flash , setFlash] = useState(0);
       <Grid container spacing={3}>
         <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-            <Typography variant="h3" sx={{ml: '20px'}}>Transaction</Typography>
-            <Button  sx={{mr: '20px'}} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
+            <Typography variant="h3" sx={{ ml: '20px' }}>
+              Transaction
+            </Typography>
+            <Button
+              sx={{ mr: '20px' }}
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              onClick={handleClickOpenAddForm}
+            >
               New Transaction
             </Button>
           </Stack>
