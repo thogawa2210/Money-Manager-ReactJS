@@ -32,7 +32,7 @@ export default function LoginForm() {
       email: form.email,
       password: form.password,
     };
-    const results = await axios.post('http://localhost:3001/auth/login', data);
+    const results = await axios.post('https://money-manager-master-be.herokuapp.com/auth/login', data);
     return results;
   };
 

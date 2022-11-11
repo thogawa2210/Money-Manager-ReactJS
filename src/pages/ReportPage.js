@@ -134,7 +134,7 @@ function ReportPage() {
   };
 
   const getWalletsApi = async (id) => {
-    return await axios.get(`http://localhost:3001/wallet/get-all-wallet/${id}`);
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${id}`);
   };
 
   useEffect(() => {
@@ -186,7 +186,7 @@ function ReportPage() {
   }, []);
 
   const getTransCustomApi = async (data) => {
-    return await axios.post('http://localhost:3001/transaction/get-transaction-custom', data);
+    return await axios.post('https://money-manager-master-be.herokuapp.com/transaction/get-transaction-custom', data);
   };
 
   useEffect(() => {
@@ -433,9 +433,11 @@ function ReportPage() {
               chartData={incomeData}
               chartColors={[
                 theme.palette.primary.main,
-                theme.palette.info.main,
                 theme.palette.warning.main,
                 theme.palette.error.main,
+                theme.palette.success.main,
+                theme.palette.secondary.main,
+                theme.palette.info.light,
               ]}
             />
           </Grid>
@@ -446,9 +448,11 @@ function ReportPage() {
               chartData={expenseData}
               chartColors={[
                 theme.palette.primary.main,
-                theme.palette.info.main,
                 theme.palette.warning.main,
                 theme.palette.error.main,
+                theme.palette.success.main,
+                theme.palette.secondary.main,
+                theme.palette.info.light,
               ]}
             />
           </Grid>

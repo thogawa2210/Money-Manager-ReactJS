@@ -29,7 +29,6 @@ import {
   Tabs,
   TextField,
   Typography,
-  Divider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Iconify from 'src/components/iconify';
@@ -53,16 +52,7 @@ const TransitionEdit = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const currencies = [
-  {
-    value: 'expense',
-    label: 'expense',
-  },
-  {
-    value: 'income',
-    label: 'income',
-  },
-];
+
 // Tab Detail
 
 function TabPanel(props) {
@@ -120,6 +110,13 @@ export default function ProductsPage() {
     setOpenCreateCategory(true);
   };
   const handleCloseCreate = () => {
+    setCategory({
+      ...category,
+      icon: null,
+      name: '',
+      type: null,
+      note: '',
+    })
     setOpenCreateCategory(false);
   };
   const handleChangeCreate = (e) => {
@@ -138,7 +135,7 @@ export default function ProductsPage() {
       note: category.note,
       user_id: idUser,
     };
-    console.log(data);
+   
     if (category.name === '' || category.type === '' || category.icon === '') {
       setOpenCreateCategory(false);
       Swal.fire({
@@ -149,9 +146,9 @@ export default function ProductsPage() {
         timer: 1500,
       });
     } else {
-      const result = await axios.post('http://localhost:3001/category/add-category', data);
-      console.log(result);
-      if (result) {
+      const result = await axios.post('https://money-manager-master-be.herokuapp.com/category/add-category', data);
+
+      if (result.data.type === "success") {
         Swal.fire({
           icon: 'success',
           title: 'Create Category Successfully!',
@@ -164,12 +161,22 @@ export default function ProductsPage() {
               icon: null,
               name: '',
               type: null,
-              note: null,
+              note: '',
             }),
             setOpenCreateCategory(false),
             dispatch(changeFlag(1))
           )
-          .catch((error) => console.log(error.message));
+          .catch((error) =>{
+            Swal.fire({
+              icon: 'error',
+              title: 'Something Wrong!',
+              text: 'Something wrong! Please try again!',
+              showConfirmButton: false,
+              timer: 2000,
+            });
+            
+            
+          });
       } else {
         Swal.fire({
           icon: 'warning',
@@ -177,6 +184,13 @@ export default function ProductsPage() {
           showConfirmButton: false,
           timer: 1500,
         });
+        setCategory({
+          ...category,
+          icon: null,
+          name: '',
+          type: null,
+          note: '',
+        })
         setOpenCreateCategory(false);
       }
     }
@@ -190,6 +204,7 @@ export default function ProductsPage() {
       type: '',
       note: '',
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flag]);
 
   const closeCategory = () => {
@@ -220,12 +235,20 @@ export default function ProductsPage() {
 
   const getWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
-    return await axios.get(` http://localhost:3001/category/get-category-byuser/${userId.user_id}`, idUser);
+    return await axios.get(` https://money-manager-master-be.herokuapp.com/category/get-category-byuser/${userId.user_id}`, idUser);
   };
   useEffect(() => {
     getWallet()
       .then((res) => setCategories(res.data.categoryOfUser))
-      .catch((error) => console.log(error.message));
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Something Wrong!',
+          text: 'Something wrong! Please try again!',
+          showConfirmButton: false,
+          timer: 2000,
+        })
+      });
   }, [flag]);
 
   // Delete Category
@@ -240,7 +263,7 @@ export default function ProductsPage() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
-          .delete(`http://localhost:3001/category/delete-category/${id}`)
+          .delete(`https://money-manager-master-be.herokuapp.com/category/delete-category/${id}`)
           .then((res) => {
             dispatch(changeFlag(1));
             Swal.fire({
@@ -252,17 +275,15 @@ export default function ProductsPage() {
             });
             setExpanded(false);
           })
-          .catch(
-            (err) => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Something Wrong!',
-                text: 'Something wrong! Please try again!',
-                showConfirmButton: false,
-                timer: 2000,
-              })
-            }
-          );
+          .catch((err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Something Wrong!',
+              text: 'Something wrong! Please try again!',
+              showConfirmButton: false,
+              timer: 2000,
+            });
+          });
       }
     });
   };
@@ -320,7 +341,7 @@ export default function ProductsPage() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           await axios
-            .put(` http://localhost:3001/category/update-categody/${editForm._id}`, data)
+            .put(` https://money-manager-master-be.herokuapp.com/category/update-categody/${editForm._id}`, data)
             .then((res) => {
               dispatch(changeFlag(1));
               Swal.fire({
@@ -332,14 +353,15 @@ export default function ProductsPage() {
               });
             })
             .catch(
-              (err) => console.log(err),
-              Swal.fire({
-                icon: 'error',
-                title: 'Something Wrong!',
-                text: 'Something wrong! Please try again!',
-                showConfirmButton: false,
-                timer: 2000,
-              })
+              (err) => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Something Wrong!',
+                  text: 'Something wrong! Please try again!',
+                  showConfirmButton: false,
+                  timer: 2000,
+                })
+              }
             );
         }
       });
@@ -435,7 +457,7 @@ export default function ProductsPage() {
                                                 <TableCell component="th" scope="row">
                                                   <strong>{item.name}</strong>
                                                 </TableCell>
-                                                <TableCell component="th" scope="row" align="center">
+                                                <TableCell component="th" scope="row" align="center" >
                                                   <strong>{item.note}</strong>
                                                 </TableCell>
 
@@ -575,74 +597,72 @@ export default function ProductsPage() {
         onClose={handleCloseCreate}
       >
         <DialogTitle>{'Add Category'}</DialogTitle>
-        <DialogContentText></DialogContentText>
         <DialogContent>
-          <Grid container spacing={3}>
-            {/*  */}
-            <Grid item xs={5}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 340 }}>
-                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="type"
-                    name="type"
-                    onChange={handleChangeCreate}
-                    sx={{ height: 55 }}
-                    value={category.type}
-                  >
-                    <MenuItem value={`expense`}>Expense</MenuItem>
-                    <MenuItem value={`income`}>Income</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+          <Grid container spacing={3} sx={{pt: 1}}>
+            <Grid item xs={2}>
+              <FormControl>
+                <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="type"
+                  name="type"
+                  onChange={handleChangeCreate}
+                  sx={{ height: 55, minWidth: 120 }}
+                  value={category.type}
+                >
+                  <MenuItem value={`expense`}>Expense</MenuItem>
+                  <MenuItem value={`income`}>Income</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs>
               <TextField
                 name="name"
+                sx={{ minWidth: 400 }}
                 onChange={handleChangeCreate}
                 fullWidth={true}
                 label="Name Category"
                 variant="outlined"
                 value={category.name}
               />
+            </Grid>{' '}
+          </Grid>
+
+          <Grid container spacing={3} sx={{mt: 1}}>
+            {/* Select icon */}
+            <Grid item xs={2}>
+              <FormControl>
+                <InputLabel id="demo-simple-select-label">Icon</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="icon"
+                  name="icon"
+                  onChange={handleChangeCreate}
+                  sx={{ height: 55, minWidth: 120 }}
+                  inputProps={{ readOnly: true }}
+                  onClick={handleClickOpenTabCategory}
+                  value={category.icon + ''}
+                >
+                  {mockExpense.map((item) => (
+                    <MenuItem value={item.icon}>
+                      <Avatar src={item.icon} sx={{ mr: 0 }} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs>
               <TextField
                 name="note"
                 onChange={handleChangeCreate}
                 fullWidth={true}
                 label="Note"
                 variant="outlined"
+                placeholder='Optional'
                 value={category.note}
               />
-            </Grid>
-
-            {/* Select icon */}
-            <Grid item xs={2}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 341 }}>
-                  <InputLabel id="demo-simple-select-label">Icon</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="icon"
-                    name="icon"
-                    onChange={handleChangeCreate}
-                    sx={{ height: 55 }}
-                    inputProps={{ readOnly: true }}
-                    onClick={handleClickOpenTabCategory}
-                    value={category.icon + ''}
-                  >
-                    {mockExpense.map((item) => (
-                      <MenuItem value={item.icon}>
-                        <Avatar src={item.icon} sx={{ mr: 0 }} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
             </Grid>
           </Grid>
         </DialogContent>
@@ -666,9 +686,8 @@ export default function ProductsPage() {
         onClose={() => handleCloseEdit(false)}
       >
         <DialogTitle>{'Edit category'}</DialogTitle>
-        <DialogContentText></DialogContentText>
         <DialogContent>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{pt: 1}}>
             <Grid item xs={2}>
               <TextField
                 id="outlined-select-currency"
@@ -692,39 +711,38 @@ export default function ProductsPage() {
               />
             </Grid>
           </Grid>
-          <Grid container spacing={2} sx={{mt: 1}}>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={2}>
               {/* Select icon */}
-             
-                <FormControl>
-                  <InputLabel>Icon</InputLabel>
-                  <Select
-                    name="icon"
-                    label="icon"
-                    onChange={handleChangeEdit}
-                    sx={{ height: 55 }}
-                    inputProps={{ readOnly: true }}
-                    onClick={handleClickOpenTabCategory}
-                    value={editForm.icon + ''}
-                  >
-                    {mockExpense.map((item, index) => (
-                      <MenuItem value={item.icon} key={index}>
-                        <Avatar src={item.icon} sx={{ mr: 0 }} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-             
+
+              <FormControl>
+                <InputLabel>Icon</InputLabel>
+                <Select
+                  name="icon"
+                  label="icon"
+                  onChange={handleChangeEdit}
+                  sx={{ height: 55 , minWidth: 120}}
+                  inputProps={{ readOnly: true }}
+                  onClick={handleClickOpenTabCategory}
+                  value={editForm.icon + ''}
+                >
+                  {mockExpense.map((item, index) => (
+                    <MenuItem value={item.icon} key={index}>
+                      <Avatar src={item.icon} sx={{ mr: 0 }} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
 
             <Grid item xs>
               <TextField
                 name="note"
-                sx={{ minWidth: 280 }}
                 InputProps={{ startAdornment: <InputAdornment position="start">Note</InputAdornment> }}
                 onChange={handleChangeEdit}
                 fullWidth
                 variant="outlined"
+                placeholder='Optional'
                 value={editForm.note}
               />
             </Grid>
