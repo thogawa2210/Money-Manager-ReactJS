@@ -40,7 +40,7 @@ import { useDispatch, useSelector } from 'react-redux';
 //css
 import '../css/transaction.css';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-
+import { useNavigate } from 'react-router-dom';
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -85,11 +85,11 @@ export default function TransactionPage() {
     outflow: 0,
   });
   const [category, setCategory] = useState('expense');
-
+  const navigate = useNavigate();
   const handleChangeCategory = (e, category) => {
     setCategory(category);
   };
-
+const [flash , setFlash] = useState(0);
   const handleChooseCategory = (id) => {
     if(openAddForm){
       setTransaction({ ...transaction, category_id: id });
@@ -116,7 +116,12 @@ export default function TransactionPage() {
     await axios
       .get(`http://localhost:3001/category/get-category/${userId}`)
       .then((res) => setListCategory(res.data.categoryUser))
-      .catch((err) => console.log(err));
+      .catch((err) => Swal.fire({
+        icon: 'error',
+        title: 'Something Wrong!',
+        text: 'Something wrong! Please try again!',
+        showConfirmButton: false,
+        timer: 2000}));
     await axios
       .get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
       .then((res) => setListWallet(res.data.wallet))
@@ -156,6 +161,7 @@ export default function TransactionPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listWallet]);
+
 
   const handleChange = (e) => {
     if (e.target) {
@@ -258,7 +264,7 @@ export default function TransactionPage() {
               title: 'Delete Success!',
               showConfirmButton: false,
               timer: 1500,
-            });
+            }).then(setTimeout(changeFlash,1500));
           })
           .catch((err) =>
             Swal.fire({
@@ -374,6 +380,35 @@ export default function TransactionPage() {
       }
     }
   };
+
+  const getWalletUser = async () => {
+    const userId = JSON.parse(localStorage.getItem('user')).user_id;
+   return  await axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
+  }
+
+  const changeFlash = () => {
+    setFlash(flash+1)
+  }
+
+  useEffect(() => {
+    getWalletUser().then((res) => {
+      if (res.data.wallet.length === 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Wallet does not exist...',
+          text: 'Please create a new wallet!',
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(navigate('/dashboard/wallet'))
+      }
+    }).catch((err) =>
+        Swal.fire({
+      icon: 'error',
+      title: 'Something Wrong!',
+      text: 'Something wrong! Please try again!',
+      showConfirmButton: false,
+      timer: 2000}))
+  },[flash])
 
   return (
     <>
