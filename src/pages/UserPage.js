@@ -126,7 +126,7 @@ export default function UserPage() {
       old_pass: oldPass,
       new_pass: newPass,
     };
-    return await axios.put(`http://localhost:3001/user/change-password/${id}`, data);
+    return await axios.put(`https://money-manager-master-be.herokuapp.com/user/change-password/${id}`, data);
   };
 
   const handleChangePass = (e) => {
@@ -184,11 +184,11 @@ export default function UserPage() {
   };
 
   const userApi = async (id) => {
-    return await axios.get(`http://localhost:3001/user/info/${id}`);
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/user/info/${id}`);
   };
 
   const changeNameApi = async (id) => {
-    return await axios.put(`http://localhost:3001/user/edit-username/${id}`, { username: formName.username });
+    return await axios.put(`https://money-manager-master-be.herokuapp.com/user/edit-username/${id}`, { username: formName.username });
   };
 
   const handleChangeName = (e) => {
@@ -243,7 +243,7 @@ export default function UserPage() {
   }, [flag]);
 
   const profileApi = async (id) => {
-    return await axios.get(`http://localhost:3001/user/profile/${id}`);
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/user/profile/${id}`);
   };
 
   useEffect(() => {
