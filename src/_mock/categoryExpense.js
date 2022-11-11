@@ -19,7 +19,10 @@ const mockExpense = [
   { name: 'Makeup', icon: '/assets/icons/category/makeup-svgrepo-com.svg' },
   { name: 'Gifts & Donations', icon: '/assets/icons/category/donation-svgrepo-com.svg' },
   { name: 'Investment', icon: '/assets/icons/category/investment-svgrepo-com.svg' },
-  { name: 'Other expense', icon: '/assets/icons/category/pay-svgrepo-com.svg' }
+  { name: 'Other expense', icon: '/assets/icons/category/pay-svgrepo-com.svg' },
+  { name: 'Salary', icon: '/assets/icons/category/money-svgrepo-com.svg' },
+  { name: 'Income transfer', icon: '/assets/icons/category/transfer-svgrepo-com.svg' },
+  { name: 'Other income', icon: '/assets/icons/category/profit-svgrepo-com.svg' }
 ];
 
 export default mockExpense;

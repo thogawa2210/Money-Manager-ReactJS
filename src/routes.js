@@ -7,7 +7,6 @@ import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import CategoryPage from './pages/CategoryPage';
-import DashboardAppPage from './pages/DashboardAppPage';
 import SignupPage from './pages/SignupPage';
 import VerifyRegister from './sections/auth/login/VerifyRegister';
 import WalletPage from './pages/WalletPage';

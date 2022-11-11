@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
 import { changeFlag } from '../features/flagSlice';
@@ -102,7 +103,7 @@ export default function WalletPage() {
             setWallet({
               name: '',
               amount: '',
-              icon: '',
+              icon: null,
             });
             Swal.fire({
               icon: 'success',
@@ -314,7 +315,7 @@ export default function WalletPage() {
         <Grid item xs />
         <Grid item xs={9} sx={{ padding: 0 }}>
           {wallets.map((item, index) => (
-            <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)}>
+            <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)} key={index}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
                 <Typography sx={{ width: '80%', flexShrink: 0, display: 'flex' }}>
                   <Avatar src={item.icon} sx={{ mr: 0 }} />
@@ -343,7 +344,7 @@ export default function WalletPage() {
                       <TableBody key={index}>
                         <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                           <TableCell component="th" scope="row">
-                            {item.name}
+                         <strong>{item.name}</strong>   
                           </TableCell>
                           <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
                           <TableCell align="right">
@@ -392,6 +393,7 @@ export default function WalletPage() {
                     label="icon"
                     name="icon"
                     onChange={handleChangeCreate}
+                    value={wallet.icon}
                     sx={{ height: 55 }}
                   >
                     {mockWallet.map((item, index) => (
