@@ -264,7 +264,7 @@ const [flash , setFlash] = useState(0);
               title: 'Delete Success!',
               showConfirmButton: false,
               timer: 1500,
-            }).then(setTimeout(changeFlash,1500));
+            }).then(setTimeout(changeFlash,1000));
           })
           .catch((err) =>
             Swal.fire({
