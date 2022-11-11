@@ -240,8 +240,14 @@ const [flash , setFlash] = useState(0);
   };
 
   useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    setTransaction({ ...transaction, user_id: userId });
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(user) {
+      let userId = user.user_id;
+      setTransaction({ ...transaction, user_id: userId });
+    }else {
+      navigate('/login');
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
