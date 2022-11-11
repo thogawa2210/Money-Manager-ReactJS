@@ -29,7 +29,6 @@ import {
   Tabs,
   TextField,
   Typography,
-  Divider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Iconify from 'src/components/iconify';
@@ -53,16 +52,7 @@ const TransitionEdit = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const currencies = [
-  {
-    value: 'expense',
-    label: 'expense',
-  },
-  {
-    value: 'income',
-    label: 'income',
-  },
-];
+
 // Tab Detail
 
 function TabPanel(props) {
@@ -145,7 +135,7 @@ export default function ProductsPage() {
       note: category.note,
       user_id: idUser,
     };
-    console.log(data);
+   
     if (category.name === '' || category.type === '' || category.icon === '') {
       setOpenCreateCategory(false);
       Swal.fire({
@@ -157,7 +147,8 @@ export default function ProductsPage() {
       });
     } else {
       const result = await axios.post('http://localhost:3001/category/add-category', data);
-      if (result) {
+
+      if (result.data.type === "success") {
         Swal.fire({
           icon: 'success',
           title: 'Create Category Successfully!',
@@ -457,7 +448,7 @@ export default function ProductsPage() {
                                                 <TableCell component="th" scope="row">
                                                   <strong>{item.name}</strong>
                                                 </TableCell>
-                                                <TableCell component="th" scope="row" align="center">
+                                                <TableCell component="th" scope="row" align="center" >
                                                   <strong>{item.note}</strong>
                                                 </TableCell>
 
@@ -660,6 +651,7 @@ export default function ProductsPage() {
                 fullWidth={true}
                 label="Note"
                 variant="outlined"
+                placeholder='Optional'
                 value={category.note}
               />
             </Grid>
@@ -741,6 +733,7 @@ export default function ProductsPage() {
                 onChange={handleChangeEdit}
                 fullWidth
                 variant="outlined"
+                placeholder='Optional'
                 value={editForm.note}
               />
             </Grid>
