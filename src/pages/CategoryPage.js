@@ -173,7 +173,9 @@ export default function ProductsPage() {
               text: 'Something wrong! Please try again!',
               showConfirmButton: false,
               timer: 2000,
-            })
+            });
+            
+            
           });
       } else {
         Swal.fire({
@@ -182,6 +184,13 @@ export default function ProductsPage() {
           showConfirmButton: false,
           timer: 1500,
         });
+        setCategory({
+          ...category,
+          icon: null,
+          name: '',
+          type: null,
+          note: '',
+        })
         setOpenCreateCategory(false);
       }
     }
