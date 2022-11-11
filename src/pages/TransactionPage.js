@@ -397,8 +397,9 @@ const [flash , setFlash] = useState(0);
           icon: 'error',
           title: 'Wallet does not exist...',
           text: 'Please create a new wallet!',
-          showConfirmButton: false,
-          timer: 1500,
+          showCancelButton: true,
+          confirmButtonColor: '#54D62C',
+          cancelButtonColor: '#FF4842',
         }).then(navigate('/dashboard/wallet'))
       }
     }).catch((err) =>
