@@ -108,13 +108,13 @@ const [flash , setFlash] = useState(0);
 
   const getDataApi = async () => {
     const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    return await axios.get(`http://localhost:3001/transaction/transaction-this-month/${userId}`);
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/transaction/transaction-this-month/${userId}`);
   };
 
   const getData = async () => {
     const userId = JSON.parse(localStorage.getItem('user')).user_id;
     await axios
-      .get(`http://localhost:3001/category/get-category/${userId}`)
+      .get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
       .then((res) => setListCategory(res.data.categoryUser))
       .catch((err) => Swal.fire({
         icon: 'error',
@@ -123,7 +123,7 @@ const [flash , setFlash] = useState(0);
         showConfirmButton: false,
         timer: 2000}));
     await axios
-      .get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
+      .get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
       .then((res) => setListWallet(res.data.wallet))
       .catch((err) => Swal.fire({
         icon: 'error',
@@ -236,7 +236,7 @@ const [flash , setFlash] = useState(0);
   };
 
   const deleteTransApi = async (id) => {
-    return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`);
+    return await axios.delete(`https://money-manager-master-be.herokuapp.com/transaction/delete-transaction/${id}`);
   };
 
   useEffect(() => {
@@ -291,7 +291,7 @@ const [flash , setFlash] = useState(0);
       });
     } else {
       await axios
-        .post('http://localhost:3001/transaction/add-transaction', transaction)
+        .post('https://money-manager-master-be.herokuapp.com/transaction/add-transaction', transaction)
         .then((res) => {
           if (res.status === 200) {
             dispatch(changeFlag(1));
@@ -350,7 +350,7 @@ const [flash , setFlash] = useState(0);
         });
       } else {
         await axios
-            .put(`http://localhost:3001/transaction/update-transaction/${editTransaction._id}`, editTransaction)
+            .put(`https://money-manager-master-be.herokuapp.com/transaction/update-transaction/${editTransaction._id}`, editTransaction)
             .then((res) => {
               setOpenEditForm(false);
               if (res.status === 200) {
@@ -383,7 +383,7 @@ const [flash , setFlash] = useState(0);
 
   const getWalletUser = async () => {
     const userId = JSON.parse(localStorage.getItem('user')).user_id;
-   return  await axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
+   return  await axios.get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
   }
 
   const changeFlash = () => {
