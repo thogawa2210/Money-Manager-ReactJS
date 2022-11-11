@@ -103,7 +103,7 @@ export default function WalletPage() {
             setWallet({
               name: '',
               amount: '',
-              icon: '',
+              icon: null,
             });
             Swal.fire({
               icon: 'success',
@@ -300,7 +300,7 @@ export default function WalletPage() {
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>p
+        <DialogActions>
           <Button variant="outlined" color="error" onClick={onCancelEdit}>
             Cancel
           </Button>
@@ -393,6 +393,7 @@ export default function WalletPage() {
                     label="icon"
                     name="icon"
                     onChange={handleChangeCreate}
+                    value={wallet.icon}
                     sx={{ height: 55 }}
                   >
                     {mockWallet.map((item, index) => (
