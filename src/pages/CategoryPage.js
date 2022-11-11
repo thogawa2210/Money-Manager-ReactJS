@@ -204,6 +204,7 @@ export default function ProductsPage() {
       type: '',
       note: '',
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flag]);
 
   const closeCategory = () => {
@@ -274,17 +275,15 @@ export default function ProductsPage() {
             });
             setExpanded(false);
           })
-          .catch(
-            (err) => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Something Wrong!',
-                text: 'Something wrong! Please try again!',
-                showConfirmButton: false,
-                timer: 2000,
-              })
-            }
-          );
+          .catch((err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Something Wrong!',
+              text: 'Something wrong! Please try again!',
+              showConfirmButton: false,
+              timer: 2000,
+            });
+          });
       }
     });
   };
@@ -598,40 +597,63 @@ export default function ProductsPage() {
         onClose={handleCloseCreate}
       >
         <DialogTitle>{'Add Category'}</DialogTitle>
-        <DialogContentText></DialogContentText>
         <DialogContent>
-          <Grid container spacing={3}>
-            {/*  */}
-            <Grid item xs={5}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 340 }}>
-                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="type"
-                    name="type"
-                    onChange={handleChangeCreate}
-                    sx={{ height: 55 }}
-                    value={category.type}
-                  >
-                    <MenuItem value={`expense`}>Expense</MenuItem>
-                    <MenuItem value={`income`}>Income</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+          <Grid container spacing={3} sx={{pt: 1}}>
+            <Grid item xs={2}>
+              <FormControl>
+                <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="type"
+                  name="type"
+                  onChange={handleChangeCreate}
+                  sx={{ height: 55, minWidth: 120 }}
+                  value={category.type}
+                >
+                  <MenuItem value={`expense`}>Expense</MenuItem>
+                  <MenuItem value={`income`}>Income</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs>
               <TextField
                 name="name"
+                sx={{ minWidth: 400 }}
                 onChange={handleChangeCreate}
                 fullWidth={true}
                 label="Name Category"
                 variant="outlined"
                 value={category.name}
               />
+            </Grid>{' '}
+          </Grid>
+
+          <Grid container spacing={3} sx={{mt: 1}}>
+            {/* Select icon */}
+            <Grid item xs={2}>
+              <FormControl>
+                <InputLabel id="demo-simple-select-label">Icon</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="icon"
+                  name="icon"
+                  onChange={handleChangeCreate}
+                  sx={{ height: 55, minWidth: 120 }}
+                  inputProps={{ readOnly: true }}
+                  onClick={handleClickOpenTabCategory}
+                  value={category.icon + ''}
+                >
+                  {mockExpense.map((item) => (
+                    <MenuItem value={item.icon}>
+                      <Avatar src={item.icon} sx={{ mr: 0 }} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs>
               <TextField
                 name="note"
                 onChange={handleChangeCreate}
@@ -641,32 +663,6 @@ export default function ProductsPage() {
                 placeholder='Optional'
                 value={category.note}
               />
-            </Grid>
-
-            {/* Select icon */}
-            <Grid item xs={2}>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ width: 341 }}>
-                  <InputLabel id="demo-simple-select-label">Icon</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Icon"
-                    name="icon"
-                    onChange={handleChangeCreate}
-                    sx={{ height: 55 }}
-                    inputProps={{ readOnly: true }}
-                    onClick={handleClickOpenTabCategory}
-                    value={category.icon + ''}
-                  >
-                    {mockExpense.map((item) => (
-                      <MenuItem value={item.icon}>
-                        <Avatar src={item.icon} sx={{ mr: 0 }} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
             </Grid>
           </Grid>
         </DialogContent>
@@ -690,9 +686,8 @@ export default function ProductsPage() {
         onClose={() => handleCloseEdit(false)}
       >
         <DialogTitle>{'Edit category'}</DialogTitle>
-        <DialogContentText></DialogContentText>
         <DialogContent>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{pt: 1}}>
             <Grid item xs={2}>
               <TextField
                 id="outlined-select-currency"
@@ -716,35 +711,33 @@ export default function ProductsPage() {
               />
             </Grid>
           </Grid>
-          <Grid container spacing={2} sx={{mt: 1}}>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={2}>
               {/* Select icon */}
-             
-                <FormControl>
-                  <InputLabel>Icon</InputLabel>
-                  <Select
-                    name="icon"
-                    label="icon"
-                    onChange={handleChangeEdit}
-                    sx={{ height: 55 }}
-                    inputProps={{ readOnly: true }}
-                    onClick={handleClickOpenTabCategory}
-                    value={editForm.icon + ''}
-                  >
-                    {mockExpense.map((item, index) => (
-                      <MenuItem value={item.icon} key={index}>
-                        <Avatar src={item.icon} sx={{ mr: 0 }} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-             
+
+              <FormControl>
+                <InputLabel>Icon</InputLabel>
+                <Select
+                  name="icon"
+                  label="icon"
+                  onChange={handleChangeEdit}
+                  sx={{ height: 55 , minWidth: 120}}
+                  inputProps={{ readOnly: true }}
+                  onClick={handleClickOpenTabCategory}
+                  value={editForm.icon + ''}
+                >
+                  {mockExpense.map((item, index) => (
+                    <MenuItem value={item.icon} key={index}>
+                      <Avatar src={item.icon} sx={{ mr: 0 }} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
 
             <Grid item xs>
               <TextField
                 name="note"
-                sx={{ minWidth: 280 }}
                 InputProps={{ startAdornment: <InputAdornment position="start">Note</InputAdornment> }}
                 onChange={handleChangeEdit}
                 fullWidth
