@@ -299,7 +299,7 @@ export default function WalletPage() {
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
+        <DialogActions>p
           <Button variant="outlined" color="error" onClick={onCancelEdit}>
             Cancel
           </Button>
@@ -343,7 +343,7 @@ export default function WalletPage() {
                       <TableBody key={index}>
                         <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                           <TableCell component="th" scope="row">
-                            {item.name}
+                         <strong>{item.name}</strong>   
                           </TableCell>
                           <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
                           <TableCell align="right">
