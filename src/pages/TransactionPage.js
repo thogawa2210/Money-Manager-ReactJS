@@ -135,7 +135,7 @@ export default function TransactionPage() {
         .catch((err) => {
           Swal.fire({
             icon: 'warning',
-            title: '1!',
+            title: 'Something wrong!',
             text: 'Try again!',
             showConfirmButton: false,
             timer: 1500,
@@ -147,7 +147,7 @@ export default function TransactionPage() {
         .catch((err) => {
           Swal.fire({
             icon: 'warning',
-            title: '2!',
+            title: 'Somrthing wrong!',
             text: 'Try again!',
             showConfirmButton: false,
             timer: 1500,
