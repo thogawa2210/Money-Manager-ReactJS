@@ -726,8 +726,8 @@ export default function ProductsPage() {
                   onClick={handleClickOpenTabCategory}
                   value={editForm.icon + ''}
                 >
-                  {mockExpense.map((item, index) => (
-                    <MenuItem value={item.icon} key={index}>
+                  {mockExpense.map((item) => (
+                    <MenuItem value={item.icon} key={item.icon}>
                       <Avatar src={item.icon} sx={{ mr: 0 }} />
                     </MenuItem>
                   ))}
