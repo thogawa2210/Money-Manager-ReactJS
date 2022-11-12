@@ -552,7 +552,7 @@ export default function TransactionPage() {
                   }}
                 >
                   {listTransaction?.map((item, index) => (
-                    <div key={index}>
+                    <div key={item._id}>
                       <Box sx={{ heght: '20px', border: '1px solid #EAFCDE' }}></Box>
                       <Accordion
                         expanded={expanded === `panel${index + 1}`}

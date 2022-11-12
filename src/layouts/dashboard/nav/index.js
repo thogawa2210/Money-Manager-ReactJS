@@ -39,8 +39,11 @@ Nav.propTypes = {
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
   const isDesktop = useResponsive('up', 'lg');
+  const [userForm, setUserForm] = useState({
+    username: '',
+    img: ''
+  })
   const flag = useSelector(state => state.flag.flag)
 
   const isLoginApi = async (token, id) => {
@@ -91,7 +94,10 @@ export default function Nav({ openNav, onCloseNav }) {
               navigate('/login');
               break;
             default:
-              setUsername(res.data.data);
+              setUserForm({
+                username: res.data.data.username,
+                img: res.data.data.img
+              });
               break;
           }
         })
@@ -115,11 +121,11 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
-            <Avatar src='/assets/images/avatars/avatar_9.jpg' />
+            <Avatar src={userForm.img} />
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                Hello, {username} ! 
+                Hello, {userForm.username} ! 
               </Typography>
             </Box>
           </StyledAccount>
