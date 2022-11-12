@@ -23,8 +23,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  FormControl,
-  Select,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CardHeader from '@mui/material/CardHeader';
@@ -49,12 +47,10 @@ const ITEM_HEIGHT = 48;
 export default function UserPage() {
   const [openName, setOpenName] = useState(false);
   const [openPass, setOpenPass] = useState(false);
-  const [openChangeAvatar, setOpenChangeAvatar] = useState(false);
   const [error, setError] = useState({
     old_pass: false,
     new_pass: false,
   });
-  const [avaForm, setAvaForm] = useState({ img: '' });
   const [formName, setFormName] = useState({ username: '' });
   const [formPass, setFormPass] = useState({ old_pass: '', new_pass: '' });
   const [openDialogListAva, setOpenDialogListAva] = useState(false);
@@ -75,9 +71,7 @@ export default function UserPage() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const openDialogAvatar = () => {
-    setOpenDialogListAva(true);
-  };
+ 
   const [showPassword, setShowPassword] = useState(false);
   const [profile, setProfile] = useState({
     wallets: 0,
@@ -287,7 +281,7 @@ export default function UserPage() {
   };
 
   const onClickChangeAvatar = () => {
-    setOpenChangeAvatar(true);
+    setOpenDialogListAva(true);
   };
 
   const handleChangeAvatar = (avatar) => {
@@ -306,7 +300,6 @@ export default function UserPage() {
             timer: 1500,
           });
           dispatch(changeFlag(1));
-          setOpenChangeAvatar(false);
           setOpenDialogListAva(false);
         })
         .catch((err) => {
@@ -580,14 +573,6 @@ export default function UserPage() {
             </Button>
           </DialogActions>
         </Box>
-      </Dialog>
-
-      {/* Change avatar*/}
-      <Dialog onClose={() => setOpenChangeAvatar(false)} open={openChangeAvatar} sx={{ maxHeight: 400 }}>
-        <DialogTitle>Choose one avatar</DialogTitle>
-        <FormControl sx={{ padding: 2 }}>
-          <Select name="img" inputProps={{ readOnly: true }} onClick={openDialogAvatar} value={avaForm.img}></Select>
-        </FormControl>
       </Dialog>
 
       {/* List ava */}
