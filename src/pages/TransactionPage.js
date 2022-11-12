@@ -109,18 +109,38 @@ export default function TransactionPage() {
     return await axios.get(`https://money-manager-master-be.herokuapp.com/transaction/transaction-this-month/${id}`);
   };
 
+  const getUserInfo = async (id) => {
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/user/profile/${id}`);
+  };
+
   useEffect(() => {
-    if (!listTransaction) {
-      Swal.fire({
-        icon: 'warning',
-        title: "You don't have any wallet!",
-        text: 'Please create one to continue!',
-        confirmButtonColor: '#54D62C',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/dashboard/wallet');
-        }
-      });
+    const user = localStorage.getItem('user');
+    if (user) {
+      let userId = JSON.parse(user).user_id;
+      getUserInfo(userId)
+        .then((res) => {
+          if (res.data.data.wallets === 0) {
+            Swal.fire({
+              icon: 'info',
+              title: 'Oops...',
+              text: "You don't have any wallets! Please create a new one to continute!",
+              confirmButtonColor: '#54D62C',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                navigate('/dashboard/wallet');
+              }
+            });
+          }
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Something wrong!',
+            text: 'Try again!',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -228,7 +248,36 @@ export default function TransactionPage() {
   };
 
   const handleClickOpenAddForm = () => {
-    setOpenAddForm(true);
+    const user = localStorage.getItem('user');
+    if (user) {
+      let userId = JSON.parse(user).user_id;
+      getUserInfo(userId)
+        .then((res) => {
+          if (res.data.data.wallets === 0) {
+            Swal.fire({
+              icon: 'info',
+              title: 'Oops...',
+              text: "You don't have any wallets! Please create a new one to continute!",
+              confirmButtonColor: '#54D62C',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                navigate('/dashboard/wallet');
+              }
+            });
+          } else {
+            setOpenAddForm(true);
+          }
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Something wrong!',
+            text: 'Try again!',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        });
+    }
   };
 
   const handleCloseAddForm = () => {
