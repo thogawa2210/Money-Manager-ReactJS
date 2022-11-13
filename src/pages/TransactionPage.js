@@ -224,8 +224,8 @@ export default function TransactionPage() {
           if (res.data.data.wallets === 0) {
             Swal.fire({
               icon: 'info',
-              title: 'Oops...',
-              text: "You don't have any wallets! Please create a new one to continute!",
+              title: "You don't have any wallets!",
+              text: "Please create a new one to continute!",
               confirmButtonColor: '#54D62C',
             }).then((result) => {
               if (result.isConfirmed) {
