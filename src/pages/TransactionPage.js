@@ -64,6 +64,7 @@ export default function TransactionPage() {
   const [listWallet, setListWallet] = useState([]);
   const [listCategory, setListCategory] = useState([]);
   const [transaction, setTransaction] = useState({
+    user_id: '',
     wallet_id: '',
     category_id: '',
     amount: 0,
@@ -233,6 +234,7 @@ export default function TransactionPage() {
               }
             });
           } else {
+            setTransaction({...transaction, user_id: userId})
             setOpenAddForm(true);
           }
         })
@@ -527,9 +529,9 @@ export default function TransactionPage() {
                           }}
                         >
                           <Grid container spacing={2} sx={{ pt: '4px' }}>
-                            <Grid item xs={2} sx={{ textAlign: 'center' }}>
+                            <Grid item xs={2}>
                               {' '}
-                              <Avatar src={item.category_icon} />
+                              <Avatar src={item.category_icon} sx={{mr: 0, width: '35px', height: '35px'}}/>
                             </Grid>
                             <Grid item xs={5} sx={{ mt: '8px' }}>
                               {item.category_name}
@@ -593,7 +595,7 @@ export default function TransactionPage() {
                           </Typography>
                           <hr />
                           <Grid container>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} sx={{ pt: '15px', pl: '26px' }}>
                               <Avatar src={item.category_icon} sx={{ mr: 10 }} />
                             </Grid>
                             <Grid item xs sx={{ mt: '3px' }}>

@@ -52,7 +52,6 @@ const TransitionEdit = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
 // Tab Detail
 
 function TabPanel(props) {
@@ -116,7 +115,7 @@ export default function ProductsPage() {
       name: '',
       type: null,
       note: '',
-    })
+    });
     setOpenCreateCategory(false);
   };
   const handleChangeCreate = (e) => {
@@ -135,7 +134,7 @@ export default function ProductsPage() {
       note: category.note,
       user_id: idUser,
     };
-   
+
     if (category.name === '' || category.type === '' || category.icon === '') {
       setOpenCreateCategory(false);
       Swal.fire({
@@ -148,7 +147,7 @@ export default function ProductsPage() {
     } else {
       const result = await axios.post('https://money-manager-master-be.herokuapp.com/category/add-category', data);
 
-      if (result.data.type === "success") {
+      if (result.data.type === 'success') {
         Swal.fire({
           icon: 'success',
           title: 'Create Category Successfully!',
@@ -166,7 +165,7 @@ export default function ProductsPage() {
             setOpenCreateCategory(false),
             dispatch(changeFlag(1))
           )
-          .catch((error) =>{
+          .catch((error) => {
             Swal.fire({
               icon: 'error',
               title: 'Something Wrong!',
@@ -174,8 +173,6 @@ export default function ProductsPage() {
               showConfirmButton: false,
               timer: 2000,
             });
-            
-            
           });
       } else {
         Swal.fire({
@@ -190,7 +187,7 @@ export default function ProductsPage() {
           name: '',
           type: null,
           note: '',
-        })
+        });
         setOpenCreateCategory(false);
       }
     }
@@ -235,7 +232,10 @@ export default function ProductsPage() {
 
   const getWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
-    return await axios.get(` https://money-manager-master-be.herokuapp.com/category/get-category-byuser/${userId.user_id}`, idUser);
+    return await axios.get(
+      ` https://money-manager-master-be.herokuapp.com/category/get-category-byuser/${userId.user_id}`,
+      idUser
+    );
   };
   useEffect(() => {
     getWallet()
@@ -247,7 +247,7 @@ export default function ProductsPage() {
           text: 'Something wrong! Please try again!',
           showConfirmButton: false,
           timer: 2000,
-        })
+        });
       });
   }, [flag]);
 
@@ -332,9 +332,8 @@ export default function ProductsPage() {
       });
     } else {
       Swal.fire({
-        title: 'Are you sure to edit?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
+        title: 'Are you confirm to edit?',
+        icon: 'info',
         showCancelButton: true,
         confirmButtonColor: '#54D62C',
         cancelButtonColor: '#FF4842',
@@ -352,17 +351,15 @@ export default function ProductsPage() {
                 timer: 1500,
               });
             })
-            .catch(
-              (err) => {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Something Wrong!',
-                  text: 'Something wrong! Please try again!',
-                  showConfirmButton: false,
-                  timer: 2000,
-                })
-              }
-            );
+            .catch((err) => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Something Wrong!',
+                text: 'Something wrong! Please try again!',
+                showConfirmButton: false,
+                timer: 2000,
+              });
+            });
         }
       });
     }
@@ -420,6 +417,7 @@ export default function ProductsPage() {
                                       expandIcon={<ExpandMoreIcon />}
                                       aria-controls="panel1bh-content"
                                       id="panel1bh-header"
+                                      sx={{ backgroundColor: '#EAFFC6' }}
                                     >
                                       <Typography sx={{ width: '100%', flexShrink: 0, display: 'flex' }}>
                                         <Avatar src={item.icon} sx={{ mr: 0 }} />
@@ -444,9 +442,17 @@ export default function ProductsPage() {
                                           <Table size="small" aria-label="a dense table" sx={{ width: '100%' }}>
                                             <TableHead>
                                               <TableRow>
-                                                <TableCell>Name Category</TableCell>
-                                                <TableCell align="center">Note</TableCell>
-                                                <TableCell align="center">Action</TableCell>
+                                                <Grid container>
+                                                  <Grid item xs={3}>
+                                                    <TableCell>Name</TableCell>
+                                                  </Grid>
+                                                  <Grid item xs={5}>
+                                                    <TableCell align="center">Note</TableCell>
+                                                  </Grid>
+                                                  <Grid item xs={4} sx={{pl: 5}}>
+                                                    <TableCell align="center">Action</TableCell>
+                                                  </Grid>
+                                                </Grid>
                                               </TableRow>
                                             </TableHead>
                                             <TableBody key={index}>
@@ -454,29 +460,36 @@ export default function ProductsPage() {
                                                 key={index}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                               >
-                                                <TableCell component="th" scope="row">
-                                                  <strong>{item.name}</strong>
-                                                </TableCell>
-                                                <TableCell component="th" scope="row" align="center" >
-                                                  <strong>{item.note}</strong>
-                                                </TableCell>
-
-                                                <TableCell align="center">
-                                                  <Button
-                                                    variant="outlined"
-                                                    color="success"
-                                                    onClick={() => handleClickOpenCategory(item._id)}
-                                                  >
-                                                    Edit
-                                                  </Button>
-                                                  <Button
-                                                    variant="outlined"
-                                                    color="error"
-                                                    onClick={() => handleDeleteCategory(item._id)}
-                                                  >
-                                                    Delete
-                                                  </Button>
-                                                </TableCell>
+                                                <Grid container>
+                                                  <Grid item xs={3}>
+                                                    <TableCell component="th" scope="row">
+                                                      <strong>{item.name}</strong>
+                                                    </TableCell>
+                                                  </Grid>
+                                                  <Grid item xs={5}>
+                                                    <TableCell component="th" scope="row" align="left">
+                                                      <strong>{item.note}</strong>
+                                                    </TableCell>
+                                                  </Grid>
+                                                  <Grid item xs={4}>
+                                                    <TableCell align="center">
+                                                      <Button
+                                                        variant="outlined"
+                                                        color="success"
+                                                        onClick={() => handleClickOpenCategory(item._id)}
+                                                      >
+                                                        Edit
+                                                      </Button>
+                                                      <Button
+                                                        variant="outlined"
+                                                        color="error"
+                                                        onClick={() => handleDeleteCategory(item._id)}
+                                                      >
+                                                        Delete
+                                                      </Button>
+                                                    </TableCell>
+                                                  </Grid>
+                                                </Grid>
                                               </TableRow>
                                             </TableBody>
                                           </Table>
@@ -506,6 +519,7 @@ export default function ProductsPage() {
                                       expandIcon={<ExpandMoreIcon />}
                                       aria-controls="panel1bh-content"
                                       id="panel1bh-header"
+                                      sx={{ backgroundColor: '#EAFFC6' }}
                                     >
                                       <Typography sx={{ width: '80%', flexShrink: 0, display: 'flex' }}>
                                         <Avatar src={item.icon} sx={{ mr: 0 }} />
@@ -598,7 +612,7 @@ export default function ProductsPage() {
       >
         <DialogTitle>{'Add Category'}</DialogTitle>
         <DialogContent>
-          <Grid container spacing={3} sx={{pt: 1}}>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
             <Grid item xs={2}>
               <FormControl>
                 <InputLabel id="demo-simple-select-label">Type</InputLabel>
@@ -629,7 +643,7 @@ export default function ProductsPage() {
             </Grid>{' '}
           </Grid>
 
-          <Grid container spacing={3} sx={{mt: 1}}>
+          <Grid container spacing={3} sx={{ mt: 1 }}>
             {/* Select icon */}
             <Grid item xs={2}>
               <FormControl>
@@ -660,7 +674,7 @@ export default function ProductsPage() {
                 fullWidth={true}
                 label="Note"
                 variant="outlined"
-                placeholder='Optional'
+                placeholder="Optional"
                 value={category.note}
               />
             </Grid>
@@ -687,7 +701,7 @@ export default function ProductsPage() {
       >
         <DialogTitle>{'Edit category'}</DialogTitle>
         <DialogContent>
-          <Grid container spacing={2} sx={{pt: 1}}>
+          <Grid container spacing={2} sx={{ pt: 1 }}>
             <Grid item xs={2}>
               <TextField
                 id="outlined-select-currency"
@@ -721,7 +735,7 @@ export default function ProductsPage() {
                   name="icon"
                   label="icon"
                   onChange={handleChangeEdit}
-                  sx={{ height: 55 , minWidth: 120}}
+                  sx={{ height: 55, minWidth: 120 }}
                   inputProps={{ readOnly: true }}
                   onClick={handleClickOpenTabCategory}
                   value={editForm.icon + ''}
@@ -742,7 +756,7 @@ export default function ProductsPage() {
                 onChange={handleChangeEdit}
                 fullWidth
                 variant="outlined"
-                placeholder='Optional'
+                placeholder="Optional"
                 value={editForm.note}
               />
             </Grid>
