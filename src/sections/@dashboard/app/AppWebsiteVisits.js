@@ -24,6 +24,7 @@ export default function AppWebsiteVisits({ title, subheader, chartLabels, chartD
     fill: { type: chartData.map((i) => i.fill) },
     labels: chartLabels,
     xaxis: { type: 'datetime' },
+
     tooltip: {
       shared: true,
       intersect: false,
