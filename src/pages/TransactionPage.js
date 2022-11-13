@@ -113,38 +113,6 @@ export default function TransactionPage() {
     return await axios.get(`https://money-manager-master-be.herokuapp.com/user/profile/${id}`);
   };
 
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      let userId = JSON.parse(user).user_id;
-      getUserInfo(userId)
-        .then((res) => {
-          if (res.data.data.wallets === 0) {
-            Swal.fire({
-              icon: 'info',
-              title: 'Oops...',
-              text: "You don't have any wallets! Please create a new one to continute!",
-              confirmButtonColor: '#54D62C',
-            }).then((result) => {
-              if (result.isConfirmed) {
-                navigate('/dashboard/wallet');
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Something wrong!',
-            text: 'Try again!',
-            showConfirmButton: false,
-            timer: 2000,
-          });
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const getData = async () => {
     const user = localStorage.getItem('user');
     if (user) {
@@ -319,18 +287,6 @@ export default function TransactionPage() {
   const deleteTransApi = async (id) => {
     return await axios.delete(`https://money-manager-master-be.herokuapp.com/transaction/delete-transaction/${id}`);
   };
-
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      let userId = JSON.parse(user).user_id;
-      setTransaction({ ...transaction, user_id: userId });
-    } else {
-      navigate('/login');
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleDeleteTrans = (id) => {
     Swal.fire({
