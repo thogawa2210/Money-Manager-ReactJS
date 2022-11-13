@@ -447,7 +447,7 @@ function ReportPage() {
               sx={{
                 width: '1056px',
                 height: '150px',
-                mt: '20px',
+                mt: '4px',
                 color: 'inherit',
                 padding: '24px',
                 boxShadow: '1px 1px 1px 1px #CFD8E3 ',
@@ -506,13 +506,13 @@ function ReportPage() {
       <Box sx={{ mt: '10px' }}>
         <Grid container spacing={2}>
           <Grid item xs={6} md={6}>
-            {dataEmpty ? (
+            {incomeData.length <= 0 ? (
               <Paper
                 elevant={3}
                 sx={{
                   width: '500',
                   height: '150px',
-                  mt: 2,
+                  mt: '4px',
                   color: 'inherit',
                   padding: '24px',
                   boxShadow: '1px 1px 1px 1px #CFD8E3 ',
@@ -574,13 +574,13 @@ function ReportPage() {
             )}
           </Grid>
           <Grid item xs={6} md={6}>
-            {dataEmpty ? (
+            {expenseData.length <= 0 ? (
               <Paper
                 elevant={3}
                 sx={{
                   width: '500',
                   height: '150px',
-                  mt: 2,
+                  mt: '4px',
                   color: 'inherit',
                   padding: '24px',
                   boxShadow: '1px 1px 1px 1px #CFD8E3 ',
