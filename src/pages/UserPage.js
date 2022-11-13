@@ -88,6 +88,7 @@ export default function UserPage() {
       setOpenName(true);
     } else {
       if (form.password) {
+        setShowPassword(false)
         setAnchorEl(null);
         setOpenPass(true);
       } else {
@@ -503,7 +504,7 @@ export default function UserPage() {
                 margin="dense"
                 id="old_pass"
                 label="Old Password"
-                type="text"
+                type={showPassword ? 'text' : 'password'}
                 fullWidth
                 variant="outlined"
                 InputProps={{
@@ -526,7 +527,7 @@ export default function UserPage() {
                 margin="dense"
                 id="new_pass"
                 label="New Password"
-                type="text"
+                type={showPassword ? 'text' : 'password'}
                 fullWidth
                 variant="outlined"
                 InputProps={{
@@ -549,7 +550,7 @@ export default function UserPage() {
                 name="new_pass"
                 id="new_pass"
                 label="New Password"
-                type="text"
+                type={showPassword ? 'text' : 'password'}
                 fullWidth
                 variant="outlined"
                 InputProps={{

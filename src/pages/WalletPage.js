@@ -428,6 +428,7 @@ export default function WalletPage() {
                 variant="outlined"
                 type="number"
                 value={wallet.amount}
+                lang="en-150"
               />
             </Grid>
           </Grid>
