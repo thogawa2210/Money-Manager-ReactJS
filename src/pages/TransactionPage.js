@@ -26,6 +26,7 @@ import {
   AccordionSummary,
   Box,
   Tab,
+  Divider,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -226,7 +227,7 @@ export default function TransactionPage() {
             Swal.fire({
               icon: 'info',
               title: "You don't have any wallets!",
-              text: "Please create a new one to continute!",
+              text: 'Please create a new one to continute!',
               confirmButtonColor: '#54D62C',
             }).then((result) => {
               if (result.isConfirmed) {
@@ -234,7 +235,7 @@ export default function TransactionPage() {
               }
             });
           } else {
-            setTransaction({...transaction, user_id: userId})
+            setTransaction({ ...transaction, user_id: userId });
             setOpenAddForm(true);
           }
         })
@@ -499,161 +500,179 @@ export default function TransactionPage() {
                   </Typography>
                 </CardContent>
 
-                <Box
-                  component="main"
-                  sx={{
-                    maxHeight: '350px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    overflow: 'hidden',
-                    overflowY: 'scroll',
-                  }}
-                >
-                  {listTransaction?.map((item, index) => (
-                    <div key={item._id}>
-                      <Box sx={{ heght: '20px', border: '1px solid #EAFCDE' }}></Box>
-                      <Accordion
-                        expanded={expanded === `panel${index + 1}`}
-                        onChange={handleExpand(`panel${index + 1}`)}
-                      >
-                        <AccordionSummary
-                          aria-controls={`panel${index + 1}bh-content`}
-                          id={`panel${index + 1}bh-header`}
-                          sx={{
-                            width: '100%',
-                            height: '60px',
-                            flexShrink: 0,
-                            justifyContent: 'flex-start',
-                            padding: '24px',
-                            backgroundColor: '#ECFFE0',
-                          }}
+                {listTransaction?.length <= 0 ? (
+                  <Box component="main">
+                    <Divider />
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        fontStyle: 'italic',
+                        fontWeight: 400,
+                        lineHeight: 1.56,
+                        fontFamily: 'Public Sans,sans-serif',
+                        fontSize: '18px',
+                      }}
+                    >
+                      No Data
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box
+                    component="main"
+                    sx={{
+                      maxHeight: '350px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      overflow: 'hidden',
+                      overflowY: 'scroll',
+                    }}
+                  >
+                    {listTransaction && listTransaction.map((item, index) => (
+                      <div key={item._id}>
+                        <Box sx={{ heght: '20px', border: '1px solid #EAFCDE' }}></Box>
+                        <Accordion
+                          expanded={expanded === `panel${index + 1}`}
+                          onChange={handleExpand(`panel${index + 1}`)}
                         >
-                          <Grid container spacing={2} sx={{ pt: '4px' }}>
-                            <Grid item xs={2}>
-                              {' '}
-                              <Avatar src={item.category_icon} sx={{mr: 0, width: '35px', height: '35px'}}/>
-                            </Grid>
-                            <Grid item xs={5} sx={{ mt: '8px' }}>
-                              {item.category_name}
-                            </Grid>
-                            {item.category_type === 'expense' ? (
-                              <Grid
-                                item
-                                xs={5}
-                                sx={{
-                                  color: '#E51C23',
-                                  textAlign: 'right',
-                                  mt: '6px',
-                                }}
-                              >
-                                - {numberWithCommas(item.amount)}{' '}
-                                <Typography component="span" sx={{ textDecoration: 'underline' }}>
-                                  đ
-                                </Typography>
+                          <AccordionSummary
+                            aria-controls={`panel${index + 1}bh-content`}
+                            id={`panel${index + 1}bh-header`}
+                            sx={{
+                              width: '100%',
+                              height: '60px',
+                              flexShrink: 0,
+                              justifyContent: 'flex-start',
+                              padding: '24px',
+                              backgroundColor: '#ECFFE0',
+                            }}
+                          >
+                            <Grid container spacing={2} sx={{ pt: '4px' }}>
+                              <Grid item xs={2}>
+                                {' '}
+                                <Avatar src={item.category_icon} sx={{ mr: 0, width: '35px', height: '35px' }} />
                               </Grid>
-                            ) : (
-                              <Grid
-                                item
-                                xs={5}
-                                sx={{
-                                  color: '#039BE5',
-                                  textAlign: 'right',
-                                  mt: '6px',
-                                }}
-                              >
-                                + {numberWithCommas(item.amount)}{' '}
-                                <Typography component="span" style={{ textDecoration: 'underline' }}>
-                                  đ
-                                </Typography>
+                              <Grid item xs={5} sx={{ mt: '8px' }}>
+                                {item.category_name}
                               </Grid>
-                            )}
-                          </Grid>
-                        </AccordionSummary>
-                        <AccordionDetails sx={{ height: '235px', pb: 0 }}>
-                          <Typography sx={{ height: '40px' }}>
-                            <Grid container>
-                              <Grid item xs sx={{ mt: 0, mb: 0 }}>
-                                <Typography variant="h4" style={{ margin: 0 }}>
-                                  Transaction Details
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                                <Button
-                                  variant="outlined"
-                                  color="success"
-                                  onClick={() => handleClickEditForm(item._id)}
+                              {item.category_type === 'expense' ? (
+                                <Grid
+                                  item
+                                  xs={5}
+                                  sx={{
+                                    color: '#E51C23',
+                                    textAlign: 'right',
+                                    mt: '6px',
+                                  }}
                                 >
-                                  EDIT
-                                </Button>
-                              </Grid>
-                              <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                                <Button variant="outlined" color="error" onClick={() => handleDeleteTrans(item._id)}>
-                                  DELETE
-                                </Button>
-                              </Grid>
-                            </Grid>
-                          </Typography>
-                          <hr />
-                          <Grid container>
-                            <Grid item xs={2} sx={{ pt: '15px', pl: '26px' }}>
-                              <Avatar src={item.category_icon} sx={{ mr: 10 }} />
-                            </Grid>
-                            <Grid item xs sx={{ mt: '3px' }}>
-                              <h3 style={{ margin: 0 }}>{item.category_name}</h3>
-                              <Typography
-                                sx={{
-                                  marginTop: '0px',
-                                  marginBottom: '0px',
-                                  fontSize: '14px',
-                                }}
-                              >
-                                {item.wallet_name}
-                              </Typography>
-                              <Typography sx={{ fontSize: '12px', fontWeight: 'light' }}>
-                                {getDayy(new Date(`${item.date}`).getDay())}, {item.date}{' '}
-                              </Typography>
-                              <hr />
-                              <Typography
-                                sx={{
-                                  margin: '8px 0px',
-                                  fontSize: '12px',
-                                }}
-                              >
-                                {item.note}{' '}
-                              </Typography>
-                              {item.category_type === 'income' ? (
-                                <Typography sx={{ color: '#039BE5', marginBottom: 0 }}>
-                                  + {numberWithCommas(item.amount)}{' '}
-                                  <span
-                                    sx={{
-                                      color: '#039BE5',
-                                      textDecoration: 'underline',
-                                    }}
-                                  >
-                                    đ
-                                  </span>
-                                </Typography>
-                              ) : (
-                                <Typography sx={{ color: '#E51C23', marginBottom: 0 }}>
                                   - {numberWithCommas(item.amount)}{' '}
-                                  <span
-                                    sx={{
-                                      color: '#E51C23',
-                                      textDecoration: 'underline',
-                                    }}
-                                  >
+                                  <Typography component="span" sx={{ textDecoration: 'underline' }}>
                                     đ
-                                  </span>
-                                </Typography>
+                                  </Typography>
+                                </Grid>
+                              ) : (
+                                <Grid
+                                  item
+                                  xs={5}
+                                  sx={{
+                                    color: '#039BE5',
+                                    textAlign: 'right',
+                                    mt: '6px',
+                                  }}
+                                >
+                                  + {numberWithCommas(item.amount)}{' '}
+                                  <Typography component="span" style={{ textDecoration: 'underline' }}>
+                                    đ
+                                  </Typography>
+                                </Grid>
                               )}
                             </Grid>
-                            <Grid item xs></Grid>
-                          </Grid>
-                        </AccordionDetails>
-                      </Accordion>
-                    </div>
-                  ))}
-                </Box>
+                          </AccordionSummary>
+                          <AccordionDetails sx={{ height: '235px', pb: 0 }}>
+                            <Typography sx={{ height: '40px' }}>
+                              <Grid container>
+                                <Grid item xs sx={{ mt: 0, mb: 0 }}>
+                                  <Typography variant="h4" style={{ margin: 0 }}>
+                                    Transaction Details
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    onClick={() => handleClickEditForm(item._id)}
+                                  >
+                                    EDIT
+                                  </Button>
+                                </Grid>
+                                <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                                  <Button variant="outlined" color="error" onClick={() => handleDeleteTrans(item._id)}>
+                                    DELETE
+                                  </Button>
+                                </Grid>
+                              </Grid>
+                            </Typography>
+                            <hr />
+                            <Grid container>
+                              <Grid item xs={2} sx={{ pt: '15px', pl: '26px' }}>
+                                <Avatar src={item.category_icon} sx={{ mr: 10 }} />
+                              </Grid>
+                              <Grid item xs sx={{ mt: '3px' }}>
+                                <h3 style={{ margin: 0 }}>{item.category_name}</h3>
+                                <Typography
+                                  sx={{
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                    fontSize: '14px',
+                                  }}
+                                >
+                                  {item.wallet_name}
+                                </Typography>
+                                <Typography sx={{ fontSize: '12px', fontWeight: 'light' }}>
+                                  {getDayy(new Date(`${item.date}`).getDay())}, {item.date}{' '}
+                                </Typography>
+                                <hr />
+                                <Typography
+                                  sx={{
+                                    margin: '8px 0px',
+                                    fontSize: '12px',
+                                  }}
+                                >
+                                  {item.note}{' '}
+                                </Typography>
+                                {item.category_type === 'income' ? (
+                                  <Typography sx={{ color: '#039BE5', marginBottom: 0 }}>
+                                    + {numberWithCommas(item.amount)}{' '}
+                                    <span
+                                      sx={{
+                                        color: '#039BE5',
+                                        textDecoration: 'underline',
+                                      }}
+                                    >
+                                      đ
+                                    </span>
+                                  </Typography>
+                                ) : (
+                                  <Typography sx={{ color: '#E51C23', marginBottom: 0 }}>
+                                    - {numberWithCommas(item.amount)}{' '}
+                                    <span
+                                      sx={{
+                                        color: '#E51C23',
+                                        textDecoration: 'underline',
+                                      }}
+                                    >
+                                      đ
+                                    </span>
+                                  </Typography>
+                                )}
+                              </Grid>
+                              <Grid item xs></Grid>
+                            </Grid>
+                          </AccordionDetails>
+                        </Accordion>
+                      </div>
+                    ))}
+                  </Box>
+                )}
               </Card>
             </Grid>
           </Stack>
