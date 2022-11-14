@@ -30,7 +30,6 @@ import {
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
 import { forwardRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import Iconify from '../components/iconify';
@@ -41,7 +40,7 @@ import { DateRangePicker, DesktopDatePicker } from '@mui/x-date-pickers-pro';
 import * as React from 'react';
 //css
 import '../css/transaction.css';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -72,6 +71,16 @@ const getStartEndThisMonth = () => {
 };
 
 export default function TransactionPage() {
+  const [loading, setLoading] = useState({
+    addTrans: false,
+      editTrans: false,
+    filter: false
+  });
+  const [disabled, setDisabled] = useState({
+    addTrans: false,
+    editTrans: false,
+    filter: false
+  });
   const flag = useSelector((state) => state.flag.flag);
   const [value, setValue] = useState(dayjs());
   const [datePicker, setDatePicker] = useState([dayjs('11/01/2022'), dayjs('11/30/2022')]);
@@ -271,6 +280,8 @@ export default function TransactionPage() {
   };
 
   const handleCloseAddForm = () => {
+    setLoading({ ...loading, addTrans: false });
+    setDisabled({ ...disabled, addTrans: false });
     setValue(dayjs());
     setOpenAddForm(false);
   };
@@ -294,6 +305,8 @@ export default function TransactionPage() {
   };
 
   const handleCloseEditForm = () => {
+    setLoading({ ...loading, editTrans: false });
+    setDisabled({ ...disabled, editTrans: false });
     setValue(dayjs());
     setOpenEditForm(false);
   };
@@ -345,7 +358,11 @@ export default function TransactionPage() {
   };
 
   const handleSubmit = async () => {
+    setLoading({ ...loading, addTrans: true });
+    setDisabled({ ...disabled, addTrans: true });
     if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
+      setLoading({ ...loading, addTrans: false });
+      setDisabled({ ...disabled, addTrans: false });
       setOpenAddForm(false);
       Swal.fire({
         icon: 'error',
@@ -358,6 +375,8 @@ export default function TransactionPage() {
       await axios
         .post('https://money-manager-master-be.herokuapp.com/transaction/add-transaction', transaction)
         .then((res) => {
+          setLoading({ ...loading, addTrans: false });
+          setDisabled({ ...disabled, addTrans: false });
           if (res.status === 200) {
             dispatch(changeFlag(1));
             setTransaction({
@@ -383,22 +402,28 @@ export default function TransactionPage() {
             });
           }
         })
-        .catch((err) =>
+        .catch((err) => {
+          setLoading({ ...loading, addTrans: false });
+          setDisabled({ ...disabled, addTrans: false });
           Swal.fire({
             icon: 'error',
             title: 'Something wrong!',
             text: 'Something wrong! Please try again!',
             showConfirmButton: false,
             timer: 2000,
-          })
-        );
+          });
+        });
       setOpenAddForm(false);
       dispatch(changeFlag(1));
     }
   };
 
   const handleEdit = async () => {
+    setLoading({ ...loading, editTrans: true });
+    setDisabled({ ...disabled, editTrans: true });
     if (editTransaction.category_name === 'Add Wallet') {
+      setLoading({ ...loading, editTrans: false });
+      setDisabled({ ...disabled, editTrans: false });
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -407,6 +432,8 @@ export default function TransactionPage() {
         timer: 2000,
       });
     } else {
+      setLoading({ ...loading, editTrans: false });
+      setDisabled({ ...disabled, editTrans: false });
       if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
         setOpenEditForm(false);
         Swal.fire({
@@ -423,6 +450,8 @@ export default function TransactionPage() {
             editTransaction
           )
           .then((res) => {
+            setLoading({ ...loading, editTrans: false });
+            setDisabled({ ...disabled, editTrans: false });
             setOpenEditForm(false);
             if (res.status === 200) {
               Swal.fire({
@@ -442,15 +471,17 @@ export default function TransactionPage() {
               });
             }
           })
-          .catch((err) =>
+          .catch((err) => {
+            setLoading({ ...loading, editTrans: false });
+            setDisabled({ ...disabled, editTrans: false });
             Swal.fire({
               icon: 'error',
               title: 'Something wrong!',
               text: 'Something wrong! Please try again!',
               showConfirmButton: false,
               timer: 2000,
-            })
-          );
+            });
+          });
       }
     }
   };
@@ -816,6 +847,7 @@ export default function TransactionPage() {
             </Grid>
             <Grid item xs={4}>
               <TextField
+                required
                 sx={{ height: '73' }}
                 name="amount"
                 onChange={handleChange}
@@ -845,6 +877,7 @@ export default function TransactionPage() {
             </Grid>
             <Grid item xs={8}>
               <TextField
+                required
                 name="note"
                 onChange={handleChange}
                 fullWidth={true}
@@ -860,9 +893,15 @@ export default function TransactionPage() {
           <Button variant="outlined" onClick={handleCloseAddForm} color="error">
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={handleSubmit}>
+          <LoadingButton
+            variant="outlined"
+            color="success"
+            onClick={handleSubmit}
+            loading={loading.addTrans}
+            disabled={disabled.addTrans}
+          >
             Submit
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
 
@@ -959,12 +998,18 @@ export default function TransactionPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseEditForm}>
+          <Button variant="outlined" onClick={handleCloseEditForm} color="error">
             Cancel
           </Button>
-          <Button sx={{ color: 'white' }} variant="contained" color="success" onClick={handleEdit}>
+          <LoadingButton
+            variant="outlined"
+            color="success"
+            onClick={handleEdit}
+            loading={loading.editTrans}
+            disabled={disabled.editTrans}
+          >
             Submit
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
 

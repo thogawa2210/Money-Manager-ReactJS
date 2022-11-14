@@ -114,10 +114,14 @@ export default function UserPage() {
   };
 
   const handleCloseName = () => {
+    setLoading({ ...loading, changeUsername: false});
+    setDisabled({ ...disabled, changeUsername: false});
     setOpenName(false);
   };
 
   const handleClosePass = () => {
+    setLoading({...loading, changePassword: false})
+    setDisabled({...disabled, changePassword: false})
     setOpenPass(false);
   };
 
