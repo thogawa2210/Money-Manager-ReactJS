@@ -138,12 +138,30 @@ export default function LoginForm() {
     email:  ''
   })
 
+  const [erremail, setErrEmail] = useState({
+    email: ''
+  })
+
+  const handleValidateForgot = (e) => {
+    switch (e.target.name) {
+      case 'email':
+        if (!REGEX.email.test(e.target.value)) {
+          setErrEmail({ ...erremail, email: 'Email is not valid' });
+        } else {
+          setErrEmail({ ...erremail, email: '' });
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   const sendEmail = async () => {
     const data = {
       email: email.email,
     };
     const results = await axios.request({
-      url: `http://localhost:3001/auth/forgotPassword`,
+      url: `http://money-manager-master-be.herokuapp.com/auth/forgotPassword`,
       method: 'POST',
       data: JSON.stringify(data),
       headers: {
@@ -174,7 +192,7 @@ export default function LoginForm() {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Account already exists!',
+        text: 'Account does not exists!',
         showConfirmButton: false,
         timer: 1500,
       });
@@ -186,24 +204,17 @@ export default function LoginForm() {
   };
 
   const handleChangeForgotPassword = (e) => {
+    handleValidateForgot(e);
     setEmail({...email,[e.target.name] : e.target.value})
   }
 
   const handleClose = () => {
     setOpen(false);
+    setEmail({...email,email: ''})
   };
 
   const handleSubmitForgotPassword = () => {
     setOpen(false);
-    if (email.email === '') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please fill out all the required fields',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    } else {
       sendEmail()
           .then((res) => handleApiEmail(res.data))
           .catch((err) =>  Swal.fire({
@@ -213,9 +224,8 @@ export default function LoginForm() {
             showConfirmButton: false,
             timer: 2000
           }));
-    }
   }
-  
+
 
   return (
     <>
@@ -309,22 +319,37 @@ export default function LoginForm() {
           <DialogContentText    sx={{ mb: 2}}>
             To forgot password, please enter your email address.
           </DialogContentText>
-          <TextField
+          {!erremail.email ? ( <TextField
+              required
               name="email"
               sx={{ minWidth: 400}}
               fullWidth={true}
               label="Email Address"
               variant="outlined"
               onChange={(e) => {handleChangeForgotPassword(e)}}
-          />
+          />) : ( <TextField
+              error
+              helperText={erremail.email}
+              required
+              name="email"
+              sx={{ minWidth: 400}}
+              fullWidth={true}
+              label="Email Address"
+              variant="outlined"
+              onChange={(e) => {handleChangeForgotPassword(e)}}
+          />)}
+
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" color="error" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={handleSubmitForgotPassword}>
+          {!erremail.email && email.email ? ( <Button variant="outlined" color="success" onClick={handleSubmitForgotPassword}>
             Submit
-          </Button>
+          </Button>) : ( <Button disabled variant="outlined" color="success" onClick={handleSubmitForgotPassword}>
+            Submit
+          </Button>)}
+
         </DialogActions>
       </Dialog>
     </>
