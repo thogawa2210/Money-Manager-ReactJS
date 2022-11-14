@@ -64,8 +64,8 @@ function ForgotPasswordForm() {
             password: form.password,
         };
         const results = await axios.request({
-            url: `http://localhost:3001/user/forgot-password/${userId.id}`,
-            method: 'POST',
+            url: `https://money-manager-master-be.herokuapp.com/user/forgot-password/${userId.id}`,
+            method: 'PUT',
             data: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ function ForgotPasswordForm() {
     const handleApi = (data) => {
         if (data.type === 'success') {
             Swal.fire({
-                title: 'Forgot Password Success',
+                title: 'Change Password Success!',
                 icon: 'success',
                 showConfirmButton: false,
                 timer: 1500,
