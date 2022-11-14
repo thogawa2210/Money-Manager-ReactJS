@@ -4,6 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import mockAvatar from 'src/_mock/avatar';
 // @mui
+import { LoadingButton } from '@mui/lab';
 import * as React from 'react';
 import {
   Card,
@@ -45,6 +46,14 @@ const REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/;
 const ITEM_HEIGHT = 48;
 
 export default function UserPage() {
+  const [loading, setLoading] = useState({
+    changeUsername: false,
+    changePassword: false,
+  });
+  const [disabled, setDisabled] = useState({
+    changeUsername: false,
+    changePassword: false,
+  });
   const [openName, setOpenName] = useState(false);
   const [openPass, setOpenPass] = useState(false);
   const [error, setError] = useState({
@@ -71,7 +80,7 @@ export default function UserPage() {
   const handleClose = () => {
     setAnchorEl(null);
   };
- 
+
   const [showPassword, setShowPassword] = useState(false);
   const [profile, setProfile] = useState({
     wallets: 0,
@@ -88,7 +97,7 @@ export default function UserPage() {
       setOpenName(true);
     } else {
       if (form.password) {
-        setShowPassword(false)
+        setShowPassword(false);
         setAnchorEl(null);
         setOpenPass(true);
       } else {
@@ -135,8 +144,12 @@ export default function UserPage() {
 
   const handleChangePass = (e) => {
     e.preventDefault();
+    setLoading({ ...loading, changePassword: true });
+    setDisabled({ ...disabled, changePassword: true });
     changePassApi(form._id, formPass.old_pass, formPass.new_pass)
       .then((res) => {
+        setLoading({ ...loading, changePassword: false });
+        setDisabled({ ...disabled, changePassword: false });
         if (res.data.type === 'success') {
           setOpenPass(false);
           Swal.fire({
@@ -199,10 +212,14 @@ export default function UserPage() {
 
   const handleChangeName = (e) => {
     e.preventDefault();
+    setLoading({ ...loading, changeUsername: true });
+    setDisabled({ ...disabled, changeUsername: true });
     changeNameApi(form._id)
       .then((res) => {
         if (res.data.type === 'success') {
           setOpenName(false);
+          setLoading({ ...loading, changeUsername: false });
+          setDisabled({ ...disabled, changeUsername: false });
           Swal.fire({
             icon: 'success',
             title: 'Change your name success!',
@@ -455,9 +472,15 @@ export default function UserPage() {
             <Button onClick={handleCloseName} variant="outlined" color="error">
               Cancel
             </Button>
-            <Button type="submit" variant="outlined" color="success">
+            <LoadingButton
+              type="submit"
+              variant="outlined"
+              color="success"
+              loading={loading.changeUsername}
+              disabled={disabled.changeUsername}
+            >
               Submit
-            </Button>
+            </LoadingButton>
           </DialogActions>
         </Box>
       </Dialog>
@@ -569,9 +592,15 @@ export default function UserPage() {
             <Button onClick={handleClosePass} variant="outlined" color="error">
               Cancel
             </Button>
-            <Button type="submit" variant="outlined" color="success">
+            <LoadingButton
+              type="submit"
+              variant="outlined"
+              color="success"
+              laoding={loading.changePassword}
+              disabled={disabled.changePassword}
+            >
               Submit
-            </Button>
+            </LoadingButton>
           </DialogActions>
         </Box>
       </Dialog>
