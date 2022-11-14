@@ -578,7 +578,7 @@ export default function ProductsPage() {
                                                     <strong>{item.name}</strong>
                                                   </TableCell>
                                                 </Grid>
-                                                <Grid item xs={5}>
+                                                <Grid item xs={5} sx={{padding: 0}}>
                                                   <TableCell component="th" scope="row" align="left" xs={{padding : 0}}>
                                                     <TextareaAutosize
                                                       aria-label="maximum height"
