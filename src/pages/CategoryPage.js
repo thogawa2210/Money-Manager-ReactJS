@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
   FormControl,
   Grid,
   InputAdornment,
@@ -27,6 +28,7 @@ import {
   Tab,
   TableContainer,
   Tabs,
+  TextareaAutosize,
   TextField,
   Typography,
 } from '@mui/material';
@@ -388,6 +390,7 @@ export default function ProductsPage() {
           </Stack>
         </Grid>
         <Grid item xs />
+     
         <Grid item xs={9} sx={{ padding: 0 }}>
           <Stack>
             <Grid>
@@ -449,7 +452,7 @@ export default function ProductsPage() {
                                                   <Grid item xs={5}>
                                                     <TableCell align="center">Note</TableCell>
                                                   </Grid>
-                                                  <Grid item xs={4} sx={{pl: 5}}>
+                                                  <Grid item xs={4} sx={{ pl: 5 }}>
                                                     <TableCell align="center">Action</TableCell>
                                                   </Grid>
                                                 </Grid>
@@ -462,17 +465,24 @@ export default function ProductsPage() {
                                               >
                                                 <Grid container>
                                                   <Grid item xs={3}>
-                                                    <TableCell component="th" scope="row">
+                                                    <TableCell component="th" scope="row" xs={{padding : 0}}>
                                                       <strong>{item.name}</strong>
                                                     </TableCell>
                                                   </Grid>
                                                   <Grid item xs={5}>
-                                                    <TableCell component="th" scope="row" align="left">
-                                                      <strong>{item.note}</strong>
-                                                    </TableCell>
+                                                    <TableCell component="th" scope="row" align="left" xs={{padding : 0}}>
+                                                      <TextareaAutosize
+                                                        aria-label="maximum height"
+                                                        defaultValue={item.note}
+                                                        style={{ width: 250 , height : 100}}
+                                                        align="left"
+                                                        disabled
+                                                      />
+                                                                   
+                                                    </TableCell >
                                                   </Grid>
                                                   <Grid item xs={4}>
-                                                    <TableCell align="center">
+                                                    <TableCell align="center" xs={{padding : 0}}>
                                                       <Button
                                                         variant="outlined"
                                                         color="success"
@@ -498,7 +508,7 @@ export default function ProductsPage() {
                                       </Typography>
                                     </AccordionDetails>
                                   </Accordion>
-                                );
+                                )                
                             })}
                           </Grid>
                           <Grid item xs />
@@ -512,79 +522,101 @@ export default function ProductsPage() {
                               if (item.type === 'expense')
                                 return (
                                   <Accordion
-                                    expanded={expanded === `panel${index + 1}`}
-                                    onChange={handleChangeDetailTable(`panel${index + 1}`)}
+                                  expanded={expanded === `panel${index + 1}`}
+                                  onChange={handleChangeDetailTable(`panel${index + 1}`)}
+                                >
+                                  <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1bh-content"
+                                    id="panel1bh-header"
+                                    sx={{ backgroundColor: '#EAFFC6' }}
                                   >
-                                    <AccordionSummary
-                                      expandIcon={<ExpandMoreIcon />}
-                                      aria-controls="panel1bh-content"
-                                      id="panel1bh-header"
-                                      sx={{ backgroundColor: '#EAFFC6' }}
-                                    >
-                                      <Typography sx={{ width: '80%', flexShrink: 0, display: 'flex' }}>
-                                        <Avatar src={item.icon} sx={{ mr: 0 }} />
-                                        <ListItemText
-                                          primary={item.name}
-                                          sx={{
-                                            pr: 22,
-                                            ml: 2,
-                                            display: 'block !important',
-                                            alignItems: 'center',
-                                            marginTop: 1,
-                                          }}
-                                        />
-                                      </Typography>
+                                    <Typography sx={{ width: '100%', flexShrink: 0, display: 'flex' }}>
+                                      <Avatar src={item.icon} sx={{ mr: 0 }} />
+                                      <ListItemText
+                                        primary={item.name}
+                                        sx={{
+                                          ml: 2,
+                                          display: 'block !important',
+                                          alignItems: 'center',
+                                          marginTop: 1,
+                                        }}
+                                      />
+                                    </Typography>
 
-                                      <Typography
-                                        sx={{ ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}
-                                      ></Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                      <Typography>
-                                        <TableContainer component={Paper}>
-                                          <Table size="small" aria-label="a dense table">
-                                            <TableHead>
-                                              <TableRow>
-                                                <TableCell>Name Category</TableCell>
-                                                <TableCell align="center">Note</TableCell>
-                                                <TableCell align="center">Action</TableCell>
-                                              </TableRow>
-                                            </TableHead>
-                                            <TableBody key={index}>
-                                              <TableRow
-                                                key={index}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                              >
-                                                <TableCell component="th" scope="row">
-                                                  <strong>{item.name}</strong>
-                                                </TableCell>
-                                                <TableCell component="td" scope="row" align="center">
-                                                  {item.note}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                  <Button
-                                                    variant="outlined"
-                                                    color="success"
-                                                    onClick={() => handleClickOpenCategory(item._id)}
-                                                  >
-                                                    Edit
-                                                  </Button>
-                                                  <Button
-                                                    variant="outlined"
-                                                    color="error"
-                                                    onClick={() => handleDeleteCategory(item._id)}
-                                                  >
-                                                    Delete
-                                                  </Button>
-                                                </TableCell>
-                                              </TableRow>
-                                            </TableBody>
-                                          </Table>
-                                        </TableContainer>
-                                        {/* done Table */}
-                                      </Typography>
-                                    </AccordionDetails>
-                                  </Accordion>
+                                    <Typography
+                                      sx={{ ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}
+                                    ></Typography>
+                                  </AccordionSummary>
+                                  <AccordionDetails>
+                                    <Typography>
+                                      <TableContainer component={Paper}>
+                                        <Table size="small" aria-label="a dense table" sx={{ width: '100%' }}>
+                                          <TableHead>
+                                            <TableRow>
+                                              <Grid container>
+                                                <Grid item xs={3}>
+                                                  <TableCell>Name</TableCell>
+                                                </Grid>
+                                                <Grid item xs={5}>
+                                                  <TableCell align="center">Note</TableCell>
+                                                </Grid>
+                                                <Grid item xs={4} sx={{ pl: 5 }}>
+                                                  <TableCell align="center">Action</TableCell>
+                                                </Grid>
+                                              </Grid>
+                                            </TableRow>
+                                          </TableHead>
+                                          <TableBody key={index}>
+                                            <TableRow
+                                              key={index}
+                                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            >
+                                              <Grid container>
+                                                <Grid item xs={3}>
+                                                  <TableCell component="th" scope="row" xs={{padding : 0}}>
+                                                    <strong>{item.name}</strong>
+                                                  </TableCell>
+                                                </Grid>
+                                                <Grid item xs={5} sx={{padding: 0}}>
+                                                  <TableCell component="th" scope="row" align="left" xs={{padding : 0}}>
+                                                    <TextareaAutosize
+                                                      aria-label="maximum height"
+                                                      defaultValue={item.note}
+                                                      style={{ width: 250 , height : 100}}
+                                                      align="left"
+                                                      disabled
+                                                    />
+                                                                 
+                                                  </TableCell >
+                                                </Grid>
+                                                <Grid item xs={4}>
+                                                  <TableCell align="center" xs={{padding : 0}}>
+                                                    <Button
+                                                      variant="outlined"
+                                                      color="success"
+                                                      onClick={() => handleClickOpenCategory(item._id)}
+                                                    >
+                                                      Edit
+                                                    </Button>
+                                                    <Button
+                                                      variant="outlined"
+                                                      color="error"
+                                                      onClick={() => handleDeleteCategory(item._id)}
+                                                    >
+                                                      Delete
+                                                    </Button>
+                                                  </TableCell>
+                                                </Grid>
+                                              </Grid>
+                                            </TableRow>
+                                          </TableBody>
+                                        </Table>
+                                      </TableContainer>
+                                      {/* done Table */}
+                                    </Typography>
+                                  </AccordionDetails>
+                                </Accordion>
                                 );
                             })}
                           </Grid>
@@ -723,7 +755,8 @@ export default function ProductsPage() {
                 variant="outlined"
                 value={editForm.name}
               />
-            </Grid>
+            </Grid>{' '}
+
           </Grid>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={2}>

@@ -1,12 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Link, Stack, IconButton, InputAdornment, TextField } from '@mui/material';
+import {
+  Link,
+  Stack,
+  IconButton,
+  InputAdornment,
+  TextField,
+  DialogActions,
+  Dialog,
+  DialogTitle,
+  DialogContent, DialogContentText, Button
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 
 // components
 import Iconify from '../../../components/iconify';
+import * as React from 'react';
+
 
 // ----------------------------------------------------------------------
 
@@ -121,6 +133,90 @@ export default function LoginForm() {
     }
   };
 
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState({
+    email:  ''
+  })
+
+  const sendEmail = async () => {
+    const data = {
+      email: email.email,
+    };
+    const results = await axios.request({
+      url: `http://money-manager-master-be.herokuapp.com/auth/forgotPassword`,
+      method: 'POST',
+      data: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return results;
+  };
+
+  const handleApiEmail = (data) => {
+    if (data.type === 'success') {
+      Swal.fire({
+        title: 'Send Email Success',
+        text: 'Please Check Your Email To Forgot Password',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+      })
+    }else if (data.type === 'error') {
+      Swal.fire({
+        title: 'Oops...',
+        text: 'You login by google',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Account does not exists!',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleChangeForgotPassword = (e) => {
+    setEmail({...email,[e.target.name] : e.target.value})
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmitForgotPassword = () => {
+    setOpen(false);
+    if (email.email === '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please fill out all the required fields',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      sendEmail()
+          .then((res) => handleApiEmail(res.data))
+          .catch((err) =>  Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text:' Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000
+          }));
+    }
+  }
+  
+
   return (
     <>
       <Stack spacing={3}>
@@ -192,7 +288,7 @@ export default function LoginForm() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Link variant="subtitle2" underline="hover">
+        <Link onClick={handleClickOpen} variant="subtitle2" underline="hover">
           Forgot password?
         </Link>
       </Stack>
@@ -206,6 +302,31 @@ export default function LoginForm() {
           Login
         </LoadingButton>
       )}
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Forgot Password</DialogTitle>
+        <DialogContent>
+          <DialogContentText    sx={{ mb: 2}}>
+            To forgot password, please enter your email address.
+          </DialogContentText>
+          <TextField
+              name="email"
+              sx={{ minWidth: 400}}
+              fullWidth={true}
+              label="Email Address"
+              variant="outlined"
+              onChange={(e) => {handleChangeForgotPassword(e)}}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" color="error" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="outlined" color="success" onClick={handleSubmitForgotPassword}>
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
