@@ -248,7 +248,7 @@ export default function TransactionPage() {
                         Swal.fire({
                             icon: 'info',
                             title: "You don't have any wallets!",
-                            text: 'Please create a new one to continute!',
+                            text: 'Please create a new one to continue!',
                             confirmButtonColor: '#54D62C',
                         }).then((result) => {
                             if (result.isConfirmed) {
