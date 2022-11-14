@@ -13,6 +13,8 @@ import WalletPage from './pages/WalletPage';
 import TransactionPage from './pages/TransactionPage';
 import LogoutPage from './pages/LogoutPage';
 import ReportPage from './pages/ReportPage';
+import ForgotPasswordForm from "./sections/auth/login/ForgotPassword";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +49,11 @@ export default function Router() {
       path: '/register/user/:id',
       element: <VerifyRegister />,
     },
+    {
+      path: '/user/forgotPassword/:id',
+      element: <ForgotPasswordPage />,
+    },
+
 
     {
       element: <SimpleLayout />,
