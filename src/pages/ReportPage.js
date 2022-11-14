@@ -70,6 +70,7 @@ const getLastStartEndDate = (date) => {
   };
 };
 
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -252,6 +253,10 @@ function ReportPage() {
             filename: `Bao_cao_tai_chinh_from_${res.data.data.startDate}_to_${res.data.data.endDate}`,
           });
         } else {
+          const circleData = getCircleData(res.data.data);
+          setDisplayDate(`Period: From ${res.data.data.startDate} To ${res.data.data.endDate}`);
+          setIcomeData(circleData.income);
+          setExpensData(circleData.expense);
           setDataExport({
             ...dataExport,
             list: res.data.data.transactions,
@@ -353,7 +358,7 @@ function ReportPage() {
         <Toolbar sx={{ height: '40px' }}>
           <Grid container spacing={1}>
             <Grid item xs={4}>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1, pt: '6px' }}>
+              <Typography variant="h6" sx={{ flexGrow: 1, pt: '6px' }}>
                 Expense report
               </Typography>
             </Grid>
