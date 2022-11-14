@@ -250,6 +250,7 @@ const [flash , setFlash] = useState(0);
       let userId = user.user_id;
       setTransaction({ ...transaction, user_id: userId });
     }else {
+
       navigate('/login');
     }
 
