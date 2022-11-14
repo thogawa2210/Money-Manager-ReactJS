@@ -64,7 +64,7 @@ function ForgotPasswordForm() {
             password: form.password,
         };
         const results = await axios.request({
-            url: `https://money-manager-master.vercel.app/user/forgot-password/${userId.id}`,
+            url: `https://money-manager-master-be.herokuapp.com/user/forgot-password/${userId.id}`,
             method: 'PUT',
             data: JSON.stringify(data),
             headers: {
