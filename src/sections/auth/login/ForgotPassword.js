@@ -77,7 +77,7 @@ function ForgotPasswordForm() {
     const handleApi = (data) => {
         if (data.type === 'success') {
             Swal.fire({
-                title: 'Forgot Password Success',
+                title: 'Change Password Success!',
                 icon: 'success',
                 showConfirmButton: false,
                 timer: 1500,
