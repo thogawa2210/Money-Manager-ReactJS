@@ -28,7 +28,6 @@ import {
   Tab,
   TableContainer,
   Tabs,
-  TextareaAutosize,
   TextField,
   Typography,
 } from '@mui/material';
@@ -471,14 +470,7 @@ export default function ProductsPage() {
                                                   </Grid>
                                                   <Grid item xs={5}>
                                                     <TableCell component="th" scope="row" align="left" xs={{padding : 0}}>
-                                                      <TextareaAutosize
-                                                        aria-label="maximum height"
-                                                        defaultValue={item.note}
-                                                        style={{ width: 250 , height : 100}}
-                                                        align="left"
-                                                        disabled
-                                                      />
-                                                                   
+                                                      <strong>{item.note}</strong>   
                                                     </TableCell >
                                                   </Grid>
                                                   <Grid item xs={4}>
@@ -579,15 +571,8 @@ export default function ProductsPage() {
                                                   </TableCell>
                                                 </Grid>
                                                 <Grid item xs={5} sx={{padding: 0}}>
-                                                  <TableCell component="th" scope="row" align="left" xs={{padding : 0}}>
-                                                    <TextareaAutosize
-                                                      aria-label="maximum height"
-                                                      defaultValue={item.note}
-                                                      style={{ width: 250 , height : 100}}
-                                                      align="left"
-                                                      disabled
-                                                    />
-                                                                 
+                                                  <TableCell component="th" scope="row" align="left" xs={{padding : 0}}  style={{ width: 250 , height : 100}}>
+                                                  <strong>{item.note}</strong>   
                                                   </TableCell >
                                                 </Grid>
                                                 <Grid item xs={4}>
