@@ -64,7 +64,7 @@ function ForgotPasswordForm() {
             password: form.password,
         };
         const results = await axios.request({
-            url: `http://localhost:3001/user/forgot-password/${userId.id}`,
+            url: `https://money-manager-master.vercel.app/user/forgot-password/${userId.id}`,
             method: 'POST',
             data: JSON.stringify(data),
             headers: {
