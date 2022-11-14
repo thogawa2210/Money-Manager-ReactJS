@@ -13,7 +13,6 @@ import WalletPage from './pages/WalletPage';
 import TransactionPage from './pages/TransactionPage';
 import LogoutPage from './pages/LogoutPage';
 import ReportPage from './pages/ReportPage';
-import ForgotPasswordForm from "./sections/auth/login/ForgotPassword";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 // ----------------------------------------------------------------------
