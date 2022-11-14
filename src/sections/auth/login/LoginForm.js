@@ -143,7 +143,7 @@ export default function LoginForm() {
       email: email.email,
     };
     const results = await axios.request({
-      url: `http://localhost:3001/auth/forgotPassword`,
+      url: `http://money-manager-master-be.herokuapp.com/auth/forgotPassword`,
       method: 'POST',
       data: JSON.stringify(data),
       headers: {
@@ -174,7 +174,7 @@ export default function LoginForm() {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Account already exists!',
+        text: 'Account does not exists!',
         showConfirmButton: false,
         timer: 1500,
       });
