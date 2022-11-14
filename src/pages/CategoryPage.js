@@ -410,7 +410,7 @@ export default function ProductsPage() {
                           <Grid item xs />
                           <Grid item xs={12}>
                             {categories.map((item, index) => {
-                              if (item.type === 'income' && categories > 0)
+                              if (item.type === 'income')
                                 return (
                                   <Accordion
                                     expanded={expanded === `panel${index + 1}`}
@@ -510,23 +510,7 @@ export default function ProductsPage() {
                                   </Accordion>
                                 ) 
 
-                                return(
-                                  <Box component="main">
-                                  <Divider/>
-                                  <Typography
-                                      sx={{
-                                          textAlign: 'center',
-                                          fontStyle: 'italic',
-                                          fontWeight: 400,
-                                          lineHeight: 1.56,
-                                          fontFamily: 'Public Sans,sans-serif',
-                                          fontSize: '18px',
-                                      }}
-                                  >
-                                      No Data
-                                  </Typography>
-                              </Box>
-                                )
+                            
                             })}
                           </Grid>
                           <Grid item xs />
