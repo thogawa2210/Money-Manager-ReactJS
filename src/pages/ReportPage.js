@@ -70,7 +70,6 @@ const getLastStartEndDate = (date) => {
   };
 };
 
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -239,10 +238,14 @@ function ReportPage() {
     getTransCustomApi(dataApi)
       .then((res) => {
         if (res.data.data.transactions.length > 0) {
+          if (res.data.data.startDate === res.data.data.endDate) {
+            setDisplayDate(`Today`);
+          } else {
+            setDisplayDate(`Period: From ${res.data.data.startDate} To ${res.data.data.endDate}`);
+          }
           setDataEmpty(false);
           const data = getDataBarChart(res.data.data);
           const circleData = getCircleData(res.data.data);
-          setDisplayDate(`Period: From ${res.data.data.startDate} To ${res.data.data.endDate}`);
           setIcomeData(circleData.income);
           setExpensData(circleData.expense);
           setChartLabels(data.chartLabels);
@@ -254,7 +257,11 @@ function ReportPage() {
           });
         } else {
           const circleData = getCircleData(res.data.data);
-          setDisplayDate(`Period: From ${res.data.data.startDate} To ${res.data.data.endDate}`);
+          if (res.data.data.startDate === res.data.data.endDate) {
+            setDisplayDate(`Today`);
+          } else {
+            setDisplayDate(`Period: From ${res.data.data.startDate} To ${res.data.data.endDate}`);
+          }
           setIcomeData(circleData.income);
           setExpensData(circleData.expense);
           setDataExport({
