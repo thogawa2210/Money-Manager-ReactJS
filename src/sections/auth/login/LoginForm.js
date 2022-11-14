@@ -161,7 +161,7 @@ export default function LoginForm() {
       email: email.email,
     };
     const results = await axios.request({
-      url: `http://money-manager-master-be.herokuapp.com/auth/forgotPassword`,
+      url: `https://money-manager-master-be.herokuapp.com/auth/forgotPassword`,
       method: 'POST',
       data: JSON.stringify(data),
       headers: {
