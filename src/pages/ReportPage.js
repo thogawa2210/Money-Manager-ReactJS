@@ -27,6 +27,8 @@ import {
   Stack,
   Alert,
   Box,
+  Paper,
+  Divider,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
@@ -85,6 +87,7 @@ function ReportPage() {
     date: '',
     wallet_id: '',
   });
+  const [dataEmpty, setDataEmpty] = useState(false);
   const [dataExport, setDataExport] = useState({
     list: [],
     filename: '',
@@ -182,7 +185,7 @@ function ReportPage() {
 
   useEffect(() => {
     setDataApi({ ...dataApi, user_id: userID });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getTransCustomApi = async (data) => {
@@ -234,19 +237,28 @@ function ReportPage() {
   const handleFilter = (e) => {
     getTransCustomApi(dataApi)
       .then((res) => {
-        console.log(res.data.data);
-        const data = getDataBarChart(res.data.data);
-        const circleData = getCircleData(res.data.data);
-        setDisplayDate(`Period: From ${res.data.data.startDate} To ${res.data.data.endDate}`);
-        setIcomeData(circleData.income);
-        setExpensData(circleData.expense);
-        setChartLabels(data.chartLabels);
-        setChartData(data.chartData);
-        setDataExport({
-          ...dataExport,
-          list: res.data.data.transactions,
-          filename: `Bao_cao_tai_chinh_from_${res.data.data.startDate}_to_${res.data.data.endDate}`,
-        });
+        if (res.data.data.transactions.length > 0) {
+          setDataEmpty(false);
+          const data = getDataBarChart(res.data.data);
+          const circleData = getCircleData(res.data.data);
+          setDisplayDate(`Period: From ${res.data.data.startDate} To ${res.data.data.endDate}`);
+          setIcomeData(circleData.income);
+          setExpensData(circleData.expense);
+          setChartLabels(data.chartLabels);
+          setChartData(data.chartData);
+          setDataExport({
+            ...dataExport,
+            list: res.data.data.transactions,
+            filename: `Bao_cao_tai_chinh_from_${res.data.data.startDate}_to_${res.data.data.endDate}`,
+          });
+        } else {
+          setDataExport({
+            ...dataExport,
+            list: res.data.data.transactions,
+            filename: `Bao_cao_tai_chinh_from_${res.data.data.startDate}_to_${res.data.data.endDate}`,
+          });
+          setDataEmpty(true);
+        }
       })
       .catch((err) =>
         Swal.fire({
@@ -284,37 +296,51 @@ function ReportPage() {
   };
 
   useEffect(() => {
-    let user_id = JSON.parse(localStorage.getItem('user')).user_id;
-    let data = {
-      user_id: user_id,
-      start_date: '',
-      end_date: '',
-      wallet_id: '',
-    };
-    getTransCustomApi(data)
-      .then((res) => {
-        const dataBarChart = getDataBarChart(res.data.data);
-        const circleData = getCircleData(res.data.data);
-        setIcomeData(circleData.income);
-        setExpensData(circleData.expense);
-        setChartLabels(dataBarChart.chartLabels);
-        setChartData(dataBarChart.chartData);
-        setDataExport({
-          ...dataExport,
-          list: res.data.data.transactions,
-          filename: `Bao_cao_tai_chinh_from_${res.data.data.startDate}_to_${res.data.data.endDate}`,
-        });
-      })
-      .catch((err) =>
-        Swal.fire({
-          icon: 'error',
-          title: 'Something Wrong!',
-          text: 'Something wrong! Please try again!',
-          showConfirmButton: false,
-          timer: 2000,
+    let user = localStorage.getItem('user');
+    if (user) {
+      let userId = JSON.parse(user).user_id;
+      let data = {
+        user_id: userId,
+        start_date: '',
+        end_date: '',
+        wallet_id: '',
+      };
+      getTransCustomApi(data)
+        .then((res) => {
+          if (res.data.data.transactions.length > 0) {
+            setDataEmpty(false);
+            const dataBarChart = getDataBarChart(res.data.data);
+            const circleData = getCircleData(res.data.data);
+            setIcomeData(circleData.income);
+            setExpensData(circleData.expense);
+            setChartLabels(dataBarChart.chartLabels);
+            setChartData(dataBarChart.chartData);
+            setDataExport({
+              ...dataExport,
+              list: res.data.data.transactions,
+              filename: `Bao_cao_tai_chinh_from_${res.data.data.startDate}_to_${res.data.data.endDate}`,
+            });
+          } else {
+            setDataExport({
+              ...dataExport,
+              list: res.data.data.transactions,
+              filename: `Bao_cao_tai_chinh_from_${res.data.data.startDate}_to_${res.data.data.endDate}`,
+            });
+            setDataEmpty(true);
+          }
         })
-      );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+        .catch((err) =>
+          Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text: 'Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000,
+          })
+        );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -396,18 +422,17 @@ function ReportPage() {
                 </Grid>
 
                 <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                  <Button variant="contained" color="warning" sx={{height: '38px'}}>
+                  <Button variant="contained" color="warning" sx={{ height: '38px' }}>
                     <CSVLink
                       data={dataExport.list}
                       filename={dataExport.filename}
                       headers={dataExport.headers}
-                      sx={{  padding: '7px', textDecoration: 'none' }}
+                      sx={{ padding: '7px', textDecoration: 'none' }}
                     >
                       Export
                     </CSVLink>
                   </Button>
                 </Grid>
-                
               </Grid>
             </Grid>
           </Grid>
@@ -416,45 +441,205 @@ function ReportPage() {
 
       <Box sx={{ mt: '10px' }}>
         <Grid item xs={12} md={6} lg={8}>
-          <AppWebsiteVisits
-            title="Income & Expense Reports"
-            subheader={displayDate}
-            chartLabels={chartLabels}
-            chartData={chartData}
-          />
+          {dataEmpty ? (
+            <Paper
+              elevant={3}
+              sx={{
+                width: '1056px',
+                height: '150px',
+                mt: '4px',
+                color: 'inherit',
+                padding: '24px',
+                boxShadow: '1px 1px 1px 1px #CFD8E3 ',
+                mr: 0,
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  lineHeight: 1.56,
+                  fontFamily: 'Public Sans,sans-serif',
+                  fontSize: '18px',
+                }}
+              >
+                Income & Expense Reports
+              </Typography>
+              <Typography
+                sx={{
+                  fontWeight: 400,
+                  lineHeight: 1.56,
+                  fontFamily: 'Public Sans,sans-serif',
+                  fontSize: '14px',
+                  color: '#637381',
+                }}
+              >
+                {displayDate}
+              </Typography>
+              <Divider />
+              <Typography
+                component="p"
+                sx={{
+                  textAlign: 'center',
+                  mt: 2,
+                  fontStyle: 'italic',
+                  fontWeight: 400,
+                  lineHeight: 1.56,
+                  fontFamily: 'Public Sans,sans-serif',
+                  fontSize: '16px',
+                  color: '#637381',
+                }}
+              >
+                No Data
+              </Typography>
+            </Paper>
+          ) : (
+            <AppWebsiteVisits
+              title="Income & Expense Reports"
+              subheader={displayDate}
+              chartLabels={chartLabels}
+              chartData={chartData}
+            />
+          )}
         </Grid>
       </Box>
+
       <Box sx={{ mt: '10px' }}>
         <Grid container spacing={2}>
           <Grid item xs={6} md={6}>
-            <AppCurrentVisits
-              title="Income"
-              subheader={displayDate}
-              chartData={incomeData}
-              chartColors={[
-                theme.palette.primary.main,
-                theme.palette.warning.main,
-                theme.palette.error.main,
-                theme.palette.success.main,
-                theme.palette.secondary.main,
-                theme.palette.info.light,
-              ]}
-            />
+            {incomeData.length <= 0 ? (
+              <Paper
+                elevant={3}
+                sx={{
+                  width: '500',
+                  height: '150px',
+                  mt: '4px',
+                  color: 'inherit',
+                  padding: '24px',
+                  boxShadow: '1px 1px 1px 1px #CFD8E3 ',
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    lineHeight: 1.56,
+                    fontFamily: 'Public Sans,sans-serif',
+                    fontSize: '18px',
+                  }}
+                >
+                  Income
+                </Typography>
+                <Typography
+                  sx={{
+                    fontWeight: 400,
+                    lineHeight: 1.56,
+                    fontFamily: 'Public Sans,sans-serif',
+                    fontSize: '14px',
+                    color: '#637381',
+                  }}
+                >
+                  {displayDate}
+                </Typography>
+                <Divider />
+                <Typography
+                  component="p"
+                  sx={{
+                    textAlign: 'center',
+                    mt: 2,
+                    fontStyle: 'italic',
+                    fontWeight: 400,
+                    lineHeight: 1.56,
+                    fontFamily: 'Public Sans,sans-serif',
+                    fontSize: '16px',
+                    color: '#637381',
+                  }}
+                >
+                  No Data
+                </Typography>
+              </Paper>
+            ) : (
+              <AppCurrentVisits
+                title="Income"
+                subheader={displayDate}
+                chartData={incomeData}
+                chartColors={[
+                  theme.palette.primary.main,
+                  theme.palette.warning.main,
+                  theme.palette.error.main,
+                  theme.palette.success.main,
+                  theme.palette.secondary.main,
+                  theme.palette.info.light,
+                ]}
+                sx={{ boxShadow: '1px 1px 1px 1px #CFD8E3 ' }}
+              />
+            )}
           </Grid>
           <Grid item xs={6} md={6}>
-            <AppCurrentVisits
-              title="Expense"
-              subheader={displayDate}
-              chartData={expenseData}
-              chartColors={[
-                theme.palette.primary.main,
-                theme.palette.warning.main,
-                theme.palette.error.main,
-                theme.palette.success.main,
-                theme.palette.secondary.main,
-                theme.palette.info.light,
-              ]}
-            />
+            {expenseData.length <= 0 ? (
+              <Paper
+                elevant={3}
+                sx={{
+                  width: '500',
+                  height: '150px',
+                  mt: '4px',
+                  color: 'inherit',
+                  padding: '24px',
+                  boxShadow: '1px 1px 1px 1px #CFD8E3 ',
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    lineHeight: 1.56,
+                    fontFamily: 'Public Sans,sans-serif',
+                    fontSize: '18px',
+                  }}
+                >
+                  Expense
+                </Typography>
+                <Typography
+                  sx={{
+                    fontWeight: 400,
+                    lineHeight: 1.56,
+                    fontFamily: 'Public Sans,sans-serif',
+                    fontSize: '14px',
+                    color: '#637381',
+                  }}
+                >
+                  {displayDate}
+                </Typography>
+                <Divider />
+                <Typography
+                  component="p"
+                  sx={{
+                    textAlign: 'center',
+                    mt: 2,
+                    fontStyle: 'italic',
+                    fontWeight: 400,
+                    lineHeight: 1.56,
+                    fontFamily: 'Public Sans,sans-serif',
+                    fontSize: '16px',
+                    color: '#637381',
+                  }}
+                >
+                  No Data
+                </Typography>
+              </Paper>
+            ) : (
+              <AppCurrentVisits
+                title="Expense"
+                subheader={displayDate}
+                chartData={expenseData}
+                chartColors={[
+                  theme.palette.primary.main,
+                  theme.palette.warning.main,
+                  theme.palette.error.main,
+                  theme.palette.success.main,
+                  theme.palette.secondary.main,
+                  theme.palette.info.light,
+                ]}
+                sx={{ boxShadow: '1px 1px 1px 1px #CFD8E3 ' }}
+              />
+            )}
           </Grid>
         </Grid>
       </Box>
@@ -467,7 +652,8 @@ function ReportPage() {
         aria-describedby="alert-dialog-slide-description"
       >
         <Typography variant="h5" padding={3} pb={0}>
-          Choose <span style={{ color: 'red' }}>Start Date</span> And <span style={{ color: 'green' }}>End Date</span>{' '}
+          Choose <span style={{ textDecoration: 'underline', color: 'blue' }}>Start Date</span> And{' '}
+          <span style={{ textDecoration: 'underline', color: 'blue' }}>End Date</span>{' '}
         </Typography>
         {error ? (
           <Stack spacing={2} sx={{ padding: 2 }}>

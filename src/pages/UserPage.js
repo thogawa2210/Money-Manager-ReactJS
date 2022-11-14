@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import mockAvatar from 'src/_mock/avatar';
 // @mui
 import * as React from 'react';
 import {
@@ -52,6 +53,7 @@ export default function UserPage() {
   });
   const [formName, setFormName] = useState({ username: '' });
   const [formPass, setFormPass] = useState({ old_pass: '', new_pass: '' });
+  const [openDialogListAva, setOpenDialogListAva] = useState(false);
   const [form, setForm] = useState({
     _id: '',
     username: '',
@@ -69,6 +71,7 @@ export default function UserPage() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+ 
   const [showPassword, setShowPassword] = useState(false);
   const [profile, setProfile] = useState({
     wallets: 0,
@@ -85,6 +88,7 @@ export default function UserPage() {
       setOpenName(true);
     } else {
       if (form.password) {
+        setShowPassword(false)
         setAnchorEl(null);
         setOpenPass(true);
       } else {
@@ -188,7 +192,9 @@ export default function UserPage() {
   };
 
   const changeNameApi = async (id) => {
-    return await axios.put(`https://money-manager-master-be.herokuapp.com/user/edit-username/${id}`, { username: formName.username });
+    return await axios.put(`https://money-manager-master-be.herokuapp.com/user/edit-username/${id}`, {
+      username: formName.username,
+    });
   };
 
   const handleChangeName = (e) => {
@@ -221,25 +227,35 @@ export default function UserPage() {
   };
 
   useEffect(() => {
-    const user_id = JSON.parse(localStorage.getItem('user')).user_id;
-    userApi(user_id)
-      .then((res) => {
-        if (res.data.type === 'success') {
-          let userInfo = res.data.message;
-          setForm(userInfo);
-        } else {
-          console.log(res.data.message);
-        }
-      })
-      .catch((err) =>
-        Swal.fire({
-          icon: 'error',
-          title: 'Something Wrong!',
-          text: 'Something wrong! Please try again!',
-          timer: 1500,
-          showConfirmButton: false,
+    const user = localStorage.getItem('user');
+    if (user) {
+      const user_id = JSON.parse(user).user_id;
+      userApi(user_id)
+        .then((res) => {
+          if (res.data.type === 'success') {
+            let userInfo = res.data.message;
+            setForm({
+              _id: userInfo._id,
+              username: userInfo.username,
+              email: userInfo.email,
+              password: userInfo.password,
+              google_id: userInfo.google_id,
+              img: userInfo.img,
+            });
+          } else {
+            console.log(res.data.message);
+          }
         })
-      );
+        .catch((err) =>
+          Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text: 'Something wrong! Please try again!',
+            timer: 1500,
+            showConfirmButton: false,
+          })
+        );
+    }
   }, [flag]);
 
   const profileApi = async (id) => {
@@ -260,6 +276,44 @@ export default function UserPage() {
         })
       );
   }, []);
+
+  const changeAvaApi = async (id, data) => {
+    return await axios.put(`https://money-manager-master-be.herokuapp.com/user/change-avatar/${id}`, data);
+  };
+
+  const onClickChangeAvatar = () => {
+    setOpenDialogListAva(true);
+  };
+
+  const handleChangeAvatar = (avatar) => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      let userId = JSON.parse(user).user_id;
+      const data = {
+        img: avatar,
+      };
+      changeAvaApi(userId, data)
+        .then((res) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Change Avatar Success!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          dispatch(changeFlag(1));
+          setOpenDialogListAva(false);
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Something wrong!',
+            text: 'Try again!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        });
+    }
+  };
 
   return (
     <>
@@ -319,8 +373,8 @@ export default function UserPage() {
                 </CardContent>
                 <Divider />
                 <CardActions>
-                  <Button color="primary" fullWidth variant="outlined">
-                    Upload picture
+                  <Button color="primary" fullWidth variant="outlined" onClick={onClickChangeAvatar}>
+                    Change Avatar
                   </Button>
                 </CardActions>
               </Card>
@@ -328,10 +382,10 @@ export default function UserPage() {
             <Grid item lg={8} md={6} xs={12}>
               <Card>
                 <Grid container>
-                  <Grid item xs={10}>
+                  <Grid item xs={11}>
                     <CardHeader subheader="Thank you for using out app!" title="Profile" />
                   </Grid>
-                  <Grid item xs sx={{}}>
+                  <Grid item xs={1}>
                     <IconButton
                       aria-label="more"
                       id="long-button"
@@ -450,7 +504,7 @@ export default function UserPage() {
                 margin="dense"
                 id="old_pass"
                 label="Old Password"
-                type="text"
+                type={showPassword ? 'text' : 'password'}
                 fullWidth
                 variant="outlined"
                 InputProps={{
@@ -473,7 +527,7 @@ export default function UserPage() {
                 margin="dense"
                 id="new_pass"
                 label="New Password"
-                type="text"
+                type={showPassword ? 'text' : 'password'}
                 fullWidth
                 variant="outlined"
                 InputProps={{
@@ -496,7 +550,7 @@ export default function UserPage() {
                 name="new_pass"
                 id="new_pass"
                 label="New Password"
-                type="text"
+                type={showPassword ? 'text' : 'password'}
                 fullWidth
                 variant="outlined"
                 InputProps={{
@@ -520,6 +574,28 @@ export default function UserPage() {
             </Button>
           </DialogActions>
         </Box>
+      </Dialog>
+
+      {/* List ava */}
+      <Dialog open={openDialogListAva} onClose={() => setOpenDialogListAva(false)}>
+        <DialogContent>
+          <Box sx={{ width: '400px', typography: 'body1', height: '400px' }}>
+            <Grid container spacing={3}>
+              {mockAvatar.map((item) => (
+                <Grid item xs={3} key={item}>
+                  <MenuItem onClick={() => handleChangeAvatar(item)} sx={{ width: '70px', height: '40px' }}>
+                    <Avatar src={item} />
+                  </MenuItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialogListAva(false)} variant="outlined" color="error">
+            Cancel
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

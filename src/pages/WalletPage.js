@@ -63,7 +63,7 @@ export default function WalletPage() {
     amount: '',
   });
   const [openAddForm, setOpenAddForm] = useState(false);
-  const idUser = JSON.parse(localStorage.getItem('user')).user_id;
+  const user = localStorage.getItem('user');
   const handleClickOpenCreate = () => {
     setOpenCreate(true);
   };
@@ -77,67 +77,71 @@ export default function WalletPage() {
     });
   };
   const handleSubmitCreate = async () => {
-    setOpenAddForm(false);
-    let data = {
-      icon: wallet.icon,
-      name: wallet.name,
-      amount: wallet.amount,
-      user_id: idUser,
-    };
-    if (wallet.name === '' || wallet.amount === '') {
-      setOpenCreate(false);
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please fill all the required fields',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    } else {
-      await axios
-        .post('https://money-manager-master-be.herokuapp.com/wallet/create', data)
-        .then((res) => {
-          if (res.data.type === 'success') {
+    if (user) {
+      let userId = JSON.parse(user).user_id
+      setOpenAddForm(false);
+      let data = {
+        icon: wallet.icon,
+        name: wallet.name,
+        amount: wallet.amount,
+        user_id: userId,
+      };
+      if (wallet.name === '' || wallet.amount === '') {
+        setOpenCreate(false);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Please fill all the required fields',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        await axios
+          .post('https://money-manager-master-be.herokuapp.com/wallet/create', data)
+          .then((res) => {
+            if (res.data.type === 'success') {
+              setOpenCreate(false);
+              dispatch(changeFlag(1));
+              setWallet({
+                name: '',
+                amount: '',
+                icon: null,
+              });
+              Swal.fire({
+                icon: 'success',
+                title: 'Update Successfully!',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            } else {
+              setOpenCreate(false);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: `${res.data.message}`,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              setWallet({
+                icon: '',
+                name: '',
+                amount: '',
+              });
+            }
+          })
+          .catch((err) => {
             setOpenCreate(false);
-            dispatch(changeFlag(1));
-            setWallet({
-              name: '',
-              amount: '',
-              icon: null,
-            });
             Swal.fire({
               icon: 'success',
-              title: 'Update Successfully!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          } else {
-            setOpenCreate(false);
-            Swal.fire({
-              icon: 'error',
               title: 'Error!',
-              text: `${res.data.message}`,
+              text: 'Something error! Try again!',
               showConfirmButton: false,
               timer: 1500,
             });
-            setWallet({
-              icon: '',
-              name: '',
-              amount: '',
-            });
-          }
-        })
-        .catch((err) => {
-          setOpenCreate(false);
-          Swal.fire({
-            icon: 'success',
-            title: 'Error!',
-            text: 'Something error! Try again!',
-            showConfirmButton: false,
-            timer: 1500,
           });
-        });
+      }
     }
+   
   };
 
   // Detail wallet
@@ -424,6 +428,7 @@ export default function WalletPage() {
                 variant="outlined"
                 type="number"
                 value={wallet.amount}
+                lang="en-150"
               />
             </Grid>
           </Grid>

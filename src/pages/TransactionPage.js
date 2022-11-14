@@ -25,8 +25,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  ListSubheader,
   Tab,
+  Divider,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -65,6 +65,7 @@ export default function TransactionPage() {
   const [listWallet, setListWallet] = useState([]);
   const [listCategory, setListCategory] = useState([]);
   const [transaction, setTransaction] = useState({
+    user_id: '',
     wallet_id: '',
     category_id: '',
     amount: 0,
@@ -89,11 +90,11 @@ export default function TransactionPage() {
   const handleChangeCategory = (e, category) => {
     setCategory(category);
   };
-const [flash , setFlash] = useState(0);
+
   const handleChooseCategory = (id) => {
-    if(openAddForm){
+    if (openAddForm) {
       setTransaction({ ...transaction, category_id: id });
-    }else{
+    } else {
       setEditTransaction({ ...editTransaction, category_id: id });
     }
     setOpenCategory(false);
@@ -106,57 +107,74 @@ const [flash , setFlash] = useState(0);
     setExpanded(isExpanded ? panel : false);
   };
 
-  const getDataApi = async () => {
-    const userId = JSON.parse(localStorage.getItem('user')).user_id;
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/transaction/transaction-this-month/${userId}`);
+  const getDataApi = async (id) => {
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/transaction/transaction-this-month/${id}`);
+  };
+
+  const getUserInfo = async (id) => {
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/user/profile/${id}`);
   };
 
   const getData = async () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if(user) {
-      let userId = user.user_id;
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userId = JSON.parse(user).user_id;
       await axios
-          .get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
-          .then((res) => setListCategory(res.data.categoryUser))
-          .catch((err) => Swal.fire({
-            icon: 'error',
-            title: 'Something Wrong!',
-            text: 'Something wrong! Please try again!',
+        .get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
+        .then((res) => setListCategory(res.data.categoryUser))
+        .catch((err) => {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Something wrong!',
+            text: 'Try again!',
             showConfirmButton: false,
-            timer: 2000}));
+            timer: 1500,
+          });
+        });
       await axios
-          .get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
-          .then((res) => setListWallet(res.data.wallet))
-          .catch((err) => Swal.fire({
-            icon: 'error',
-            title: 'Something Wrong!',
-            text: 'Something wrong! Please try again!',
+        .get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
+        .then((res) => setListWallet(res.data.wallet))
+        .catch((err) => {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Somrthing wrong!',
+            text: 'Try again!',
             showConfirmButton: false,
-            timer: 2000}));
-    }else {
+            timer: 1500,
+          });
+        });
+    } else {
       navigate('/login');
     }
   };
 
   useEffect(() => {
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    getDataApi()
-      .then((res) => {
-        setListTransaction(res.data.data.list);
-        setMoneyFlow({
-          inflow: res.data.data.inflow,
-          outflow: res.data.data.outflow,
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userId = JSON.parse(user).user_id;
+      getDataApi(userId)
+        .then((res) => {
+          setListTransaction(res.data.data.list);
+          setMoneyFlow({
+            inflow: res.data.data.inflow,
+            outflow: res.data.data.outflow,
+          });
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Something Wrong!',
+            text: 'Try again!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
         });
-      })
-      .catch((err) => Swal.fire({
-        icon: 'error',
-        title: 'Something Wrong!',
-        text: 'Something wrong! Please try again!',
-        showConfirmButton: false,
-        timer: 2000}));
+    }
   }, [flag]);
 
   useEffect(() => {
@@ -166,7 +184,6 @@ const [flash , setFlash] = useState(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listWallet]);
-
 
   const handleChange = (e) => {
     if (e.target) {
@@ -201,7 +218,37 @@ const [flash , setFlash] = useState(0);
   };
 
   const handleClickOpenAddForm = () => {
-    setOpenAddForm(true);
+    const user = localStorage.getItem('user');
+    if (user) {
+      let userId = JSON.parse(user).user_id;
+      getUserInfo(userId)
+        .then((res) => {
+          if (res.data.data.wallets === 0) {
+            Swal.fire({
+              icon: 'info',
+              title: "You don't have any wallets!",
+              text: 'Please create a new one to continute!',
+              confirmButtonColor: '#54D62C',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                navigate('/dashboard/wallet');
+              }
+            });
+          } else {
+            setTransaction({ ...transaction, user_id: userId });
+            setOpenAddForm(true);
+          }
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Something wrong!',
+            text: 'Try again!',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        });
+    }
   };
 
   const handleCloseAddForm = () => {
@@ -219,7 +266,7 @@ const [flash , setFlash] = useState(0);
         text: 'You can not edit Add Wallet Transaction!',
         showConfirmButton: false,
         timer: 2000,
-      })
+      });
     } else {
       setOpenEditForm(true);
       setValue(dayjs(editTransaction[0].date));
@@ -244,19 +291,6 @@ const [flash , setFlash] = useState(0);
     return await axios.delete(`https://money-manager-master-be.herokuapp.com/transaction/delete-transaction/${id}`);
   };
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if(user) {
-      let userId = user.user_id;
-      setTransaction({ ...transaction, user_id: userId });
-    }else {
-
-      navigate('/login');
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleDeleteTrans = (id) => {
     Swal.fire({
       icon: 'warning',
@@ -276,7 +310,7 @@ const [flash , setFlash] = useState(0);
               title: 'Delete Success!',
               showConfirmButton: false,
               timer: 1500,
-            }).then(setTimeout(changeFlash,1000));
+            });
           })
           .catch((err) =>
             Swal.fire({
@@ -330,27 +364,30 @@ const [flash , setFlash] = useState(0);
             });
           }
         })
-        .catch((err) => Swal.fire({
-          icon: 'error',
-          title: 'Something Wrong!',
-          text: 'Something wrong! Please try again!',
-          showConfirmButton: false,
-          timer: 2000}));
+        .catch((err) =>
+          Swal.fire({
+            icon: 'error',
+            title: 'Something wrong!',
+            text: 'Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000,
+          })
+        );
       setOpenAddForm(false);
       dispatch(changeFlag(1));
     }
   };
 
   const handleEdit = async () => {
-    if(editTransaction.category_name === 'Add Wallet') {
+    if (editTransaction.category_name === 'Add Wallet') {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: 'You can not edit Add Wallet Transaction!',
         showConfirmButton: false,
         timer: 2000,
-      })
-    }else{
+      });
+    } else {
       if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
         setOpenEditForm(false);
         Swal.fire({
@@ -362,66 +399,42 @@ const [flash , setFlash] = useState(0);
         });
       } else {
         await axios
-            .put(`https://money-manager-master-be.herokuapp.com/transaction/update-transaction/${editTransaction._id}`, editTransaction)
-            .then((res) => {
-              setOpenEditForm(false);
-              if (res.status === 200) {
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Edit transaction successfully!',
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-                dispatch(changeFlag(1));
-              } else {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Something went wrong!',
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-              }
-            })
-            .catch((err) => Swal.fire({
+          .put(
+            `https://money-manager-master-be.herokuapp.com/transaction/update-transaction/${editTransaction._id}`,
+            editTransaction
+          )
+          .then((res) => {
+            setOpenEditForm(false);
+            if (res.status === 200) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Edit transaction successfully!',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              dispatch(changeFlag(1));
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          })
+          .catch((err) =>
+            Swal.fire({
               icon: 'error',
-              title: 'Something Wrong!',
+              title: 'Something wrong!',
               text: 'Something wrong! Please try again!',
               showConfirmButton: false,
-              timer: 2000}));
+              timer: 2000,
+            })
+          );
       }
     }
   };
-
-  const getWalletUser = async () => {
-    const userId = JSON.parse(localStorage.getItem('user')).user_id;
-   return  await axios.get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
-  }
-
-  const changeFlash = () => {
-    setFlash(flash+1)
-  }
-
-  useEffect(() => {
-    getWalletUser().then((res) => {
-      if (res.data.wallet.length === 0) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Wallet does not exist...',
-          text: 'Please create a new wallet!',
-          showCancelButton: true,
-          confirmButtonColor: '#54D62C',
-          cancelButtonColor: '#FF4842',
-        }).then(navigate('/dashboard/wallet'))
-      }
-    }).catch((err) =>
-        Swal.fire({
-      icon: 'error',
-      title: 'Something Wrong!',
-      text: 'Something wrong! Please try again!',
-      showConfirmButton: false,
-      timer: 2000}))
-  },[flash])
 
   return (
     <>
@@ -432,8 +445,15 @@ const [flash , setFlash] = useState(0);
       <Grid container spacing={3}>
         <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-            <Typography variant="h3" sx={{ml: '20px'}}>Transaction</Typography>
-            <Button  sx={{mr: '20px'}} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenAddForm}>
+            <Typography variant="h3" sx={{ ml: '20px' }}>
+              Transaction
+            </Typography>
+            <Button
+              sx={{ mr: '20px' }}
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              onClick={handleClickOpenAddForm}
+            >
               New Transaction
             </Button>
           </Stack>
@@ -480,161 +500,179 @@ const [flash , setFlash] = useState(0);
                   </Typography>
                 </CardContent>
 
-                <Box
-                  component="main"
-                  sx={{
-                    maxHeight: '350px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    overflow: 'hidden',
-                    overflowY: 'scroll',
-                  }}
-                >
-                  {listTransaction?.map((item, index) => (
-                    <div key={index}>
-                      <Box sx={{ heght: '20px', border: '1px solid #EAFCDE' }}></Box>
-                      <Accordion
-                        expanded={expanded === `panel${index + 1}`}
-                        onChange={handleExpand(`panel${index + 1}`)}
-                      >
-                        <AccordionSummary
-                          aria-controls={`panel${index + 1}bh-content`}
-                          id={`panel${index + 1}bh-header`}
-                          sx={{
-                            width: '100%',
-                            height: '60px',
-                            flexShrink: 0,
-                            justifyContent: 'flex-start',
-                            padding: '24px',
-                            backgroundColor: '#ECFFE0',
-                          }}
+                {listTransaction?.length <= 0 ? (
+                  <Box component="main">
+                    <Divider />
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        fontStyle: 'italic',
+                        fontWeight: 400,
+                        lineHeight: 1.56,
+                        fontFamily: 'Public Sans,sans-serif',
+                        fontSize: '18px',
+                      }}
+                    >
+                      No Data
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box
+                    component="main"
+                    sx={{
+                      maxHeight: '350px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      overflow: 'hidden',
+                      overflowY: 'scroll',
+                    }}
+                  >
+                    {listTransaction && listTransaction.map((item, index) => (
+                      <div key={item._id}>
+                        <Box sx={{ heght: '20px', border: '1px solid #EAFCDE' }}></Box>
+                        <Accordion
+                          expanded={expanded === `panel${index + 1}`}
+                          onChange={handleExpand(`panel${index + 1}`)}
                         >
-                          <Grid container spacing={2} sx={{ pt: '4px' }}>
-                            <Grid item xs={2} sx={{ textAlign: 'center' }}>
-                              {' '}
-                              <Avatar src={item.category_icon} />
-                            </Grid>
-                            <Grid item xs={5} sx={{ mt: '8px' }}>
-                              {item.category_name}
-                            </Grid>
-                            {item.category_type === 'expense' ? (
-                              <Grid
-                                item
-                                xs={5}
-                                sx={{
-                                  color: '#E51C23',
-                                  textAlign: 'right',
-                                  mt: '6px',
-                                }}
-                              >
-                                - {numberWithCommas(item.amount)}{' '}
-                                <Typography component="span" sx={{ textDecoration: 'underline' }}>
-                                  đ
-                                </Typography>
+                          <AccordionSummary
+                            aria-controls={`panel${index + 1}bh-content`}
+                            id={`panel${index + 1}bh-header`}
+                            sx={{
+                              width: '100%',
+                              height: '60px',
+                              flexShrink: 0,
+                              justifyContent: 'flex-start',
+                              padding: '24px',
+                              backgroundColor: '#ECFFE0',
+                            }}
+                          >
+                            <Grid container spacing={2} sx={{ pt: '4px' }}>
+                              <Grid item xs={2}>
+                                {' '}
+                                <Avatar src={item.category_icon} sx={{ mr: 0, width: '35px', height: '35px' }} />
                               </Grid>
-                            ) : (
-                              <Grid
-                                item
-                                xs={5}
-                                sx={{
-                                  color: '#039BE5',
-                                  textAlign: 'right',
-                                  mt: '6px',
-                                }}
-                              >
-                                + {numberWithCommas(item.amount)}{' '}
-                                <Typography component="span" style={{ textDecoration: 'underline' }}>
-                                  đ
-                                </Typography>
+                              <Grid item xs={5} sx={{ mt: '8px' }}>
+                                {item.category_name}
                               </Grid>
-                            )}
-                          </Grid>
-                        </AccordionSummary>
-                        <AccordionDetails sx={{ height: '235px', pb: 0 }}>
-                          <Typography sx={{ height: '40px' }}>
-                            <Grid container>
-                              <Grid item xs sx={{ mt: 0, mb: 0 }}>
-                                <Typography variant="h4" style={{ margin: 0 }}>
-                                  Transaction Details
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                                <Button
-                                  variant="outlined"
-                                  color="success"
-                                  onClick={() => handleClickEditForm(item._id)}
+                              {item.category_type === 'expense' ? (
+                                <Grid
+                                  item
+                                  xs={5}
+                                  sx={{
+                                    color: '#E51C23',
+                                    textAlign: 'right',
+                                    mt: '6px',
+                                  }}
                                 >
-                                  EDIT
-                                </Button>
-                              </Grid>
-                              <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                                <Button variant="outlined" color="error" onClick={() => handleDeleteTrans(item._id)}>
-                                  DELETE
-                                </Button>
-                              </Grid>
-                            </Grid>
-                          </Typography>
-                          <hr />
-                          <Grid container>
-                            <Grid item xs={2}>
-                              <Avatar src={item.category_icon} sx={{ mr: 10 }} />
-                            </Grid>
-                            <Grid item xs sx={{ mt: '3px' }}>
-                              <h3 style={{ margin: 0 }}>{item.category_name}</h3>
-                              <Typography
-                                sx={{
-                                  marginTop: '0px',
-                                  marginBottom: '0px',
-                                  fontSize: '14px',
-                                }}
-                              >
-                                {item.wallet_name}
-                              </Typography>
-                              <Typography sx={{ fontSize: '12px', fontWeight: 'light' }}>
-                                {getDayy(new Date(`${item.date}`).getDay())}, {item.date}{' '}
-                              </Typography>
-                              <hr />
-                              <Typography
-                                sx={{
-                                  margin: '8px 0px',
-                                  fontSize: '12px',
-                                }}
-                              >
-                                {item.note}{' '}
-                              </Typography>
-                              {item.category_type === 'income' ? (
-                                <Typography sx={{ color: '#039BE5', marginBottom: 0 }}>
-                                  + {numberWithCommas(item.amount)}{' '}
-                                  <span
-                                    sx={{
-                                      color: '#039BE5',
-                                      textDecoration: 'underline',
-                                    }}
-                                  >
-                                    đ
-                                  </span>
-                                </Typography>
-                              ) : (
-                                <Typography sx={{ color: '#E51C23', marginBottom: 0 }}>
                                   - {numberWithCommas(item.amount)}{' '}
-                                  <span
-                                    sx={{
-                                      color: '#E51C23',
-                                      textDecoration: 'underline',
-                                    }}
-                                  >
+                                  <Typography component="span" sx={{ textDecoration: 'underline' }}>
                                     đ
-                                  </span>
-                                </Typography>
+                                  </Typography>
+                                </Grid>
+                              ) : (
+                                <Grid
+                                  item
+                                  xs={5}
+                                  sx={{
+                                    color: '#039BE5',
+                                    textAlign: 'right',
+                                    mt: '6px',
+                                  }}
+                                >
+                                  + {numberWithCommas(item.amount)}{' '}
+                                  <Typography component="span" style={{ textDecoration: 'underline' }}>
+                                    đ
+                                  </Typography>
+                                </Grid>
                               )}
                             </Grid>
-                            <Grid item xs></Grid>
-                          </Grid>
-                        </AccordionDetails>
-                      </Accordion>
-                    </div>
-                  ))}
-                </Box>
+                          </AccordionSummary>
+                          <AccordionDetails sx={{ height: '235px', pb: 0 }}>
+                            <Typography sx={{ height: '40px' }}>
+                              <Grid container>
+                                <Grid item xs sx={{ mt: 0, mb: 0 }}>
+                                  <Typography variant="h4" style={{ margin: 0 }}>
+                                    Transaction Details
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                                  <Button
+                                    variant="outlined"
+                                    color="success"
+                                    onClick={() => handleClickEditForm(item._id)}
+                                  >
+                                    EDIT
+                                  </Button>
+                                </Grid>
+                                <Grid item xs={2} sx={{ textAlign: 'right' }}>
+                                  <Button variant="outlined" color="error" onClick={() => handleDeleteTrans(item._id)}>
+                                    DELETE
+                                  </Button>
+                                </Grid>
+                              </Grid>
+                            </Typography>
+                            <hr />
+                            <Grid container>
+                              <Grid item xs={2} sx={{ pt: '15px', pl: '26px' }}>
+                                <Avatar src={item.category_icon} sx={{ mr: 10 }} />
+                              </Grid>
+                              <Grid item xs sx={{ mt: '3px' }}>
+                                <h3 style={{ margin: 0 }}>{item.category_name}</h3>
+                                <Typography
+                                  sx={{
+                                    marginTop: '0px',
+                                    marginBottom: '0px',
+                                    fontSize: '14px',
+                                  }}
+                                >
+                                  {item.wallet_name}
+                                </Typography>
+                                <Typography sx={{ fontSize: '12px', fontWeight: 'light' }}>
+                                  {getDayy(new Date(`${item.date}`).getDay())}, {item.date}{' '}
+                                </Typography>
+                                <hr />
+                                <Typography
+                                  sx={{
+                                    margin: '8px 0px',
+                                    fontSize: '12px',
+                                  }}
+                                >
+                                  {item.note}{' '}
+                                </Typography>
+                                {item.category_type === 'income' ? (
+                                  <Typography sx={{ color: '#039BE5', marginBottom: 0 }}>
+                                    + {numberWithCommas(item.amount)}{' '}
+                                    <span
+                                      sx={{
+                                        color: '#039BE5',
+                                        textDecoration: 'underline',
+                                      }}
+                                    >
+                                      đ
+                                    </span>
+                                  </Typography>
+                                ) : (
+                                  <Typography sx={{ color: '#E51C23', marginBottom: 0 }}>
+                                    - {numberWithCommas(item.amount)}{' '}
+                                    <span
+                                      sx={{
+                                        color: '#E51C23',
+                                        textDecoration: 'underline',
+                                      }}
+                                    >
+                                      đ
+                                    </span>
+                                  </Typography>
+                                )}
+                              </Grid>
+                              <Grid item xs></Grid>
+                            </Grid>
+                          </AccordionDetails>
+                        </Accordion>
+                      </div>
+                    ))}
+                  </Box>
+                )}
               </Card>
             </Grid>
           </Stack>
