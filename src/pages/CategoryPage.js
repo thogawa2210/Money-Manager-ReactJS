@@ -44,6 +44,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import mockExpense from 'src/_mock/categoryExpense';
+import { LoadingButton } from '@mui/lab';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -90,6 +91,10 @@ function a11yProps(index) {
   };
 }
 export default function ProductsPage() {
+  // Button loading
+  const [loading, setLoading] = useState(false);
+
+
   // Tab detail
   // Done
   const [openCategory, setOpenCategory] = useState(false);
@@ -146,6 +151,7 @@ export default function ProductsPage() {
         timer: 1500,
       });
     } else {
+      setLoading(true);
       const result = await axios.post('https://money-manager-master-be.herokuapp.com/category/add-category', data);
 
       if (result.data.type === 'success') {
@@ -156,6 +162,7 @@ export default function ProductsPage() {
           timer: 1500,
         })
           .then(
+            setLoading(false),
             setCategory({
               ...category,
               icon: null,
@@ -321,6 +328,7 @@ export default function ProductsPage() {
   };
 
   const handleSubmitCateEdit = async () => {
+  
     setOpenEditCategory(false);
     if (data.name === '' || data.icon === '' || data.type === '') {
       setOpenEditCategory(false);
@@ -343,6 +351,7 @@ export default function ProductsPage() {
           await axios
             .put(` https://money-manager-master-be.herokuapp.com/category/update-categody/${editForm._id}`, data)
             .then((res) => {
+              
               dispatch(changeFlag(1));
               Swal.fire({
                 icon: 'success',
@@ -366,6 +375,7 @@ export default function ProductsPage() {
     }
   };
 
+  
   return (
     <>
       <Helmet>
@@ -482,6 +492,10 @@ export default function ProductsPage() {
                                                       >
                                                         Edit
                                                       </Button>
+                                                      
+                                                  
+
+                                                
                                                       <Button
                                                         variant="outlined"
                                                         color="error"
@@ -701,9 +715,17 @@ export default function ProductsPage() {
           <Button variant="outlined" color="error" onClick={handleCloseCreate}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={handleSubmitCreate}>
-            Submit
-          </Button>
+         
+
+          <LoadingButton
+          variant="outlined"
+          color="success"
+          onClick={handleSubmitCreate}
+          loading={loading}
+          loadingPosition="start"
+        >
+          Submit
+        </LoadingButton>
         </DialogActions>
       </Dialog>
       {/* Update Category */}
