@@ -35,6 +35,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  Divider,
 } from '@mui/material';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -317,7 +318,24 @@ export default function WalletPage() {
 
       <Grid container spacing={3}>
         <Grid item xs />
-        <Grid item xs={9} sx={{ padding: 0 }}>
+        {wallets.length <=0 ? (
+               <Box component="main">
+               <Divider/>
+               <Typography
+                   sx={{
+                       textAlign: 'center',
+                       fontStyle: 'italic',
+                       fontWeight: 400,
+                       lineHeight: 1.56,
+                       fontFamily: 'Public Sans,sans-serif',
+                       fontSize: '18px',
+                   }}
+               >
+                   No Data
+               </Typography>
+           </Box>
+        ) : (
+          <Grid item xs={9} sx={{ padding: 0 }}>
           {wallets.map((item, index) => (
             <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)} key={index}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
@@ -369,6 +387,8 @@ export default function WalletPage() {
             </Accordion>
           ))}
         </Grid>
+        )}
+     
         <Grid item xs />
       </Grid>
 
