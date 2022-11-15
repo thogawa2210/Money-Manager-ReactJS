@@ -14,6 +14,8 @@ function SingupForm() {
     password: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/,
   };
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
+
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
@@ -99,6 +101,7 @@ function SingupForm() {
   };
 
   const handleApi = (data) => {
+    setLoading(false);
     if (data.type === 'success') {
       Swal.fire({
         title: 'Register Success',
@@ -120,6 +123,7 @@ function SingupForm() {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     if (form.username === '' || form.password === '' || form.passwordConfirm === '' || form.email === '') {
       Swal.fire({
         icon: 'error',
@@ -128,16 +132,20 @@ function SingupForm() {
         showConfirmButton: false,
         timer: 1500,
       });
+      setLoading(false);
     } else {
       sendUser()
         .then((res) => handleApi(res.data))
-        .catch((err) =>  Swal.fire({
-          icon: 'error',
-          title: 'Something Wrong!',
-          text:' Something wrong! Please try again!',
-          showConfirmButton: false,
-          timer: 2000
-        }));
+        .catch((err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text: ' Something wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 2000
+          })
+          setLoading(false);
+        });
     }
   };
 
@@ -267,11 +275,11 @@ function SingupForm() {
         <hr />
       </Stack>
       {!error.email && !error.username && !error.password && !error.passwordConfirm && form.username && form.password && form.email && form.passwordConfirm ? (
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
+        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit} loading={loading}>
           Sign up
         </LoadingButton>
       ) : (
-        <LoadingButton disabled fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
+        <LoadingButton disabled fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit} loading={loading}>
           Sign up
         </LoadingButton>
       )}

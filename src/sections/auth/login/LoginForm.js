@@ -38,6 +38,15 @@ export default function LoginForm() {
     email: '',
     password: '',
   });
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState({
+    email:  ''
+  })
+
+  const [erremail, setErrEmail] = useState({
+    email: ''
+  })
 
   const callApi = async () => {
     const data = {
@@ -79,6 +88,7 @@ export default function LoginForm() {
   };
 
   const handleClick = () => {
+    setLoading(true);
     if (form.email === '' || form.password === '') {
       Swal.fire({
         icon: 'error',
@@ -87,16 +97,26 @@ export default function LoginForm() {
         showConfirmButton: false,
         timer: 1500,
       });
+      setLoading(false);
+
     } else {
       callApi()
-        .then((res) => handleApi(res.data))
-        .catch((err) =>  Swal.fire({
-          icon: 'error',
-          title: 'Something Wrong!',
-          text: 'Somthing wrong! Please try again!',
-          showConfirmButton: false,
-          timer: 1500,
-        }));
+        .then((res) => {
+          setLoading(false);
+          handleApi(res.data)
+        })
+    
+        .catch((err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Something Wrong!',
+            text: 'Somthing wrong! Please try again!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          setLoading(false);
+        })
+    ;
     }
   };
 
@@ -133,14 +153,7 @@ export default function LoginForm() {
     }
   };
 
-  const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState({
-    email:  ''
-  })
-
-  const [erremail, setErrEmail] = useState({
-    email: ''
-  })
+  
 
   const handleValidateForgot = (e) => {
     switch (e.target.name) {
@@ -217,13 +230,15 @@ export default function LoginForm() {
     setOpen(false);
       sendEmail()
           .then((res) => handleApiEmail(res.data))
-          .catch((err) =>  Swal.fire({
+        .catch((err) => {
+          Swal.fire({
             icon: 'error',
             title: 'Something Wrong!',
-            text:' Something wrong! Please try again!',
+            text: ' Something wrong! Please try again!',
             showConfirmButton: false,
             timer: 2000
-          }));
+          })
+        });
   }
 
 
@@ -304,11 +319,11 @@ export default function LoginForm() {
       </Stack>
 
       {!error.email && !error.password ? (
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick} loading={loading}>
           Login
         </LoadingButton>
       ) : (
-        <LoadingButton disabled fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+        <LoadingButton disabled fullWidth size="large" type="submit" variant="contained" onClick={handleClick} loading={loading}>
           Login
         </LoadingButton>
       )}

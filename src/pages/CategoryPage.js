@@ -107,7 +107,6 @@ export default function ProductsPage() {
     icon: '',
     note: '',
   });
-  const [openAddForm, setOpenAddForm] = useState(false);
   // Create
   const handleClickOpenCreateCategory = () => {
     setOpenCreateCategory(true);
@@ -130,7 +129,6 @@ export default function ProductsPage() {
   };
 
   const handleSubmitCreate = async () => {
-    setOpenAddForm(false);
     let data = {
       icon: category.icon,
       name: category.name,
@@ -172,6 +170,7 @@ export default function ProductsPage() {
             dispatch(changeFlag(1))
           )
           .catch((error) => {
+            setLoading(false)
             Swal.fire({
               icon: 'error',
               title: 'Something Wrong!',
@@ -195,6 +194,7 @@ export default function ProductsPage() {
           note: '',
         });
         setOpenCreateCategory(false);
+        setLoading(false)
       }
     }
   };
@@ -258,6 +258,7 @@ export default function ProductsPage() {
           timer: 2000,
         });
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flag]);
 
   // Delete Category
@@ -287,6 +288,7 @@ export default function ProductsPage() {
             setExpanded(false);
           })
           .catch((err) => {
+           
             Swal.fire({
               icon: 'error',
               title: 'Something Wrong!',
@@ -356,15 +358,19 @@ export default function ProductsPage() {
           await axios
             .put(` https://money-manager-master-be.herokuapp.com/category/update-categody/${editForm._id}`, data)
             .then((res) => {
-              
-              dispatch(changeFlag(1));
               Swal.fire({
                 icon: 'success',
                 title: 'Edited!',
                 text: 'Category has been edited.',
-                showConfirmButton: false,
-                timer: 1500,
-              });
+                confirmButtonColor : '#54D62C',
+                showConfirmButton: true,
+             
+              }).then((result)=> {
+                if( result.isConfirmed) {
+                  dispatch(changeFlag(1));
+                }
+                dispatch(changeFlag(1));
+              } )
             })
             .catch((err) => {
               Swal.fire({
@@ -598,7 +604,7 @@ export default function ProductsPage() {
                                                   </TableCell>
                                                 </Grid>
                                                 <Grid item xs={5} sx={{padding: 0}}>
-                                                  <TableCell component="th" scope="row" align="left" xs={{padding : 0}}  style={{ width: 250 , height : 100}}>
+                                                  <TableCell component="th" scope="row" align="left" xs={{padding : 0}}  >
                                                   <strong>{item.note}</strong>   
                                                   </TableCell >
                                                 </Grid>
