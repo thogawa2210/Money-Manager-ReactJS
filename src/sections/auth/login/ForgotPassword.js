@@ -13,7 +13,6 @@ function ForgotPasswordForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [disabled, setDisabled] = useState(false);
   const [form, setForm] = useState({
     password: '',
     passwordConfirm: '',
@@ -100,10 +99,8 @@ function ForgotPasswordForm() {
 
   const handleSubmit = () => {
     setLoading(true);
-    setDisabled(true);
     if (form.password === '' || form.passwordConfirm === '') {
       setLoading(false);
-      setDisabled(false);
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -115,13 +112,11 @@ function ForgotPasswordForm() {
       sendUser(userId)
         .then((res) => {
           setLoading(false);
-          setDisabled(false);
-          handleApi(res.data);
+              handleApi(res.data);
         })
         .catch((err) => {
           setLoading(false);
-          setDisabled(false);
-          Swal.fire({
+              Swal.fire({
             icon: 'error',
             title: 'Something Wrong!',
             text: ' Something wrong! Please try again!',
@@ -229,7 +224,6 @@ function ForgotPasswordForm() {
           variant="contained"
           onClick={handleSubmit}
           loading={loading}
-          disabled={disabled}
         >
           Submit
         </LoadingButton>
