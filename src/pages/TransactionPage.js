@@ -71,16 +71,7 @@ const getStartEndThisMonth = () => {
 };
 
 export default function TransactionPage() {
-  const [loading, setLoading] = useState({
-    addTrans: false,
-      editTrans: false,
-    filter: false
-  });
-  const [disabled, setDisabled] = useState({
-    addTrans: false,
-    editTrans: false,
-    filter: false
-  });
+  const [loading, setLoading] = useState(false);
   const flag = useSelector((state) => state.flag.flag);
   const [value, setValue] = useState(dayjs());
   const [datePicker, setDatePicker] = useState([dayjs('11/01/2022'), dayjs('11/30/2022')]);
@@ -280,8 +271,7 @@ export default function TransactionPage() {
   };
 
   const handleCloseAddForm = () => {
-    setLoading({ ...loading, addTrans: false });
-    setDisabled({ ...disabled, addTrans: false });
+    setLoading(false);
     setValue(dayjs());
     setOpenAddForm(false);
   };
@@ -289,11 +279,11 @@ export default function TransactionPage() {
   const handleClickEditForm = (id) => {
     const editTransaction = listTransaction.filter((transaction) => transaction._id === id);
 
-    if (editTransaction[0].category_name === 'Add Wallet') {
+    if (editTransaction[0].category_name === 'Add Wallet' || editTransaction[0].category_name === 'Other Income' || editTransaction[0].category_name === 'Other Expense') {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'You can not edit Add Wallet Transaction!',
+        text: 'You can not edit this transaction!',
         showConfirmButton: false,
         timer: 2000,
       });
@@ -305,8 +295,7 @@ export default function TransactionPage() {
   };
 
   const handleCloseEditForm = () => {
-    setLoading({ ...loading, editTrans: false });
-    setDisabled({ ...disabled, editTrans: false });
+    setLoading(false);
     setValue(dayjs());
     setOpenEditForm(false);
   };
@@ -324,6 +313,7 @@ export default function TransactionPage() {
   };
 
   const handleDeleteTrans = (id) => {
+    setLoading(true);
     Swal.fire({
       icon: 'warning',
       title: 'Delete This Transaction',
@@ -343,26 +333,26 @@ export default function TransactionPage() {
               showConfirmButton: false,
               timer: 1500,
             });
+            setLoading(false);
           })
-          .catch((err) =>
+          .catch((err) => {
             Swal.fire({
               icon: 'warning',
               title: 'Something Wrong!',
               text: 'Try again!',
               showConfirmButton: false,
               timer: 1500,
-            })
-          );
+            });
+            setLoading(false);
+          });
       }
+      setTimeout(() => setLoading(false), 800);
     });
   };
 
   const handleSubmit = async () => {
-    setLoading({ ...loading, addTrans: true });
-    setDisabled({ ...disabled, addTrans: true });
+    setLoading(true);
     if (transaction.category_id === '' || transaction.wallet_id === '' || transaction.amount === '') {
-      setLoading({ ...loading, addTrans: false });
-      setDisabled({ ...disabled, addTrans: false });
       setOpenAddForm(false);
       Swal.fire({
         icon: 'error',
@@ -371,12 +361,12 @@ export default function TransactionPage() {
         showConfirmButton: false,
         timer: 1500,
       });
+      setLoading(false);
+
     } else {
       await axios
         .post('https://money-manager-master-be.herokuapp.com/transaction/add-transaction', transaction)
         .then((res) => {
-          setLoading({ ...loading, addTrans: false });
-          setDisabled({ ...disabled, addTrans: false });
           if (res.status === 200) {
             dispatch(changeFlag(1));
             setTransaction({
@@ -392,6 +382,8 @@ export default function TransactionPage() {
               showConfirmButton: false,
               timer: 1500,
             });
+            setLoading(false);
+
           } else {
             Swal.fire({
               icon: 'error',
@@ -400,11 +392,11 @@ export default function TransactionPage() {
               showConfirmButton: false,
               timer: 1500,
             });
+            setLoading(false);
+
           }
         })
         .catch((err) => {
-          setLoading({ ...loading, addTrans: false });
-          setDisabled({ ...disabled, addTrans: false });
           Swal.fire({
             icon: 'error',
             title: 'Something wrong!',
@@ -412,6 +404,7 @@ export default function TransactionPage() {
             showConfirmButton: false,
             timer: 2000,
           });
+          setLoading(false);
         });
       setOpenAddForm(false);
       dispatch(changeFlag(1));
@@ -419,11 +412,8 @@ export default function TransactionPage() {
   };
 
   const handleEdit = async () => {
-    setLoading({ ...loading, editTrans: true });
-    setDisabled({ ...disabled, editTrans: true });
+    setLoading(true);
     if (editTransaction.category_name === 'Add Wallet') {
-      setLoading({ ...loading, editTrans: false });
-      setDisabled({ ...disabled, editTrans: false });
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -431,9 +421,8 @@ export default function TransactionPage() {
         showConfirmButton: false,
         timer: 2000,
       });
+      setLoading(false);
     } else {
-      setLoading({ ...loading, editTrans: false });
-      setDisabled({ ...disabled, editTrans: false });
       if (editTransaction.category_id === '' || editTransaction.wallet_id === '' || isNaN(editTransaction.amount)) {
         setOpenEditForm(false);
         Swal.fire({
@@ -443,6 +432,8 @@ export default function TransactionPage() {
           showConfirmButton: false,
           timer: 1500,
         });
+        setLoading(false);
+
       } else {
         await axios
           .put(
@@ -450,8 +441,6 @@ export default function TransactionPage() {
             editTransaction
           )
           .then((res) => {
-            setLoading({ ...loading, editTrans: false });
-            setDisabled({ ...disabled, editTrans: false });
             setOpenEditForm(false);
             if (res.status === 200) {
               Swal.fire({
@@ -460,6 +449,7 @@ export default function TransactionPage() {
                 showConfirmButton: false,
                 timer: 1500,
               });
+              setLoading(false);
               dispatch(changeFlag(1));
             } else {
               Swal.fire({
@@ -469,11 +459,12 @@ export default function TransactionPage() {
                 showConfirmButton: false,
                 timer: 1500,
               });
+              setLoading(false);
+
             }
           })
           .catch((err) => {
-            setLoading({ ...loading, editTrans: false });
-            setDisabled({ ...disabled, editTrans: false });
+            setLoading(false);
             Swal.fire({
               icon: 'error',
               title: 'Something wrong!',
@@ -487,12 +478,14 @@ export default function TransactionPage() {
   };
 
   const filterTransaction = () => {
+    setLoading(true);
     const user = localStorage.getItem('user');
     const userId = JSON.parse(user).user_id;
     const startDate = dayjs(datePicker[0]).format('MM/DD/YYYY');
     const endDate = dayjs(datePicker[1]).format('MM/DD/YYYY');
     getTransactionCustom(userId, { startDate: startDate, endDate: endDate })
       .then((res) => {
+        setLoading(false);
         setListTransaction(res.data.data.list);
         setMoneyFlow({
           inflow: res.data.data.inflow,
@@ -500,6 +493,7 @@ export default function TransactionPage() {
         });
       })
       .catch((err) => {
+        setLoading(false);
         Swal.fire({
           icon: 'warning',
           title: 'Something Wrong!',
@@ -564,14 +558,15 @@ export default function TransactionPage() {
                       </LocalizationProvider>
                     </Grid>
                     <Grid item xs={3}>
-                      <Button
+                      <LoadingButton
+                        loading={loading}
                         variant="outlined"
                         color="success"
                         sx={{ marginLeft: '40px' }}
                         onClick={filterTransaction}
                       >
                         Filter
-                      </Button>
+                      </LoadingButton>
                     </Grid>
                   </Grid>
                   <hr />
@@ -713,13 +708,14 @@ export default function TransactionPage() {
                                     </Button>
                                   </Grid>
                                   <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                                    <Button
+                                    <LoadingButton
                                       variant="outlined"
+                                      loading={loading}
                                       color="error"
                                       onClick={() => handleDeleteTrans(item._id)}
                                     >
                                       DELETE
-                                    </Button>
+                                    </LoadingButton>
                                   </Grid>
                                 </Grid>
                               </Typography>
@@ -893,13 +889,7 @@ export default function TransactionPage() {
           <Button variant="outlined" onClick={handleCloseAddForm} color="error">
             Cancel
           </Button>
-          <LoadingButton
-            variant="outlined"
-            color="success"
-            onClick={handleSubmit}
-            loading={loading.addTrans}
-            disabled={disabled.addTrans}
-          >
+          <LoadingButton variant="outlined" color="success" onClick={handleSubmit} loading={loading}>
             Submit
           </LoadingButton>
         </DialogActions>
@@ -1001,13 +991,7 @@ export default function TransactionPage() {
           <Button variant="outlined" onClick={handleCloseEditForm} color="error">
             Cancel
           </Button>
-          <LoadingButton
-            variant="outlined"
-            color="success"
-            onClick={handleEdit}
-            loading={loading.editTrans}
-            disabled={disabled.editTrans}
-          >
+          <LoadingButton variant="outlined" color="success" onClick={handleEdit} loading={loading}>
             Submit
           </LoadingButton>
         </DialogActions>
