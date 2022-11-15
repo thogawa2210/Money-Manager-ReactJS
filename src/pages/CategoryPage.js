@@ -12,9 +12,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  Divider,
   FormControl,
   Grid,
   InputAdornment,
@@ -300,7 +298,7 @@ export default function ProductsPage() {
 
           });
       }
-      setTimeout(() => setLoading(false), 500);
+      setTimeout(() => setLoading(false), 1000);
     });
   };
 
