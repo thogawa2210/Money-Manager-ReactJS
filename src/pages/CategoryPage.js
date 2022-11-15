@@ -109,7 +109,6 @@ export default function ProductsPage() {
     icon: '',
     note: '',
   });
-  const [openAddForm, setOpenAddForm] = useState(false);
   // Create
   const handleClickOpenCreateCategory = () => {
     setOpenCreateCategory(true);
@@ -132,7 +131,6 @@ export default function ProductsPage() {
   };
 
   const handleSubmitCreate = async () => {
-    setOpenAddForm(false);
     let data = {
       icon: category.icon,
       name: category.name,
@@ -257,6 +255,7 @@ export default function ProductsPage() {
           timer: 2000,
         });
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flag]);
 
   // Delete Category
