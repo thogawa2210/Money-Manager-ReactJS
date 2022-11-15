@@ -489,7 +489,6 @@ export default function WalletPage() {
             color="success"
             onClick={handleSubmitCreate}
             loading={loading}
-            loadingPosition="start"
           >
             Submit
           </LoadingButton>
