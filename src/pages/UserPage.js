@@ -221,6 +221,7 @@ export default function UserPage() {
             if (result.isConfirmed) {
               dispatch(changeFlag(1));
             }
+            dispatch(changeFlag(1));
           });
         }
       })

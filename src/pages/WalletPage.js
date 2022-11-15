@@ -117,7 +117,7 @@ export default function WalletPage() {
               });
               Swal.fire({
                 icon: 'success',
-                title: 'Update Successfully!',
+                title: 'Create Successfully!',
                 showConfirmButton: false,
                 timer: 1500,
               });
