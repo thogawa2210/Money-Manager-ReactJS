@@ -4,11 +4,11 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Avatar,
+  Avatar, Backdrop,
   Box,
   Button,
   Card,
-  CardContent,
+  CardContent, CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -28,7 +28,6 @@ import {
   Tab,
   TableContainer,
   Tabs,
-  TextareaAutosize,
   TextField,
   Typography,
 } from '@mui/material';
@@ -45,6 +44,8 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import mockExpense from 'src/_mock/categoryExpense';
+import { LoadingButton } from '@mui/lab';
+import * as React from "react";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -91,8 +92,9 @@ function a11yProps(index) {
   };
 }
 export default function ProductsPage() {
-  // Tab detail
-  // Done
+  // Button loading
+  const [loading, setLoading] = useState(false);
+  const [openBackDrop, setOpenBackDrop] = useState(true);
   const [openCategory, setOpenCategory] = useState(false);
   const idUser = JSON.parse(localStorage.getItem('user')).user_id;
   const flag = useSelector((state) => state.flag);
@@ -105,7 +107,6 @@ export default function ProductsPage() {
     icon: '',
     note: '',
   });
-  const [openAddForm, setOpenAddForm] = useState(false);
   // Create
   const handleClickOpenCreateCategory = () => {
     setOpenCreateCategory(true);
@@ -128,7 +129,6 @@ export default function ProductsPage() {
   };
 
   const handleSubmitCreate = async () => {
-    setOpenAddForm(false);
     let data = {
       icon: category.icon,
       name: category.name,
@@ -147,6 +147,7 @@ export default function ProductsPage() {
         timer: 1500,
       });
     } else {
+      setLoading(true);
       const result = await axios.post('https://money-manager-master-be.herokuapp.com/category/add-category', data);
 
       if (result.data.type === 'success') {
@@ -157,6 +158,7 @@ export default function ProductsPage() {
           timer: 1500,
         })
           .then(
+            setLoading(false),
             setCategory({
               ...category,
               icon: null,
@@ -241,7 +243,10 @@ export default function ProductsPage() {
   };
   useEffect(() => {
     getWallet()
-      .then((res) => setCategories(res.data.categoryOfUser))
+      .then((res) => {
+        setCategories(res.data.categoryOfUser);
+        setOpenBackDrop(false);
+      })
       .catch((error) => {
         Swal.fire({
           icon: 'error',
@@ -251,10 +256,12 @@ export default function ProductsPage() {
           timer: 2000,
         });
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flag]);
 
   // Delete Category
   const handleDeleteCategory = (id) => {
+    setLoading(true);
     Swal.fire({
       title: 'Are you sure to delete?',
       text: "You won't be able to revert this!",
@@ -275,6 +282,7 @@ export default function ProductsPage() {
               showConfirmButton: false,
               timer: 1500,
             });
+            setLoading(false);
             setExpanded(false);
           })
           .catch((err) => {
@@ -283,10 +291,13 @@ export default function ProductsPage() {
               title: 'Something Wrong!',
               text: 'Something wrong! Please try again!',
               showConfirmButton: false,
-              timer: 2000,
+              timer: 1500,
             });
+            setLoading(false);
+
           });
       }
+      setTimeout(() => setLoading(false), 500);
     });
   };
 
@@ -344,6 +355,7 @@ export default function ProductsPage() {
           await axios
             .put(` https://money-manager-master-be.herokuapp.com/category/update-categody/${editForm._id}`, data)
             .then((res) => {
+              
               dispatch(changeFlag(1));
               Swal.fire({
                 icon: 'success',
@@ -367,11 +379,19 @@ export default function ProductsPage() {
     }
   };
 
+  
   return (
     <>
       <Helmet>
         <title>Category | Money Manager Master</title>
       </Helmet>
+
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
       <Grid container spacing={3}>
         <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
@@ -471,14 +491,7 @@ export default function ProductsPage() {
                                                   </Grid>
                                                   <Grid item xs={5}>
                                                     <TableCell component="th" scope="row" align="left" xs={{padding : 0}}>
-                                                      <TextareaAutosize
-                                                        aria-label="maximum height"
-                                                        defaultValue={item.note}
-                                                        style={{ width: 250 , height : 100}}
-                                                        align="left"
-                                                        disabled
-                                                      />
-                                                                   
+                                                      <strong>{item.note}</strong>   
                                                     </TableCell >
                                                   </Grid>
                                                   <Grid item xs={4}>
@@ -490,13 +503,18 @@ export default function ProductsPage() {
                                                       >
                                                         Edit
                                                       </Button>
-                                                      <Button
+                                                      
+                                                  
+
+                                                
+                                                      <LoadingButton
                                                         variant="outlined"
                                                         color="error"
                                                         onClick={() => handleDeleteCategory(item._id)}
+                                                        loading={loading}
                                                       >
                                                         Delete
-                                                      </Button>
+                                                      </LoadingButton>
                                                     </TableCell>
                                                   </Grid>
                                                 </Grid>
@@ -579,15 +597,8 @@ export default function ProductsPage() {
                                                   </TableCell>
                                                 </Grid>
                                                 <Grid item xs={5} sx={{padding: 0}}>
-                                                  <TableCell component="th" scope="row" align="left" xs={{padding : 0}}>
-                                                    <TextareaAutosize
-                                                      aria-label="maximum height"
-                                                      defaultValue={item.note}
-                                                      style={{ width: 250 , height : 100}}
-                                                      align="left"
-                                                      disabled
-                                                    />
-                                                                 
+                                                  <TableCell component="th" scope="row" align="left" xs={{padding : 0}}  style={{ width: 250 , height : 100}}>
+                                                  <strong>{item.note}</strong>   
                                                   </TableCell >
                                                 </Grid>
                                                 <Grid item xs={4}>
@@ -599,13 +610,14 @@ export default function ProductsPage() {
                                                     >
                                                       Edit
                                                     </Button>
-                                                    <Button
-                                                      variant="outlined"
+                                                    <LoadingButton
+                                                        variant="outlined"
+                                                        loading={loading}
                                                       color="error"
                                                       onClick={() => handleDeleteCategory(item._id)}
                                                     >
                                                       Delete
-                                                    </Button>
+                                                    </LoadingButton>
                                                   </TableCell>
                                                 </Grid>
                                               </Grid>
@@ -716,9 +728,16 @@ export default function ProductsPage() {
           <Button variant="outlined" color="error" onClick={handleCloseCreate}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={handleSubmitCreate}>
-            Submit
-          </Button>
+         
+
+          <LoadingButton
+          variant="outlined"
+          color="success"
+          onClick={handleSubmitCreate}
+          loading={loading}
+        >
+          Submit
+        </LoadingButton>
         </DialogActions>
       </Dialog>
       {/* Update Category */}

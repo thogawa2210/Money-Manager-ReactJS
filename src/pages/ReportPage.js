@@ -30,6 +30,7 @@ import {
   Paper,
   Divider,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useEffect, useState } from 'react';
 import getDataBarChart from '../getDataBarChart';
 import axios from 'axios';
@@ -79,6 +80,14 @@ let { start_date, end_date } = getStartEndDate(day);
 let { last_start, last_end } = getLastStartEndDate(day);
 
 function ReportPage() {
+  const [loading, setLoading] = useState({
+    filter: false,
+    export: false,
+  });
+  const [disabled, setDisabled] = useState({
+    filter: false,
+    export: false,
+  });
   const [chartLabels, setChartLabels] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [openChooseDay, setOpenChooseDay] = useState(false);
@@ -235,8 +244,12 @@ function ReportPage() {
   }, [form, dataApi, pickDate]);
 
   const handleFilter = (e) => {
+    setLoading({ ...loading, filter: true });
+    setDisabled({ ...disabled, filter: true });
     getTransCustomApi(dataApi)
       .then((res) => {
+        setLoading({ ...loading, filter: false });
+        setDisabled({ ...disabled, filter: false });
         if (res.data.data.transactions.length > 0) {
           if (res.data.data.startDate === res.data.data.endDate) {
             setDisplayDate(`Today`);
@@ -272,15 +285,17 @@ function ReportPage() {
           setDataEmpty(true);
         }
       })
-      .catch((err) =>
+      .catch((err) => {
+        setLoading({ ...loading, filter: false });
+        setDisabled({ ...disabled, filter: false });
         Swal.fire({
           icon: 'error',
           title: 'Something Wrong!',
           text: 'Something wrong! Please try again!',
           showConfirmButton: false,
           timer: 2000,
-        })
-      );
+        });
+      });
   };
 
   const handleChangePickDate = (value) => {
@@ -422,19 +437,21 @@ function ReportPage() {
                 </Grid>
 
                 <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                  <Button
+                  <LoadingButton
                     color="success"
                     type="submit"
                     variant="outlined"
                     sx={{ padding: '7px' }}
                     onClick={handleFilter}
+                    loading={loading.filter}
+                    disabled={disabled.filter}
                   >
                     Filter
-                  </Button>
+                  </LoadingButton>
                 </Grid>
 
                 <Grid item xs={2} sx={{ textAlign: 'right' }}>
-                  <Button variant="contained" color="warning" sx={{ height: '38px' }}>
+                  <LoadingButton variant="contained" color="warning" sx={{ height: '38px' }} loading={loading.export} disabled={disabled.export}>
                     <CSVLink
                       data={dataExport.list}
                       filename={dataExport.filename}
@@ -443,7 +460,7 @@ function ReportPage() {
                     >
                       Export
                     </CSVLink>
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </Grid>

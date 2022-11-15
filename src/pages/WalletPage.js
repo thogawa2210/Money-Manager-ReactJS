@@ -35,7 +35,7 @@ import {
   TableRow,
   TextField,
   Typography,
-  Divider,
+  Divider, CircularProgress, Backdrop,
 } from '@mui/material';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,6 +43,7 @@ import Swal from 'sweetalert2';
 import Iconify from '../components/iconify';
 import { forwardRef } from 'react';
 import { Box } from '@mui/system';
+import { LoadingButton } from '@mui/lab';
 
 function numberWithCommas(x) {
   return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -51,6 +52,8 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function WalletPage() {
+  // Button loading
+  const [loading, setLoading] = useState(false);
   const [wallets, setWallets] = useState([]);
   const [walletEdit, setWalletEdit] = useState({
     icon: '',
@@ -64,6 +67,7 @@ export default function WalletPage() {
     amount: '',
   });
   const [openAddForm, setOpenAddForm] = useState(false);
+  const [openBackDrop, setOpenBackDrop] = useState(true);
   const user = localStorage.getItem('user');
   const handleClickOpenCreate = () => {
     setOpenCreate(true);
@@ -78,6 +82,7 @@ export default function WalletPage() {
     });
   };
   const handleSubmitCreate = async () => {
+    setLoading(true)
     if (user) {
       let userId = JSON.parse(user).user_id
       setOpenAddForm(false);
@@ -96,10 +101,12 @@ export default function WalletPage() {
           showConfirmButton: false,
           timer: 1500,
         });
+        setLoading(false)
       } else {
         await axios
           .post('https://money-manager-master-be.herokuapp.com/wallet/create', data)
           .then((res) => {
+            setLoading(false)
             if (res.data.type === 'success') {
               setOpenCreate(false);
               dispatch(changeFlag(1));
@@ -115,6 +122,7 @@ export default function WalletPage() {
                 timer: 1500,
               });
             } else {
+              setLoading(false)
               setOpenCreate(false);
               Swal.fire({
                 icon: 'error',
@@ -131,6 +139,7 @@ export default function WalletPage() {
             }
           })
           .catch((err) => {
+            setLoading(false)
             setOpenCreate(false);
             Swal.fire({
               icon: 'success',
@@ -142,7 +151,7 @@ export default function WalletPage() {
           });
       }
     }
-   
+
   };
 
   // Detail wallet
@@ -168,7 +177,10 @@ export default function WalletPage() {
 
   useEffect(() => {
     getAllWallet()
-      .then((res) => setWallets(res.data.wallet))
+      .then((res) => {
+        setOpenBackDrop(false);
+        setWallets(res.data.wallet)
+      })
       .catch((error) => console.log(error.message));
   }, [flag]);
 
@@ -186,6 +198,7 @@ export default function WalletPage() {
   };
 
   const handleDeleteWallet = (id) => {
+    setLoading(true)
     Swal.fire({
       title: 'Are you sure to delete?',
       text: "You won't be able to revert this!",
@@ -194,6 +207,7 @@ export default function WalletPage() {
       confirmButtonColor: '#54D62C',
       cancelButtonColor: '#FF4842',
     }).then(async (result) => {
+      setLoading(false)
       if (result.isConfirmed) {
         await axios
           .delete(`https://money-manager-master-be.herokuapp.com/wallet/delete/${id}`)
@@ -207,13 +221,16 @@ export default function WalletPage() {
               timer: 1500,
             });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err)
+            setLoading(false)
+          });
       }
     });
   };
 
   const handleSaveEdit = async (id) => {
-    console.log(id);
+    setLoading(true)
     let data = {
       icon: walletEdit.icon,
       name: walletEdit.name,
@@ -231,7 +248,10 @@ export default function WalletPage() {
         });
         dispatch(changeFlag(1));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {console.log(err)
+        setLoading(false)
+      });
+    setLoading(false)
   };
 
   return (
@@ -241,13 +261,20 @@ export default function WalletPage() {
       </Helmet>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h3" gutterBottom sx={{ml: '20px'}}>
+        <Typography variant="h3" gutterBottom sx={{ ml: '20px' }}>
           Wallet Manager
         </Typography>
-        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenCreate} sx={{mr: '20px'}}>
+        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpenCreate} sx={{ mr: '20px' }}>
           New Wallet
         </Button>
       </Stack>
+
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
       {/* Edit Wallet */}
       <Dialog
@@ -309,86 +336,86 @@ export default function WalletPage() {
           <Button variant="outlined" color="error" onClick={onCancelEdit}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={() => handleSaveEdit(walletEdit._id)}>
+          <LoadingButton loading={loading} variant="outlined" color="success" onClick={() => handleSaveEdit(walletEdit._id)}>
             Submit
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
-      {/* Detail Wallet */}
 
+      {/* Detail Wallet */}
       <Grid container spacing={3}>
         <Grid item xs />
-        {wallets.length <=0 ? (
-               <Box component="main">
-               <Divider/>
-               <Typography
-                   sx={{
-                       textAlign: 'center',
-                       fontStyle: 'italic',
-                       fontWeight: 400,
-                       lineHeight: 1.56,
-                       fontFamily: 'Public Sans,sans-serif',
-                       fontSize: '18px',
-                   }}
-               >
-                   No Data
-               </Typography>
-           </Box>
+        {wallets.length <= 0 ? (
+          <Box component="main">
+            <Divider />
+            <Typography
+              sx={{
+                textAlign: 'center',
+                fontStyle: 'italic',
+                fontWeight: 400,
+                lineHeight: 1.56,
+                fontFamily: 'Public Sans,sans-serif',
+                fontSize: '18px',
+              }}
+            >
+              No Data
+            </Typography>
+          </Box>
         ) : (
           <Grid item xs={9} sx={{ padding: 0 }}>
-          {wallets.map((item, index) => (
-            <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)} key={index}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
-                <Typography sx={{ width: '80%', flexShrink: 0, display: 'flex' }}>
-                  <Avatar src={item.icon} sx={{ mr: 0 }} />
-                  <ListItemText
-                    primary={item.name}
-                    sx={{ pr: 22, ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}
-                  />
-                </Typography>
+            {wallets.map((item, index) => (
+              <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChangeDetail(`panel${index + 1}`)} key={index}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
+                  <Typography sx={{ width: '80%', flexShrink: 0, display: 'flex' }}>
+                    <Avatar src={item.icon} sx={{ mr: 0 }} />
+                    <ListItemText
+                      primary={item.name}
+                      sx={{ pr: 22, ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}
+                    />
+                  </Typography>
 
-                <Typography sx={{ ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}>
-                  Wallet {index + 1}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  {/* Table */}
-                  <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Wallet Name</TableCell>
-                          <TableCell align="right">Wallet Amount</TableCell>
-                          <TableCell align="right">Wallet Action</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody key={index}>
-                        <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                          <TableCell component="th" scope="row">
-                         <strong>{item.name}</strong>   
-                          </TableCell>
-                          <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
-                          <TableCell align="right">
-                            <Button variant="outlined" color="success" onClick={() => handleOpenEdit(item._id)}>
-                              Edit
-                            </Button>
-                            <Button variant="outlined" color="error" onClick={() => handleDeleteWallet(item._id)}>
-                              Delete
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  {/* done Table */}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Grid>
+                  <Typography sx={{ ml: 2, display: 'block !important', alignItems: 'center', marginTop: 1 }}>
+                    Wallet {index + 1}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    {/* Table */}
+                    <TableContainer component={Paper}>
+                      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Wallet Name</TableCell>
+                            <TableCell align="right">Wallet Amount</TableCell>
+                            <TableCell align="right">Wallet Action</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody key={index}>
+                          <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                            <TableCell component="th" scope="row">
+                              <strong>{item.name}</strong>
+                            </TableCell>
+                            <TableCell align="right">{numberWithCommas(item.amount)} VNĐ</TableCell>
+                            <TableCell align="right">
+                              <Button variant="outlined" color="success" onClick={() => handleOpenEdit(item._id)}>
+                                Edit
+                              </Button>
+                              <Button variant="outlined" color="error" onClick={() => handleDeleteWallet(item._id)}>
+                                Delete
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    {/* done Table */}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Grid>
         )}
-     
+
         <Grid item xs />
       </Grid>
 
@@ -457,9 +484,15 @@ export default function WalletPage() {
           <Button variant="outlined" color="error" onClick={handleCloseCreate}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={handleSubmitCreate}>
+          <LoadingButton
+            variant="outlined"
+            color="success"
+            onClick={handleSubmitCreate}
+            loading={loading}
+            loadingPosition="start"
+          >
             Submit
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>

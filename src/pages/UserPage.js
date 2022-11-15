@@ -4,6 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import mockAvatar from 'src/_mock/avatar';
 // @mui
+import { LoadingButton } from '@mui/lab';
 import * as React from 'react';
 import {
   Card,
@@ -22,7 +23,7 @@ import {
   InputAdornment,
   IconButton,
   Menu,
-  MenuItem,
+  MenuItem, CircularProgress, Backdrop,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CardHeader from '@mui/material/CardHeader';
@@ -45,6 +46,7 @@ const REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/;
 const ITEM_HEIGHT = 48;
 
 export default function UserPage() {
+  const [loading, setLoading] = useState(false);
   const [openName, setOpenName] = useState(false);
   const [openPass, setOpenPass] = useState(false);
   const [error, setError] = useState({
@@ -52,6 +54,7 @@ export default function UserPage() {
     new_pass: false,
   });
   const [formName, setFormName] = useState({ username: '' });
+  const [openBackDrop, setOpenBackDrop] = useState(true);
   const [formPass, setFormPass] = useState({ old_pass: '', new_pass: '' });
   const [openDialogListAva, setOpenDialogListAva] = useState(false);
   const [form, setForm] = useState({
@@ -71,7 +74,7 @@ export default function UserPage() {
   const handleClose = () => {
     setAnchorEl(null);
   };
- 
+
   const [showPassword, setShowPassword] = useState(false);
   const [profile, setProfile] = useState({
     wallets: 0,
@@ -88,7 +91,7 @@ export default function UserPage() {
       setOpenName(true);
     } else {
       if (form.password) {
-        setShowPassword(false)
+        setShowPassword(false);
         setAnchorEl(null);
         setOpenPass(true);
       } else {
@@ -105,10 +108,12 @@ export default function UserPage() {
   };
 
   const handleCloseName = () => {
+    setLoading(false);
     setOpenName(false);
   };
 
   const handleClosePass = () => {
+    setLoading(false);
     setOpenPass(false);
   };
 
@@ -135,8 +140,10 @@ export default function UserPage() {
 
   const handleChangePass = (e) => {
     e.preventDefault();
+    setLoading(true);
     changePassApi(form._id, formPass.old_pass, formPass.new_pass)
       .then((res) => {
+        setLoading(false);
         if (res.data.type === 'success') {
           setOpenPass(false);
           Swal.fire({
@@ -199,10 +206,12 @@ export default function UserPage() {
 
   const handleChangeName = (e) => {
     e.preventDefault();
+    setLoading(true);
     changeNameApi(form._id)
       .then((res) => {
         if (res.data.type === 'success') {
           setOpenName(false);
+          setLoading(false);
           Swal.fire({
             icon: 'success',
             title: 'Change your name success!',
@@ -232,6 +241,7 @@ export default function UserPage() {
       const user_id = JSON.parse(user).user_id;
       userApi(user_id)
         .then((res) => {
+          setOpenBackDrop(false);
           if (res.data.type === 'success') {
             let userInfo = res.data.message;
             setForm({
@@ -320,6 +330,13 @@ export default function UserPage() {
       <Helmet>
         <title> Profile | Money Manager Master </title>
       </Helmet>
+
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
       <Box
         component="main"
@@ -455,9 +472,14 @@ export default function UserPage() {
             <Button onClick={handleCloseName} variant="outlined" color="error">
               Cancel
             </Button>
-            <Button type="submit" variant="outlined" color="success">
+            <LoadingButton
+              type="submit"
+              variant="outlined"
+              color="success"
+              loading={loading}
+            >
               Submit
-            </Button>
+            </LoadingButton>
           </DialogActions>
         </Box>
       </Dialog>
@@ -569,9 +591,14 @@ export default function UserPage() {
             <Button onClick={handleClosePass} variant="outlined" color="error">
               Cancel
             </Button>
-            <Button type="submit" variant="outlined" color="success">
+            <LoadingButton
+              type="submit"
+              variant="outlined"
+              color="success"
+              loading={loading}
+            >
               Submit
-            </Button>
+            </LoadingButton>
           </DialogActions>
         </Box>
       </Dialog>
