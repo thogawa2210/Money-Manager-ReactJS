@@ -172,6 +172,7 @@ export default function ProductsPage() {
             dispatch(changeFlag(1))
           )
           .catch((error) => {
+            setLoading(false)
             Swal.fire({
               icon: 'error',
               title: 'Something Wrong!',
@@ -195,6 +196,7 @@ export default function ProductsPage() {
           note: '',
         });
         setOpenCreateCategory(false);
+        setLoading(false)
       }
     }
   };
@@ -287,6 +289,7 @@ export default function ProductsPage() {
             setExpanded(false);
           })
           .catch((err) => {
+           
             Swal.fire({
               icon: 'error',
               title: 'Something Wrong!',
