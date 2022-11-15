@@ -35,7 +35,7 @@ import {
   TableRow,
   TextField,
   Typography,
-  Divider,
+  Divider, CircularProgress, Backdrop,
 } from '@mui/material';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -68,6 +68,7 @@ export default function WalletPage() {
     amount: '',
   });
   const [openAddForm, setOpenAddForm] = useState(false);
+  const [openBackDrop, setOpenBackDrop] = useState(true);
   const user = localStorage.getItem('user');
   const handleClickOpenCreate = () => {
     setOpenCreate(true);
@@ -101,6 +102,7 @@ export default function WalletPage() {
           showConfirmButton: false,
           timer: 1500,
         });
+        setLoading(false)
       } else {
         await axios
           .post('https://money-manager-master-be.herokuapp.com/wallet/create', data)
@@ -176,7 +178,10 @@ export default function WalletPage() {
 
   useEffect(() => {
     getAllWallet()
-      .then((res) => setWallets(res.data.wallet))
+      .then((res) => {
+        setOpenBackDrop(false);
+        setWallets(res.data.wallet)
+      })
       .catch((error) => console.log(error.message));
   }, [flag]);
 
@@ -235,7 +240,6 @@ export default function WalletPage() {
     await axios
       .put(`https://money-manager-master-be.herokuapp.com/wallet/update/${id}`, data)
       .then((res) => {
-      setLoading(false)
         setOpen(false);
         Swal.fire({
           icon: 'success',
@@ -248,6 +252,7 @@ export default function WalletPage() {
       .catch((err) => {console.log(err)
         setLoading(false)
       });
+    setLoading(false)
   };
 
   return (
@@ -264,6 +269,13 @@ export default function WalletPage() {
           New Wallet
         </Button>
       </Stack>
+
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
       {/* Edit Wallet */}
       <Dialog
@@ -325,13 +337,13 @@ export default function WalletPage() {
           <Button variant="outlined" color="error" onClick={onCancelEdit}>
             Cancel
           </Button>
-          <Button variant="outlined" color="success" onClick={() => handleSaveEdit(walletEdit._id)}>
+          <LoadingButton loading={loading} variant="outlined" color="success" onClick={() => handleSaveEdit(walletEdit._id)}>
             Submit
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
-      {/* Detail Wallet */}
 
+      {/* Detail Wallet */}
       <Grid container spacing={3}>
         <Grid item xs />
         {wallets.length <= 0 ? (
