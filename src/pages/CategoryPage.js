@@ -4,11 +4,11 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Avatar,
+  Avatar, Backdrop,
   Box,
   Button,
   Card,
-  CardContent,
+  CardContent, CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -45,6 +45,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import mockExpense from 'src/_mock/categoryExpense';
 import { LoadingButton } from '@mui/lab';
+import * as React from "react";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -93,10 +94,7 @@ function a11yProps(index) {
 export default function ProductsPage() {
   // Button loading
   const [loading, setLoading] = useState(false);
-
-
-  // Tab detail
-  // Done
+  const [openBackDrop, setOpenBackDrop] = useState(true);
   const [openCategory, setOpenCategory] = useState(false);
   const idUser = JSON.parse(localStorage.getItem('user')).user_id;
   const flag = useSelector((state) => state.flag);
@@ -247,7 +245,10 @@ export default function ProductsPage() {
   };
   useEffect(() => {
     getWallet()
-      .then((res) => setCategories(res.data.categoryOfUser))
+      .then((res) => {
+        setCategories(res.data.categoryOfUser);
+        setOpenBackDrop(false);
+      })
       .catch((error) => {
         Swal.fire({
           icon: 'error',
@@ -333,7 +334,6 @@ export default function ProductsPage() {
   };
 
   const handleSubmitCateEdit = async () => {
-  
     setOpenEditCategory(false);
     if (data.name === '' || data.icon === '' || data.type === '') {
       setOpenEditCategory(false);
@@ -386,6 +386,13 @@ export default function ProductsPage() {
       <Helmet>
         <title>Category | Money Manager Master</title>
       </Helmet>
+
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
       <Grid container spacing={3}>
         <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
