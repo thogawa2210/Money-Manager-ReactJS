@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-
+import {useNavigate} from "react-router-dom";
 import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/iconify';
+
 
 function SingupForm() {
   const REGEX = {
@@ -12,7 +13,7 @@ function SingupForm() {
     email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
     password: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/,
   };
-
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
@@ -105,7 +106,8 @@ function SingupForm() {
         icon: 'success',
         showConfirmButton: false,
         timer: 1500,
-      });
+      })
+      navigate('/login');
     } else {
       Swal.fire({
         icon: 'error',
