@@ -261,6 +261,7 @@ export default function ProductsPage() {
 
   // Delete Category
   const handleDeleteCategory = (id) => {
+    setLoading(true);
     Swal.fire({
       title: 'Are you sure to delete?',
       text: "You won't be able to revert this!",
@@ -281,6 +282,7 @@ export default function ProductsPage() {
               showConfirmButton: false,
               timer: 1500,
             });
+            setLoading(false);
             setExpanded(false);
           })
           .catch((err) => {
@@ -289,10 +291,13 @@ export default function ProductsPage() {
               title: 'Something Wrong!',
               text: 'Something wrong! Please try again!',
               showConfirmButton: false,
-              timer: 2000,
+              timer: 1500,
             });
+            setLoading(false);
+
           });
       }
+      setTimeout(() => setLoading(false), 500);
     });
   };
 
@@ -496,13 +501,14 @@ export default function ProductsPage() {
                                                   
 
                                                 
-                                                      <Button
+                                                      <LoadingButton
                                                         variant="outlined"
                                                         color="error"
                                                         onClick={() => handleDeleteCategory(item._id)}
+                                                        loading={loading}
                                                       >
                                                         Delete
-                                                      </Button>
+                                                      </LoadingButton>
                                                     </TableCell>
                                                   </Grid>
                                                 </Grid>
@@ -598,13 +604,14 @@ export default function ProductsPage() {
                                                     >
                                                       Edit
                                                     </Button>
-                                                    <Button
-                                                      variant="outlined"
+                                                    <LoadingButton
+                                                        variant="outlined"
+                                                        loading={loading}
                                                       color="error"
                                                       onClick={() => handleDeleteCategory(item._id)}
                                                     >
                                                       Delete
-                                                    </Button>
+                                                    </LoadingButton>
                                                   </TableCell>
                                                 </Grid>
                                               </Grid>
@@ -722,7 +729,6 @@ export default function ProductsPage() {
           color="success"
           onClick={handleSubmitCreate}
           loading={loading}
-          loadingPosition="start"
         >
           Submit
         </LoadingButton>
