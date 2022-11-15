@@ -348,7 +348,7 @@ export default function TransactionPage() {
             setLoading(false);
           });
       }
-      setTimeout(() => setLoading(false), 1000);
+      setTimeout(() => setLoading(false), 1500);
     });
   };
 
