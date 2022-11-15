@@ -54,7 +54,6 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function WalletPage() {
   // Button loading
   const [loading, setLoading] = useState(false);
-
   const [wallets, setWallets] = useState([]);
   const [walletEdit, setWalletEdit] = useState({
     icon: '',
