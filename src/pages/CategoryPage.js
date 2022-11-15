@@ -297,7 +297,7 @@ export default function ProductsPage() {
 
           });
       }
-      setTimeout(() => setLoading(false), 500);
+      setTimeout(() => setLoading(false), 1000);
     });
   };
 
