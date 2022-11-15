@@ -26,7 +26,7 @@ import {
   AccordionSummary,
   Box,
   Tab,
-  Divider,
+  Divider, CircularProgress, Backdrop,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -72,6 +72,7 @@ const getStartEndThisMonth = () => {
 
 export default function TransactionPage() {
   const [loading, setLoading] = useState(false);
+  const [openBackDrop, setOpenBackDrop] = useState(true);
   const flag = useSelector((state) => state.flag.flag);
   const [value, setValue] = useState(dayjs());
   const [datePicker, setDatePicker] = useState([dayjs('11/01/2022'), dayjs('11/30/2022')]);
@@ -108,6 +109,7 @@ export default function TransactionPage() {
   const handleChangeCategory = (e, category) => {
     setCategory(category);
   };
+  const user = localStorage.getItem('user');
 
   const handleChooseCategory = (id) => {
     if (openAddForm) {
@@ -133,51 +135,52 @@ export default function TransactionPage() {
     return await axios.get(`https://money-manager-master-be.herokuapp.com/user/profile/${id}`);
   };
 
-  const getData = async () => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      const userId = JSON.parse(user).user_id;
-      await axios
-        .get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
-        .then((res) => setListCategory(res.data.categoryUser))
-        .catch((err) => {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Something wrong!',
-            text: 'Try again!',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        });
-      await axios
-        .get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
-        .then((res) => setListWallet(res.data.wallet))
-        .catch((err) => {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Somrthing wrong!',
-            text: 'Try again!',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        });
-    } else {
-      navigate('/login');
-    }
+  const getListCategory = async (userId) => {
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
   };
 
+  const getListWallet = async (userId) => {
+    return await axios.get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
+  }
+
   useEffect(() => {
-    getData();
+    if(user){
+      const userId = JSON.parse(user).user_id;
+      getListCategory(userId)
+          .then((res) => setListCategory(res.data.categoryUser))
+          .catch((err) => {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Something wrong!',
+              text: 'Try again!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          });
+      getListWallet(userId)
+          .then((res) => setListWallet(res.data.wallet))
+          .catch((err) => {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Somrthing wrong!',
+              text: 'Try again!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          });
+    }else {
+      navigate('/login');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
     if (user) {
       const userId = JSON.parse(user).user_id;
       let data = getStartEndThisMonth();
       getTransactionCustom(userId, data)
         .then((res) => {
+          setOpenBackDrop(false);
           setListTransaction(res.data.data.list);
           setMoneyFlow({
             inflow: res.data.data.inflow,
@@ -237,7 +240,6 @@ export default function TransactionPage() {
   };
 
   const handleClickOpenAddForm = () => {
-    const user = localStorage.getItem('user');
     if (user) {
       let userId = JSON.parse(user).user_id;
       getUserInfo(userId)
@@ -479,7 +481,6 @@ export default function TransactionPage() {
 
   const filterTransaction = () => {
     setLoading(true);
-    const user = localStorage.getItem('user');
     const userId = JSON.parse(user).user_id;
     const startDate = dayjs(datePicker[0]).format('MM/DD/YYYY');
     const endDate = dayjs(datePicker[1]).format('MM/DD/YYYY');
@@ -510,6 +511,13 @@ export default function TransactionPage() {
         <title> Transaction | Money Manager Master </title>
       </Helmet>
 
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <Grid container spacing={3}>
         <Grid item xs={12} sx={{ padding: '0px', height: '50px' }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -527,6 +535,7 @@ export default function TransactionPage() {
             </Button>
           </Stack>
         </Grid>
+
         <Grid item xs />
         <Grid item xs={8} sx={{ padding: 0 }}>
           <Stack>
