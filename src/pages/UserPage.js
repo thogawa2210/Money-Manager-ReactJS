@@ -46,14 +46,7 @@ const REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/;
 const ITEM_HEIGHT = 48;
 
 export default function UserPage() {
-  const [loading, setLoading] = useState({
-    changeUsername: false,
-    changePassword: false,
-  });
-  const [disabled, setDisabled] = useState({
-    changeUsername: false,
-    changePassword: false,
-  });
+  const [loading, setLoading] = useState(false);
   const [openName, setOpenName] = useState(false);
   const [openPass, setOpenPass] = useState(false);
   const [error, setError] = useState({
@@ -114,14 +107,12 @@ export default function UserPage() {
   };
 
   const handleCloseName = () => {
-    setLoading({ ...loading, changeUsername: false});
-    setDisabled({ ...disabled, changeUsername: false});
+    setLoading(false);
     setOpenName(false);
   };
 
   const handleClosePass = () => {
-    setLoading({...loading, changePassword: false})
-    setDisabled({...disabled, changePassword: false})
+    setLoading(false);
     setOpenPass(false);
   };
 
@@ -148,12 +139,10 @@ export default function UserPage() {
 
   const handleChangePass = (e) => {
     e.preventDefault();
-    setLoading({ ...loading, changePassword: true });
-    setDisabled({ ...disabled, changePassword: true });
+    setLoading(true);
     changePassApi(form._id, formPass.old_pass, formPass.new_pass)
       .then((res) => {
-        setLoading({ ...loading, changePassword: false });
-        setDisabled({ ...disabled, changePassword: false });
+        setLoading(false);
         if (res.data.type === 'success') {
           setOpenPass(false);
           Swal.fire({
@@ -216,14 +205,12 @@ export default function UserPage() {
 
   const handleChangeName = (e) => {
     e.preventDefault();
-    setLoading({ ...loading, changeUsername: true });
-    setDisabled({ ...disabled, changeUsername: true });
+    setLoading(true);
     changeNameApi(form._id)
       .then((res) => {
         if (res.data.type === 'success') {
           setOpenName(false);
-          setLoading({ ...loading, changeUsername: false });
-          setDisabled({ ...disabled, changeUsername: false });
+          setLoading(false);
           Swal.fire({
             icon: 'success',
             title: 'Change your name success!',
@@ -480,8 +467,7 @@ export default function UserPage() {
               type="submit"
               variant="outlined"
               color="success"
-              loading={loading.changeUsername}
-              disabled={disabled.changeUsername}
+              loading={loading}
             >
               Submit
             </LoadingButton>
@@ -600,8 +586,7 @@ export default function UserPage() {
               type="submit"
               variant="outlined"
               color="success"
-              laoding={loading.changePassword}
-              disabled={disabled.changePassword}
+              loading={loading}
             >
               Submit
             </LoadingButton>
