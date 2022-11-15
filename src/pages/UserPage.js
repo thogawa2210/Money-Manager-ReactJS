@@ -23,7 +23,7 @@ import {
   InputAdornment,
   IconButton,
   Menu,
-  MenuItem,
+  MenuItem, CircularProgress, Backdrop,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CardHeader from '@mui/material/CardHeader';
@@ -54,6 +54,7 @@ export default function UserPage() {
     new_pass: false,
   });
   const [formName, setFormName] = useState({ username: '' });
+  const [openBackDrop, setOpenBackDrop] = useState(true);
   const [formPass, setFormPass] = useState({ old_pass: '', new_pass: '' });
   const [openDialogListAva, setOpenDialogListAva] = useState(false);
   const [form, setForm] = useState({
@@ -240,6 +241,7 @@ export default function UserPage() {
       const user_id = JSON.parse(user).user_id;
       userApi(user_id)
         .then((res) => {
+          setOpenBackDrop(false);
           if (res.data.type === 'success') {
             let userInfo = res.data.message;
             setForm({
@@ -328,6 +330,13 @@ export default function UserPage() {
       <Helmet>
         <title> Profile | Money Manager Master </title>
       </Helmet>
+
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
       <Box
         component="main"
