@@ -70,12 +70,14 @@ const getStartEndThisMonth = () => {
   };
 };
 
+const thisMonth = getStartEndThisMonth();
+
 export default function TransactionPage() {
   const [loading, setLoading] = useState(false);
   const [openBackDrop, setOpenBackDrop] = useState(true);
   const flag = useSelector((state) => state.flag.flag);
   const [value, setValue] = useState(dayjs());
-  const [datePicker, setDatePicker] = useState([dayjs('11/01/2022'), dayjs('11/30/2022')]);
+  const [datePicker, setDatePicker] = useState([dayjs(thisMonth.startDate), dayjs(thisMonth.endDate)]);
   const [openAddForm, setOpenAddForm] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
