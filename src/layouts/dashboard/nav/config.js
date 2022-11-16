@@ -21,16 +21,15 @@ const navConfig = [
     path: '/dashboard/wallet',
     icon: icon('wallet-svgrepo-com'),
   },
- 
-  {
-    title: 'profile',
-    path: '/dashboard/profile',
-    icon: icon('ic_user'),
-  },
   {
     title: 'my category',
     path: '/dashboard/category',
     icon: icon('ic_cart'),
+  },
+  {
+    title: 'profile',
+    path: '/dashboard/profile',
+    icon: icon('ic_user'),
   },
   {
     title: 'logout',
