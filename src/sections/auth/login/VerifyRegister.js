@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { enviroment } from 'src/enviroment/enviroment';
 
 function VerifyRegister() {
   const navigate = useNavigate();

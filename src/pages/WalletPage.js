@@ -5,6 +5,7 @@ import { changeFlag } from '../features/flagSlice';
 import * as React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import mockWallet from '../_mock/wallet';
+import { enviroment } from 'src/enviroment/enviroment';
 
 import {
   Accordion,

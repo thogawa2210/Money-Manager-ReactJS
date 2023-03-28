@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/iconify';
+import { enviroment } from 'src/enviroment/enviroment';
 
 function ForgotPasswordForm() {
   const REGEX = {

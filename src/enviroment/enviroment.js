@@ -1,4 +1,4 @@
 export const enviroment = {
     // apiUrl: 'https://money-manager-master-be.herokuapp.com'
-    apiUrl: 'localhost:3000'
+    apiUrl: 'http://localhost:3001'
 }
