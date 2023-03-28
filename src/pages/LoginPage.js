@@ -16,6 +16,7 @@ import Logo from '../components/logo';
 // sections
 import { LoginForm } from '../sections/auth/login';
 import { useNavigate } from 'react-router-dom';
+import { enviroment } from 'src/enviroment/enviroment';
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +63,7 @@ export default function LoginPage() {
   }, []);
 
   const loginGGApi = async (data) => {
-    const result = await axios.post('https://money-manager-master-be.herokuapp.com/auth/login-gg', data);
+    const result = await axios.post(`${enviroment.apiUrl}/auth/login-gg`, data);
     return result;
   };
 

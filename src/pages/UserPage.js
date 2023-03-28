@@ -135,7 +135,7 @@ export default function UserPage() {
       old_pass: oldPass,
       new_pass: newPass,
     };
-    return await axios.put(`https://money-manager-master-be.herokuapp.com/user/change-password/${id}`, data);
+    return await axios.put(`${enviroment.apiUrl}/user/change-password/${id}`, data);
   };
 
   const handleChangePass = (e) => {
@@ -195,11 +195,11 @@ export default function UserPage() {
   };
 
   const userApi = async (id) => {
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/user/info/${id}`);
+    return await axios.get(`${enviroment.apiUrl}/user/info/${id}`);
   };
 
   const changeNameApi = async (id) => {
-    return await axios.put(`https://money-manager-master-be.herokuapp.com/user/edit-username/${id}`, {
+    return await axios.put(`${enviroment.apiUrl}/user/edit-username/${id}`, {
       username: formName.username,
     });
   };
@@ -270,7 +270,7 @@ export default function UserPage() {
   }, [flag]);
 
   const profileApi = async (id) => {
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/user/profile/${id}`);
+    return await axios.get(`${enviroment.apiUrl}/user/profile/${id}`);
   };
 
   useEffect(() => {
@@ -289,7 +289,7 @@ export default function UserPage() {
   }, []);
 
   const changeAvaApi = async (id, data) => {
-    return await axios.put(`https://money-manager-master-be.herokuapp.com/user/change-avatar/${id}`, data);
+    return await axios.put(`${enviroment.apiUrl}/user/change-avatar/${id}`, data);
   };
 
   const onClickChangeAvatar = () => {

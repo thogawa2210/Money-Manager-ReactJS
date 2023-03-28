@@ -47,7 +47,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const flag = useSelector(state => state.flag.flag)
 
   const isLoginApi = async (token, id) => {
-    const result = await axios.post('https://money-manager-master-be.herokuapp.com/auth/is-login', { token: token, id: id });
+    const result = await axios.post(`${enviroment.apiUrl}/auth/is-login`, { token: token, id: id });
     return result;
   };
 
@@ -140,7 +140,7 @@ export default function Nav({ openNav, onCloseNav }) {
         <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
           <Box
             component="img"
-            src="/assets/illustrations/illustration_avatar.png"
+            src="/assets/logotrans.png"
             sx={{ width: 100, position: 'absolute', top: -50 }}
           />
 
