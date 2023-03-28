@@ -44,6 +44,7 @@ import TableRow from '@mui/material/TableRow';
 import mockExpense from 'src/_mock/categoryExpense';
 import { LoadingButton } from '@mui/lab';
 import * as React from "react";
+import {enviroment} from 'src/enviroment/enviroment';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -146,7 +147,7 @@ export default function ProductsPage() {
       });
     } else {
       setLoading(true);
-      const result = await axios.post('https://money-manager-master-be.herokuapp.com/category/add-category', data);
+      const result = await axios.post(`${enviroment.apiUrl}/category/add-category`, data);
 
       if (result.data.type === 'success') {
         Swal.fire({
@@ -237,7 +238,7 @@ export default function ProductsPage() {
   const getWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
     return await axios.get(
-      ` https://money-manager-master-be.herokuapp.com/category/get-category-byuser/${userId.user_id}`,
+      ` ${enviroment.apiUrl}/category/get-category-byuser/${userId.user_id}`,
       idUser
     );
   };
@@ -272,7 +273,7 @@ export default function ProductsPage() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
-          .delete(`https://money-manager-master-be.herokuapp.com/category/delete-category/${id}`)
+          .delete(`${enviroment.apiUrl}/category/delete-category/${id}`)
           .then((res) => {
             dispatch(changeFlag(1));
             Swal.fire({
@@ -354,7 +355,7 @@ export default function ProductsPage() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           await axios
-            .put(` https://money-manager-master-be.herokuapp.com/category/update-categody/${editForm._id}`, data)
+            .put(` ${enviroment.apiUrl}/category/update-categody/${editForm._id}`, data)
             .then((res) => {
               Swal.fire({
                 icon: 'success',
