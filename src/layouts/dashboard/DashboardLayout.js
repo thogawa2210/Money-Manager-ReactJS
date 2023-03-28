@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 //
 import Header from './header';
 import Nav from './nav';
-
 // ----------------------------------------------------------------------
 
 const APP_BAR_MOBILE = 64;
