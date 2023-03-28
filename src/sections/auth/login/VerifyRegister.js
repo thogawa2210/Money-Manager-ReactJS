@@ -10,7 +10,7 @@ function VerifyRegister() {
 
   const sendIdApi = async (userId) => {
     const results = await axios.request({
-      url: `https://money-manager-master-be.herokuapp.com/auth/verify/${userId.id}`,
+      url: `${enviroment.apiUrl}/auth/verify/${userId.id}`,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

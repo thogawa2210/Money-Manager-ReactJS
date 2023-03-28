@@ -42,6 +42,7 @@ import * as React from 'react';
 import '../css/transaction.css';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
+import { enviroment } from 'src/enviroment/enviroment';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -130,19 +131,19 @@ export default function TransactionPage() {
   };
 
   const getTransactionCustom = async (id, data) => {
-    return await axios.post(`https://money-manager-master-be.herokuapp.com/transaction/transaction-page/${id}`, data);
+    return await axios.post(`${enviroment.apiUrl}/transaction/transaction-page/${id}`, data);
   };
 
   const getUserInfo = async (id) => {
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/user/profile/${id}`);
+    return await axios.get(`${enviroment.apiUrl}/user/profile/${id}`);
   };
 
   const getListCategory = async (userId) => {
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
+    return await axios.get(`${enviroment.apiUrl}/category/get-category/${userId}`)
   };
 
   const getListWallet = async (userId) => {
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
+    return await axios.get(`${enviroment.apiUrl}/wallet/get-all-wallet/${userId}`)
   }
 
   useEffect(() => {
@@ -313,7 +314,7 @@ export default function TransactionPage() {
   };
 
   const deleteTransApi = async (id) => {
-    return await axios.delete(`https://money-manager-master-be.herokuapp.com/transaction/delete-transaction/${id}`);
+    return await axios.delete(`${enviroment.apiUrl}/transaction/delete-transaction/${id}`);
   };
 
   const handleDeleteTrans = (id) => {
@@ -369,7 +370,7 @@ export default function TransactionPage() {
 
     } else {
       await axios
-        .post('https://money-manager-master-be.herokuapp.com/transaction/add-transaction', transaction)
+        .post(`${enviroment.apiUrl}/transaction/add-transaction`, transaction)
         .then((res) => {
           if (res.status === 200) {
             dispatch(changeFlag(1));
@@ -441,7 +442,7 @@ export default function TransactionPage() {
       } else {
         await axios
           .put(
-            `https://money-manager-master-be.herokuapp.com/transaction/update-transaction/${editTransaction._id}`,
+            `${enviroment.apiUrl}/transaction/update-transaction/${editTransaction._id}`,
             editTransaction
           )
           .then((res) => {
