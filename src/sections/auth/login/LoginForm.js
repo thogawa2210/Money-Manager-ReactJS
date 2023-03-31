@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
-
+import { enviroment } from 'src/enviroment/enviroment';
 // components
 import Iconify from '../../../components/iconify';
 import * as React from 'react';
@@ -53,7 +53,11 @@ export default function LoginForm() {
       email: form.email,
       password: form.password,
     };
+<<<<<<< HEAD
     const results = await axios.post('http://localhost:3001/auth/login', data);
+=======
+    const results = await axios.post(`${enviroment.apiUrl}/auth/login`, data);
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
     return results;
   };
 
@@ -174,7 +178,11 @@ export default function LoginForm() {
       email: email.email,
     };
     const results = await axios.request({
+<<<<<<< HEAD
       url: `http://localhost:3001/auth/forgotPassword`,
+=======
+      url: `${enviroment.apiUrl}/auth/forgotPassword`,
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
       method: 'POST',
       data: JSON.stringify(data),
       headers: {

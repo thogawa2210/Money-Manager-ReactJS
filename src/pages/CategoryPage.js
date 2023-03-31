@@ -44,6 +44,7 @@ import TableRow from '@mui/material/TableRow';
 import mockExpense from 'src/_mock/categoryExpense';
 import { LoadingButton } from '@mui/lab';
 import * as React from "react";
+import {enviroment} from 'src/enviroment/enviroment';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -146,7 +147,11 @@ export default function ProductsPage() {
       });
     } else {
       setLoading(true);
+<<<<<<< HEAD
       const result = await axios.post('http://localhost:3001/category/add-category', data);
+=======
+      const result = await axios.post(`${enviroment.apiUrl}/category/add-category`, data);
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
 
       if (result.data.type === 'success') {
         Swal.fire({
@@ -237,7 +242,11 @@ export default function ProductsPage() {
   const getWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
     return await axios.get(
+<<<<<<< HEAD
       ` http://localhost:3001/category/get-category-byuser/${userId.user_id}`,
+=======
+      ` ${enviroment.apiUrl}/category/get-category-byuser/${userId.user_id}`,
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
       idUser
     );
   };
@@ -272,7 +281,11 @@ export default function ProductsPage() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
+<<<<<<< HEAD
           .delete(`http://localhost:3001/category/delete-category/${id}`)
+=======
+          .delete(`${enviroment.apiUrl}/category/delete-category/${id}`)
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
           .then((res) => {
             dispatch(changeFlag(1));
             Swal.fire({
@@ -354,7 +367,11 @@ export default function ProductsPage() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           await axios
+<<<<<<< HEAD
             .put(` http://localhost:3001/category/update-categody/${editForm._id}`, data)
+=======
+            .put(` ${enviroment.apiUrl}/category/update-categody/${editForm._id}`, data)
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
             .then((res) => {
               Swal.fire({
                 icon: 'success',

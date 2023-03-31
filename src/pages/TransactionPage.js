@@ -42,6 +42,7 @@ import * as React from 'react';
 import '../css/transaction.css';
 import { TabContext, TabList, TabPanel, LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
+import { enviroment } from 'src/enviroment/enviroment';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -130,6 +131,7 @@ export default function TransactionPage() {
   };
 
   const getTransactionCustom = async (id, data) => {
+<<<<<<< HEAD
     return await axios.post(`http://localhost:3001/transaction/transaction-page/${id}`, data);
   };
 
@@ -143,6 +145,21 @@ export default function TransactionPage() {
 
   const getListWallet = async (userId) => {
     return await axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
+=======
+    return await axios.post(`${enviroment.apiUrl}/transaction/transaction-page/${id}`, data);
+  };
+
+  const getUserInfo = async (id) => {
+    return await axios.get(`${enviroment.apiUrl}/user/profile/${id}`);
+  };
+
+  const getListCategory = async (userId) => {
+    return await axios.get(`${enviroment.apiUrl}/category/get-category/${userId}`)
+  };
+
+  const getListWallet = async (userId) => {
+    return await axios.get(`${enviroment.apiUrl}/wallet/get-all-wallet/${userId}`)
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
   }
 
   useEffect(() => {
@@ -313,7 +330,11 @@ export default function TransactionPage() {
   };
 
   const deleteTransApi = async (id) => {
+<<<<<<< HEAD
     return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`);
+=======
+    return await axios.delete(`${enviroment.apiUrl}/transaction/delete-transaction/${id}`);
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
   };
 
   const handleDeleteTrans = (id) => {
@@ -369,7 +390,11 @@ export default function TransactionPage() {
 
     } else {
       await axios
+<<<<<<< HEAD
         .post('http://localhost:3001/transaction/add-transaction', transaction)
+=======
+        .post(`${enviroment.apiUrl}/transaction/add-transaction`, transaction)
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
         .then((res) => {
           if (res.status === 200) {
             dispatch(changeFlag(1));
@@ -441,7 +466,11 @@ export default function TransactionPage() {
       } else {
         await axios
           .put(
+<<<<<<< HEAD
             `http://localhost:3001/transaction/update-transaction/${editTransaction._id}`,
+=======
+            `${enviroment.apiUrl}/transaction/update-transaction/${editTransaction._id}`,
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
             editTransaction
           )
           .then((res) => {

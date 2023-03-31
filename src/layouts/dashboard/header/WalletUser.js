@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { addTotal } from '../../../features/totalSlice';
 import Swal from 'sweetalert2';
+import { enviroment } from 'src/enviroment/enviroment';
 
 // ----------------------------------------------------------------------
 
@@ -35,10 +36,17 @@ export default function WalletUser() {
   const userId = JSON.parse(localStorage.getItem('user'));
 
   const getAllWallet = async (userId) => {
+<<<<<<< HEAD
     return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`);
   };
   const toTalMoney = async (userId) => {
     return await axios.get(`http://localhost:3001/wallet/total/${userId.user_id}`);
+=======
+    return await axios.get(`${enviroment.apiUrl}/wallet/get-all-wallet/${userId.user_id}`);
+  };
+  const toTalMoney = async (userId) => {
+    return await axios.get(`${enviroment.apiUrl}/wallet/total/${userId.user_id}`);
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
   };
 
   useEffect(() => {

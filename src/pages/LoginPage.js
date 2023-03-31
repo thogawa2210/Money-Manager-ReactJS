@@ -16,6 +16,7 @@ import Logo from '../components/logo';
 // sections
 import { LoginForm } from '../sections/auth/login';
 import { useNavigate } from 'react-router-dom';
+import { enviroment } from 'src/enviroment/enviroment';
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +63,11 @@ export default function LoginPage() {
   }, []);
 
   const loginGGApi = async (data) => {
+<<<<<<< HEAD
     const result = await axios.post('http://localhost:3001/auth/login-gg', data);
+=======
+    const result = await axios.post(`${enviroment.apiUrl}/auth/login-gg`, data);
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
     return result;
   };
 

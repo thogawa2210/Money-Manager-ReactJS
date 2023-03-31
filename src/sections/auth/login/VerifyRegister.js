@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { enviroment } from 'src/enviroment/enviroment';
 
 function VerifyRegister() {
   const navigate = useNavigate();
@@ -10,7 +11,11 @@ function VerifyRegister() {
 
   const sendIdApi = async (userId) => {
     const results = await axios.request({
+<<<<<<< HEAD
       url: `http://localhost:3001/auth/verify/${userId.id}`,
+=======
+      url: `${enviroment.apiUrl}/auth/verify/${userId.id}`,
+>>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
