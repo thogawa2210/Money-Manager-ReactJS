@@ -146,7 +146,7 @@ export default function ProductsPage() {
       });
     } else {
       setLoading(true);
-      const result = await axios.post('https://money-manager-master-be.herokuapp.com/category/add-category', data);
+      const result = await axios.post('http://localhost:3001/category/add-category', data);
 
       if (result.data.type === 'success') {
         Swal.fire({
@@ -237,7 +237,7 @@ export default function ProductsPage() {
   const getWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
     return await axios.get(
-      ` https://money-manager-master-be.herokuapp.com/category/get-category-byuser/${userId.user_id}`,
+      ` http://localhost:3001/category/get-category-byuser/${userId.user_id}`,
       idUser
     );
   };
@@ -272,7 +272,7 @@ export default function ProductsPage() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await axios
-          .delete(`https://money-manager-master-be.herokuapp.com/category/delete-category/${id}`)
+          .delete(`http://localhost:3001/category/delete-category/${id}`)
           .then((res) => {
             dispatch(changeFlag(1));
             Swal.fire({
@@ -354,7 +354,7 @@ export default function ProductsPage() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           await axios
-            .put(` https://money-manager-master-be.herokuapp.com/category/update-categody/${editForm._id}`, data)
+            .put(` http://localhost:3001/category/update-categody/${editForm._id}`, data)
             .then((res) => {
               Swal.fire({
                 icon: 'success',

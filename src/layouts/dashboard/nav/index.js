@@ -47,7 +47,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const flag = useSelector(state => state.flag.flag)
 
   const isLoginApi = async (token, id) => {
-    const result = await axios.post('https://money-manager-master-be.herokuapp.com/auth/is-login', { token: token, id: id });
+    const result = await axios.post('http://localhost:3001/auth/is-login', { token: token, id: id });
     return result;
   };
 

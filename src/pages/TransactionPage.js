@@ -130,19 +130,19 @@ export default function TransactionPage() {
   };
 
   const getTransactionCustom = async (id, data) => {
-    return await axios.post(`https://money-manager-master-be.herokuapp.com/transaction/transaction-page/${id}`, data);
+    return await axios.post(`http://localhost:3001/transaction/transaction-page/${id}`, data);
   };
 
   const getUserInfo = async (id) => {
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/user/profile/${id}`);
+    return await axios.get(`http://localhost:3001/user/profile/${id}`);
   };
 
   const getListCategory = async (userId) => {
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/category/get-category/${userId}`)
+    return await axios.get(`http://localhost:3001/category/get-category/${userId}`)
   };
 
   const getListWallet = async (userId) => {
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId}`)
+    return await axios.get(`http://localhost:3001/wallet/get-all-wallet/${userId}`)
   }
 
   useEffect(() => {
@@ -313,7 +313,7 @@ export default function TransactionPage() {
   };
 
   const deleteTransApi = async (id) => {
-    return await axios.delete(`https://money-manager-master-be.herokuapp.com/transaction/delete-transaction/${id}`);
+    return await axios.delete(`http://localhost:3001/transaction/delete-transaction/${id}`);
   };
 
   const handleDeleteTrans = (id) => {
@@ -369,7 +369,7 @@ export default function TransactionPage() {
 
     } else {
       await axios
-        .post('https://money-manager-master-be.herokuapp.com/transaction/add-transaction', transaction)
+        .post('http://localhost:3001/transaction/add-transaction', transaction)
         .then((res) => {
           if (res.status === 200) {
             dispatch(changeFlag(1));
@@ -441,7 +441,7 @@ export default function TransactionPage() {
       } else {
         await axios
           .put(
-            `https://money-manager-master-be.herokuapp.com/transaction/update-transaction/${editTransaction._id}`,
+            `http://localhost:3001/transaction/update-transaction/${editTransaction._id}`,
             editTransaction
           )
           .then((res) => {

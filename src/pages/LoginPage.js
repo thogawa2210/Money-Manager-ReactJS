@@ -62,7 +62,7 @@ export default function LoginPage() {
   }, []);
 
   const loginGGApi = async (data) => {
-    const result = await axios.post('https://money-manager-master-be.herokuapp.com/auth/login-gg', data);
+    const result = await axios.post('http://localhost:3001/auth/login-gg', data);
     return result;
   };
 

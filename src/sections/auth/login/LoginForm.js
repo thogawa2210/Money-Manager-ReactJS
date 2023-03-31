@@ -53,7 +53,7 @@ export default function LoginForm() {
       email: form.email,
       password: form.password,
     };
-    const results = await axios.post('https://money-manager-master-be.herokuapp.com/auth/login', data);
+    const results = await axios.post('http://localhost:3001/auth/login', data);
     return results;
   };
 
@@ -174,7 +174,7 @@ export default function LoginForm() {
       email: email.email,
     };
     const results = await axios.request({
-      url: `https://money-manager-master-be.herokuapp.com/auth/forgotPassword`,
+      url: `http://localhost:3001/auth/forgotPassword`,
       method: 'POST',
       data: JSON.stringify(data),
       headers: {

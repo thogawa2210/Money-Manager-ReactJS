@@ -90,7 +90,7 @@ function SingupForm() {
     };
 
     const results = await axios.request({
-      url: 'https://money-manager-master-be.herokuapp.com/auth/register',
+      url: 'http://localhost:3001/auth/register',
       method: 'POST',
       data: JSON.stringify(data),
       headers: {

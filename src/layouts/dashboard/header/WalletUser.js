@@ -35,10 +35,10 @@ export default function WalletUser() {
   const userId = JSON.parse(localStorage.getItem('user'));
 
   const getAllWallet = async (userId) => {
-    return await axios.get(` https://money-manager-master-be.herokuapp.com/wallet/get-all-wallet/${userId.user_id}`);
+    return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`);
   };
   const toTalMoney = async (userId) => {
-    return await axios.get(`https://money-manager-master-be.herokuapp.com/wallet/total/${userId.user_id}`);
+    return await axios.get(`http://localhost:3001/wallet/total/${userId.user_id}`);
   };
 
   useEffect(() => {

@@ -67,7 +67,7 @@ function ForgotPasswordForm() {
       password: form.password,
     };
     const results = await axios.request({
-      url: `https://money-manager-master-be.herokuapp.com/user/forgot-password/${userId.id}`,
+      url: `http://localhost:3001/user/forgot-password/${userId.id}`,
       method: 'PUT',
       data: JSON.stringify(data),
       headers: {
