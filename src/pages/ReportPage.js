@@ -147,11 +147,7 @@ function ReportPage() {
   };
 
   const getWalletsApi = async (id) => {
-<<<<<<< HEAD
-    return await axios.get(`http://localhost:3001/wallet/get-all-wallet/${id}`);
-=======
     return await axios.get(`${enviroment.apiUrl}/wallet/get-all-wallet/${id}`);
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
   };
 
   useEffect(() => {
@@ -203,11 +199,7 @@ function ReportPage() {
   }, []);
 
   const getTransCustomApi = async (data) => {
-<<<<<<< HEAD
-    return await axios.post('http://localhost:3001/transaction/get-transaction-custom', data);
-=======
     return await axios.post(`${enviroment.apiUrl}/transaction/get-transaction-custom`, data);
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
   };
 
   useEffect(() => {

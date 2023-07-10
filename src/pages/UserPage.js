@@ -135,11 +135,7 @@ export default function UserPage() {
       old_pass: oldPass,
       new_pass: newPass,
     };
-<<<<<<< HEAD
-    return await axios.put(`http://localhost:3001/user/change-password/${id}`, data);
-=======
     return await axios.put(`${enviroment.apiUrl}/user/change-password/${id}`, data);
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
   };
 
   const handleChangePass = (e) => {
@@ -199,19 +195,11 @@ export default function UserPage() {
   };
 
   const userApi = async (id) => {
-<<<<<<< HEAD
-    return await axios.get(`http://localhost:3001/user/info/${id}`);
-  };
-
-  const changeNameApi = async (id) => {
-    return await axios.put(`http://localhost:3001/user/edit-username/${id}`, {
-=======
     return await axios.get(`${enviroment.apiUrl}/user/info/${id}`);
   };
 
   const changeNameApi = async (id) => {
     return await axios.put(`${enviroment.apiUrl}/user/edit-username/${id}`, {
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
       username: formName.username,
     });
   };
@@ -282,11 +270,7 @@ export default function UserPage() {
   }, [flag]);
 
   const profileApi = async (id) => {
-<<<<<<< HEAD
-    return await axios.get(`http://localhost:3001/user/profile/${id}`);
-=======
     return await axios.get(`${enviroment.apiUrl}/user/profile/${id}`);
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
   };
 
   useEffect(() => {
@@ -305,11 +289,7 @@ export default function UserPage() {
   }, []);
 
   const changeAvaApi = async (id, data) => {
-<<<<<<< HEAD
-    return await axios.put(`http://localhost:3001/user/change-avatar/${id}`, data);
-=======
     return await axios.put(`${enviroment.apiUrl}/user/change-avatar/${id}`, data);
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
   };
 
   const onClickChangeAvatar = () => {

@@ -1,46 +1,23 @@
-
 const getCircleData = (data) => {
-    const transactions = data.transactions
-
-    let incomeCategory = [];
-    let expenseCategory = [];
-
+    const transactions = data.transactions;
+  
+    const categories = {
+      income: new Map(),
+      expense: new Map(),
+    };
+  
     transactions.forEach((transaction) => {
-        if(transaction.category_type === 'income'){
-            if(incomeCategory.indexOf(transaction.category_name) === -1){
-                incomeCategory.push(transaction.category_name);
-            }
-        }else{
-            if(expenseCategory.indexOf(transaction.category_name) === -1){
-                expenseCategory.push(transaction.category_name);
-            }
-        }
-    })
-
-    let income = [];
-    let expense = [];
-
-    incomeCategory.forEach((category) => {
-        let amount = 0;
-        transactions.forEach((transaction) => {
-            if(transaction.category_name === category){
-                amount += transaction.amount
-            }
-        })
-        income.push({label: category, value: amount})
+      const { category_type, category_name, amount } = transaction;
+      const categoryMap = categories[category_type];
+      const currentAmount = categoryMap.get(category_name) || 0;
+      categoryMap.set(category_name, currentAmount + amount);
     });
-
-    expenseCategory.forEach((category) => {
-        let amount = 0;
-        transactions.forEach((transaction) => {
-            if(transaction.category_name === category){
-                amount += transaction.amount
-            }
-        })
-        expense.push({label: category, value: amount})
-    });
-
-    return {income:income, expense: expense}
-}
-
-export default getCircleData;
+  
+    const income = Array.from(categories.income, ([label, value]) => ({ label, value }));
+    const expense = Array.from(categories.expense, ([label, value]) => ({ label, value }));
+  
+    return { income, expense };
+  };
+  
+  export default getCircleData;
+  

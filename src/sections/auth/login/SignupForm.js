@@ -90,11 +90,7 @@ function SingupForm() {
     };
 
     const results = await axios.request({
-<<<<<<< HEAD
-      url: 'http://localhost:3001/auth/register',
-=======
       url: `${enviroment.apiUrl}/auth/register`,
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
       method: 'POST',
       data: JSON.stringify(data),
       headers: {

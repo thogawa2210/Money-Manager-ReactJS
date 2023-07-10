@@ -68,11 +68,7 @@ function ForgotPasswordForm() {
       password: form.password,
     };
     const results = await axios.request({
-<<<<<<< HEAD
-      url: `http://localhost:3001/user/forgot-password/${userId.id}`,
-=======
       url: `${enviroment.apiUrl}/user/forgot-password/${userId.id}`,
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
       method: 'PUT',
       data: JSON.stringify(data),
       headers: {

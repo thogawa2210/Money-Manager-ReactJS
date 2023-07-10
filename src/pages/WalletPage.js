@@ -105,11 +105,7 @@ export default function WalletPage() {
         setLoading(false)
       } else {
         await axios
-<<<<<<< HEAD
-          .post('http://localhost:3001/wallet/create', data)
-=======
           .post(`${enviroment.apiUrl}/wallet/create`, data)
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
           .then((res) => {
             setLoading(false)
             if (res.data.type === 'success') {
@@ -177,11 +173,7 @@ export default function WalletPage() {
 
   const getAllWallet = async () => {
     const userId = JSON.parse(localStorage.getItem('user'));
-<<<<<<< HEAD
-    return await axios.get(` http://localhost:3001/wallet/get-all-wallet/${userId.user_id}`);
-=======
     return await axios.get(`${enviroment.apiUrl}/wallet/get-all-wallet/${userId.user_id}`);
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
   };
 
   useEffect(() => {
@@ -219,11 +211,7 @@ export default function WalletPage() {
       setLoading(false)
       if (result.isConfirmed) {
         await axios
-<<<<<<< HEAD
-          .delete(`http://localhost:3001/wallet/delete/${id}`)
-=======
           .delete(`${enviroment.apiUrl}/wallet/delete/${id}`)
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
           .then((res) => {
             dispatch(changeFlag(1));
             Swal.fire({
@@ -250,11 +238,7 @@ export default function WalletPage() {
       amount: walletEdit.amount,
     };
     await axios
-<<<<<<< HEAD
-      .put(`http://localhost:3001/wallet/update/${id}`, data)
-=======
       .put(`${enviroment.apiUrl}/wallet/update/${id}`, data)
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
       .then((res) => {
         setOpen(false);
         Swal.fire({

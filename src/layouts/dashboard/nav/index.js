@@ -47,11 +47,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const flag = useSelector(state => state.flag.flag)
 
   const isLoginApi = async (token, id) => {
-<<<<<<< HEAD
-    const result = await axios.post('http://localhost:3001/auth/is-login', { token: token, id: id });
-=======
     const result = await axios.post(`${enviroment.apiUrl}/auth/is-login`, { token: token, id: id });
->>>>>>> 650520c5c1ef5ffc59bbd50646230bf6cf8befdb
     return result;
   };
 

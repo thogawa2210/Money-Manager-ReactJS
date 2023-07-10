@@ -1,76 +1,46 @@
 export default function getDataBarChart(data) {
   const transactions = data.transactions;
-  const startDate = new Date(data.startDate);
-  const endDate = new Date(data.endDate);
-  const startMonth = startDate.getMonth();
-  const endMonth = endDate.getMonth();
+  const chartLabels = [];
+  const dataIncome = [];
+  const dataExpense = [];
 
-  let chartLabels = [];
-  let dataIncome = [];
-  let dataExpense = [];
+  transactions.forEach((transaction) => {
+    const { amount, category_type, date } = transaction;
 
-  if (startMonth === endMonth) {
-    const startDay = startDate.getDate();
-    const endDay = endDate.getDate();
-    for (let i = startDay; i <= endDay; i++) {
-      if (i < 10) {
-        chartLabels.push(`${startMonth + 1}/0${i}/2022`);
+    // Split date into day, month, and year
+    const [month, day, year] = date.split('/');
+
+    // Format the date as "MM/dd/YYYY"
+    const formattedDate = `${month}/${day}/${year}`;
+
+    // Add the formatted date to the days array if it doesn't exist
+    if (!chartLabels.includes(formattedDate)) {
+      chartLabels.push(formattedDate);
+    }
+
+    // Calculate the total income and expense for each day
+    if (category_type === 'income') {
+      if (dataIncome[formattedDate]) {
+        dataIncome[formattedDate] += amount;
       } else {
-        chartLabels.push(`${startMonth + 1}/${i}/2022`);
+        dataIncome[formattedDate] = amount;
+      }
+    } else if (category_type === 'expense') {
+      if (dataExpense[formattedDate]) {
+        dataExpense[formattedDate] += amount;
+      } else {
+        dataExpense[formattedDate] = amount;
       }
     }
+  });
 
-    chartLabels.forEach((date) => {
-      let income = 0;
-      let expense = 0;
-      transactions.forEach((transaction) => {
-        if (transaction.date === date) {
-          if (transaction.category_type === 'income') {
-            income += transaction.amount;
-          } else {
-            expense += transaction.amount;
-          }
-        }
-      });
-      dataIncome.push(income);
-      dataExpense.push(expense);
-    });
-  } else {
-    for (let i = startMonth; i <= endMonth; i++) {
-      chartLabels.push(`${i + 1}/01/2022`);
-    }
-
-    chartLabels.forEach((month) => {
-      let income = 0;
-      let expense = 0;
-      transactions.forEach((transaction) => {
-        if (new Date(transaction.date).getMonth() === new Date(month).getMonth()) {
-          if (transaction.category_type === 'income') {
-            income += transaction.amount;
-          } else {
-            expense += transaction.amount;
-          }
-        }
-      });
-      dataIncome.push(income);
-      dataExpense.push(expense);
-    });
-  }
+  const incomeByDay = Object.values(dataIncome);
+  const expenseByDay = Object.values(dataExpense);
 
   const chartData = [
-    {
-      name: 'Income',
-      type: 'column',
-      fill: 'solid',
-      data: dataIncome,
-    },
-    {
-      name: 'Expense',
-      type: 'column',
-      fill: 'solid',
-      data: dataExpense,
-    },
+    { name: 'Income', type: 'column', fill: 'solid', data: incomeByDay },
+    { name: 'Expense', type: 'column', fill: 'solid', data: expenseByDay },
   ];
 
-  return { chartLabels: chartLabels, chartData: chartData };
+  return { chartLabels, chartData };
 }
